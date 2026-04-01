@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Raffle App</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">🎲 Raffle</div>
+      <div class="header-meta">
+        <span id="participant-count" class="participant-count">0 participants</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+
+    <!-- LEFT: Participants -->
+    <section class="panel panel--participants">
+      <div class="panel-header">
+        <h2>Participants</h2>
+        <button class="btn-icon" id="btn-clear-all" title="Clear all">✕ Clear</button>
+      </div>
+
+      <div class="add-row">
+        <input type="text" id="input-name" placeholder="Add name…" maxlength="50" />
+        <button class="btn btn-accent" id="btn-add">Add</button>
+      </div>
+
+      <div class="import-row">
+        <textarea id="input-bulk" placeholder="Bulk import: one name per line…" rows="3"></textarea>
+        <button class="btn" id="btn-import">Import</button>
+      </div>
+
+      <ul class="participant-list" id="participant-list">
+        <li class="list-empty">No participants yet</li>
+      </ul>
+    </section>
+
+    <!-- CENTER: Modes -->
+    <section class="panel panel--main">
+
+      <div class="mode-tabs">
+        <button class="mode-tab active" data-mode="quick">⚡ Quick Draw</button>
+        <button class="mode-tab" data-mode="roulette">🎰 Roulette</button>
+        <button class="mode-tab" data-mode="multi">🏆 Multi Pick</button>
+      </div>
+
+      <!-- Quick Draw -->
+      <div class="mode-panel active" id="mode-quick">
+        <div class="quick-stage">
+          <div class="quick-winner" id="quick-winner">
+            <span class="quick-winner-label">Winner</span>
+            <span class="quick-winner-name" id="quick-winner-name">—</span>
+          </div>
+        </div>
+        <button class="btn btn-big btn-accent" id="btn-quick-draw">Draw!</button>
+      </div>
+
+      <!-- Roulette -->
+      <div class="mode-panel" id="mode-roulette">
+        <div class="roulette-stage">
+          <div class="roulette-track-wrap">
+            <div class="roulette-arrow">▼</div>
+            <div class="roulette-track" id="roulette-track"></div>
+          </div>
+          <div class="roulette-result" id="roulette-result"></div>
+        </div>
+        <button class="btn btn-big btn-accent" id="btn-spin">Spin!</button>
+      </div>
+
+      <!-- Multi Pick -->
+      <div class="mode-panel" id="mode-multi">
+        <div class="multi-config">
+          <label>Winners count</label>
+          <div class="multi-count-row">
+            <button class="btn-icon" id="btn-winners-minus">−</button>
+            <span id="winners-count">3</span>
+            <button class="btn-icon" id="btn-winners-plus">+</button>
+          </div>
+        </div>
+        <div class="multi-results" id="multi-results"></div>
+        <button class="btn btn-big btn-accent" id="btn-multi-draw">Pick Winners!</button>
+      </div>
+
+    </section>
+
+    <!-- RIGHT: History -->
+    <section class="panel panel--history">
+      <div class="panel-header">
+        <h2>History</h2>
+        <button class="btn-icon" id="btn-clear-history" title="Clear history">✕</button>
+      </div>
+      <ul class="history-list" id="history-list">
+        <li class="list-empty">No draws yet</li>
+      </ul>
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
