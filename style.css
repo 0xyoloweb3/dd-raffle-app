@@ -983,7 +983,7 @@ body.battle-focus .battle-prototype-frame {
 
 .battle-embed-shell {
   position: relative;
-  min-height: 430px;
+  min-height: 560px;
   border-radius: 24px;
   overflow: hidden;
   border: 1px solid rgba(176, 129, 73, 0.34);
@@ -996,7 +996,7 @@ body.battle-focus .battle-prototype-frame {
 .battle-prototype-frame {
   display: block;
   width: 100%;
-  min-height: 430px;
+  min-height: 560px;
   border: 0;
   background: transparent;
 }
@@ -1004,7 +1004,7 @@ body.battle-focus .battle-prototype-frame {
 .battlefield {
   position: relative;
   flex: 1;
-  min-height: 320px;
+  min-height: 420px;
   overflow: hidden;
   border-radius: 24px;
   border: 1px solid rgba(176, 129, 73, 0.34);
