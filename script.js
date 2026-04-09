@@ -292,13 +292,13 @@ function extractNamesFromOcrText(text) {
 
     if (!candidate) return;
     if (candidate.length < 2 || candidate.length > 40) return;
-    if (!/[A-Za-zРђ-РЇР°-СЏР†С–Р‡С—Р„С”ТђТ‘]/.test(candidate)) return;
+    if (!/[\p{L}]/u.test(candidate)) return;
     if (/^\d+$/.test(candidate)) return;
     if (/[!?=:;%]/.test(candidate)) return;
 
     candidate = candidate
-      .replace(/^[^A-Za-zРђ-РЇР°-СЏР†С–Р‡С—Р„С”ТђТ‘0-9_]+/, '')
-      .replace(/[^A-Za-zРђ-РЇР°-СЏР†С–Р‡С—Р„С”ТђТ‘0-9_.\-\s]+$/g, '')
+      .replace(/^[^\p{L}0-9_]+/gu, '')
+      .replace(/[^\p{L}0-9_.\-\s]+$/gu, '')
       .trim();
 
     if (!candidate) return;
@@ -1534,4 +1534,7 @@ setParticipantStatus(
   participants.length ? 'success' : ''
 );
 drawWheel();
+
+
+
 
