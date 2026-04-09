@@ -11,6 +11,7 @@ const statusEl = document.getElementById('battle-status');
 const feedEl = document.getElementById('battle-feed');
 const participantsEl = document.getElementById('battle-participants');
 const winnerModalEl = document.getElementById('battle-winner-modal');
+const winnerConfettiEl = document.getElementById('battle-winner-confetti');
 const aliveCounterEl = document.getElementById('battle-alive-count');
 const winnerKickerEl = document.querySelector('.battle-winner-kicker');
 const winnerNameEl = document.getElementById('battle-winner-name');
@@ -600,25 +601,53 @@ function addCombatText(fighter, text, color = '#fff0c5') {
 function updateWinnerModal(winner) {
   if (!winner) {
     winnerModalEl.hidden = true;
+    if (winnerConfettiEl) winnerConfettiEl.innerHTML = '';
     stopWinnerTheme();
-    winnerKickerEl.textContent = 'Victory';
+    winnerKickerEl.textContent = 'CONGRATSBRIA!';
     winnerNameEl.textContent = 'Winner';
     winnerSubtitleEl.textContent = 'stands alone in the arena';
     return;
   }
 
   if (winner.draw) {
-    winnerKickerEl.textContent = 'Result';
+    winnerKickerEl.textContent = 'CONGRATSBRIA!';
     winnerNameEl.textContent = 'DRAW';
     winnerSubtitleEl.textContent = 'both fighters fell at the same time';
   } else {
-    winnerKickerEl.textContent = 'Victory';
+    winnerKickerEl.textContent = 'CONGRATSBRIA!';
     winnerNameEl.textContent = winner.name;
     winnerSubtitleEl.textContent = 'stands alone in the arena';
+    launchBattleWinnerConfetti();
     playWinnerTheme();
   }
   winnerModalEl.hidden = false;
   notifyParent({ type: 'battle-finish' });
+}
+
+function launchBattleWinnerConfetti() {
+  if (!winnerConfettiEl) return;
+
+  winnerConfettiEl.innerHTML = '';
+  const colors = ['#ff5f5f', '#ffd36b', '#ff8c42', '#ffe7a8', '#f05a7e'];
+  const pieces = 28;
+
+  for (let i = 0; i < pieces; i++) {
+    const piece = document.createElement('span');
+    piece.className = 'battle-winner-confetti-piece';
+    piece.style.left = `${Math.random() * 100}%`;
+    piece.style.background = colors[i % colors.length];
+    piece.style.animationDelay = `${Math.random() * 0.28}s`;
+    piece.style.animationDuration = `${1.55 + Math.random() * 0.75}s`;
+    piece.style.setProperty('--confetti-x', `${(Math.random() * 42) - 21}vw`);
+    piece.style.setProperty('--confetti-rotate', `${320 + Math.round(Math.random() * 420)}deg`);
+    piece.style.width = `${8 + Math.round(Math.random() * 5)}px`;
+    piece.style.height = `${14 + Math.round(Math.random() * 10)}px`;
+    winnerConfettiEl.appendChild(piece);
+  }
+
+  setTimeout(() => {
+    if (winnerConfettiEl) winnerConfettiEl.innerHTML = '';
+  }, 2600);
 }
 
 function resolveView(dx, dy) {
