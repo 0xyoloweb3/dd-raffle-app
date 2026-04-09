@@ -1224,17 +1224,29 @@ function drawWheel(angle = wheelAngle) {
   wheelCtx.lineWidth = 4;
   wheelCtx.stroke();
 
-  const pointerLength = Math.round(Math.min(72, Math.max(52, R * 0.11)));
-  const pointerInset = Math.round(Math.min(22, Math.max(16, R * 0.022)));
-  const pointerHalfHeight = Math.round(Math.min(28, Math.max(20, R * 0.045)));
-  const pointerCurveOffset = Math.round(Math.min(18, Math.max(12, R * 0.028)));
-  const pointerHubRadius = Math.round(Math.min(14, Math.max(10, R * 0.022)));
-  const pointerCoreRadius = Math.round(Math.min(6, Math.max(4, R * 0.01)));
-  const pointerStrokeWidth = Math.round(Math.min(5, Math.max(3, R * 0.008)));
-  const pointerOuterOffset = Math.round(Math.min(18, Math.max(10, R * 0.018)));
-  const pointerGapFromEdge = Math.round(Math.min(20, Math.max(12, R * 0.02)));
-  const pointerTipX = cx - R + pointerOuterOffset + pointerLength;
-  const pointerBaseX = pointerGapFromEdge + pointerHubRadius * 2;
+  const wheelExpanded = document.body.classList.contains('wheel-focus');
+  let pointerLength = Math.max(40, Math.round(R * 0.145));
+  let pointerInset = Math.max(16, Math.round(R * 0.03));
+  let pointerHalfHeight = Math.max(22, Math.round(R * 0.07));
+  let pointerCurveOffset = Math.max(14, Math.round(R * 0.042));
+  let pointerHubRadius = Math.max(10, Math.round(R * 0.03));
+  let pointerCoreRadius = Math.max(4, Math.round(R * 0.012));
+  let pointerStrokeWidth = Math.max(4, Math.round(R * 0.01));
+  let pointerBaseX = cx - R - pointerInset;
+  let pointerTipX = cx - R + pointerLength;
+
+  if (wheelExpanded) {
+    pointerLength = 40;
+    pointerInset = 16;
+    pointerHalfHeight = 22;
+    pointerCurveOffset = 14;
+    pointerHubRadius = 10;
+    pointerCoreRadius = 4;
+    pointerStrokeWidth = 4;
+    pointerBaseX = 36;
+    pointerTipX = pointerBaseX + pointerInset + pointerLength;
+  }
+
   const pointerGradient = wheelCtx.createLinearGradient(pointerBaseX - pointerHubRadius, cy, pointerTipX, cy);
   pointerGradient.addColorStop(0, '#5f1714');
   pointerGradient.addColorStop(0.3, '#9e241f');
