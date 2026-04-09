@@ -79,7 +79,7 @@ body.battle-embedded {
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto;
   gap: 12px;
-  padding: 12px 14px 14px;
+  padding: 10px 14px 12px;
   border-radius: 0;
   border: none;
   box-shadow: none;
@@ -92,7 +92,7 @@ body.battle-embedded {
 }
 
 .battle-embedded .battle-stage {
-  min-height: calc(100vh - 148px);
+  min-height: calc(100vh - 176px);
 }
 
 .battle-embedded .battle-topbar {
