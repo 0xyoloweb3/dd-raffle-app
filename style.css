@@ -1171,6 +1171,7 @@ body.battle-focus .battle-prototype-frame {
     linear-gradient(180deg, rgba(73, 46, 25, 0.96), rgba(40, 24, 14, 0.98));
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.42);
   text-align: center;
+  animation: winner-popup-card-pulse 1.45s ease-in-out infinite alternate;
 }
 
 .winner-popup-confetti {
@@ -1242,6 +1243,15 @@ body.battle-focus .battle-prototype-frame {
     opacity: 1;
     filter: blur(34px);
     transform: translate(-50%, -50%) scale(1.05);
+  }
+}
+
+@keyframes winner-popup-card-pulse {
+  0% {
+    transform: scale(0.975);
+  }
+  100% {
+    transform: scale(1.02);
   }
 }
 
