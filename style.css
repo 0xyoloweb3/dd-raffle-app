@@ -1254,8 +1254,8 @@ body.battle-focus .battle-prototype-frame {
     opacity: 1;
   }
   100% {
-    opacity: 0.95;
-    transform: translate3d(var(--confetti-x, 0), 108vh, 0) rotate(var(--confetti-rotate, 540deg)) scale(1);
+    opacity: 0;
+    transform: translate3d(var(--confetti-x, 0), 122vh, 0) rotate(var(--confetti-rotate, 540deg)) scale(1);
   }
 }
 

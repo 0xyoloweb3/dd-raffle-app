@@ -379,6 +379,10 @@ function launchWinnerConfetti() {
     piece.style.height = `${14 + Math.round(Math.random() * 10)}px`;
     winnerPopupConfetti.appendChild(piece);
   }
+
+  setTimeout(() => {
+    if (winnerPopupConfetti) winnerPopupConfetti.innerHTML = '';
+  }, 2600);
 }
 
 function showWinnerPopup(winners) {
