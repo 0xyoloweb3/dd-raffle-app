@@ -1198,13 +1198,13 @@ function drawWheel(angle = wheelAngle) {
   wheelCtx.lineWidth = 4;
   wheelCtx.stroke();
 
-  const pointerBaseX = cx - R + 10;
-  const pointerTipX = cx - R - 32;
+  const pointerBaseX = cx - R - 22;
+  const pointerTipX = cx - R + 20;
   const pointerHalfHeight = 24;
-  const pointerGradient = wheelCtx.createLinearGradient(pointerTipX, cy, pointerBaseX + 28, cy);
-  pointerGradient.addColorStop(0, '#fff1bf');
-  pointerGradient.addColorStop(0.42, '#efc66c');
-  pointerGradient.addColorStop(1, '#8f5829');
+  const pointerGradient = wheelCtx.createLinearGradient(pointerBaseX - 10, cy, pointerTipX, cy);
+  pointerGradient.addColorStop(0, '#8f5829');
+  pointerGradient.addColorStop(0.45, '#efc66c');
+  pointerGradient.addColorStop(1, '#fff1bf');
 
   wheelCtx.save();
   wheelCtx.shadowColor = 'rgba(16, 8, 3, 0.34)';
@@ -1214,10 +1214,10 @@ function drawWheel(angle = wheelAngle) {
 
   wheelCtx.fillStyle = pointerGradient;
   wheelCtx.beginPath();
-  wheelCtx.moveTo(pointerTipX, cy);
-  wheelCtx.lineTo(pointerBaseX + 20, cy - pointerHalfHeight);
-  wheelCtx.quadraticCurveTo(pointerBaseX + 36, cy - 5, pointerBaseX + 20, cy);
-  wheelCtx.quadraticCurveTo(pointerBaseX + 36, cy + 5, pointerBaseX + 20, cy + pointerHalfHeight);
+  wheelCtx.moveTo(pointerBaseX, cy - pointerHalfHeight);
+  wheelCtx.quadraticCurveTo(pointerBaseX + 16, cy - 5, pointerBaseX, cy);
+  wheelCtx.quadraticCurveTo(pointerBaseX + 16, cy + 5, pointerBaseX, cy + pointerHalfHeight);
+  wheelCtx.lineTo(pointerTipX, cy);
   wheelCtx.closePath();
   wheelCtx.fill();
 
@@ -1226,7 +1226,7 @@ function drawWheel(angle = wheelAngle) {
   wheelCtx.stroke();
 
   wheelCtx.beginPath();
-  wheelCtx.arc(pointerBaseX + 10, cy, 10, 0, Math.PI * 2);
+  wheelCtx.arc(pointerBaseX - 10, cy, 10, 0, Math.PI * 2);
   wheelCtx.fillStyle = '#4b2b14';
   wheelCtx.fill();
   wheelCtx.strokeStyle = '#edc877';
@@ -1234,7 +1234,7 @@ function drawWheel(angle = wheelAngle) {
   wheelCtx.stroke();
 
   wheelCtx.beginPath();
-  wheelCtx.arc(pointerBaseX + 10, cy, 4, 0, Math.PI * 2);
+  wheelCtx.arc(pointerBaseX - 10, cy, 4, 0, Math.PI * 2);
   wheelCtx.fillStyle = '#ffe3a0';
   wheelCtx.fill();
   wheelCtx.restore();
@@ -1534,6 +1534,7 @@ setParticipantStatus(
   participants.length ? 'success' : ''
 );
 drawWheel();
+
 
 
 
