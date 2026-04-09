@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=20260409-popupglow3" />
+  <link rel="stylesheet" href="style.css?v=20260409-roulette-marker1" />
 </head>
 <body>
   <header class="header">
@@ -120,13 +120,14 @@
         <button class="btn btn-big btn-accent" id="btn-quick-draw">Draw</button>
       </div>
 
-      <div class="mode-panel" id="mode-roulette">
-        <div class="roulette-stage">
-          <div class="roulette-track-wrap">
-            <div class="roulette-track" id="roulette-track"></div>
+        <div class="mode-panel" id="mode-roulette">
+          <div class="roulette-stage">
+            <div class="roulette-track-wrap">
+              <div class="roulette-center-marker" aria-hidden="true"></div>
+              <div class="roulette-track" id="roulette-track"></div>
+            </div>
+            <div class="roulette-result" id="roulette-result"></div>
           </div>
-          <div class="roulette-result" id="roulette-result"></div>
-        </div>
         <div class="game-duration-row" data-duration-group="roulette">
           <label>Duration</label>
           <div class="duration-btns">

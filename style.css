@@ -667,6 +667,48 @@ textarea {
   background: linear-gradient(90deg, rgba(34,22,13,0.95), transparent 12%, transparent 88%, rgba(34,22,13,0.95));
 }
 
+.roulette-center-marker {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 50%;
+  width: 0;
+  transform: translateX(-50%);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.roulette-center-marker::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  transform: translate(-50%, 0) rotate(45deg);
+  border: 2px solid rgba(87, 42, 14, 0.92);
+  border-radius: 3px;
+  background: linear-gradient(180deg, #fff0bf, #efc66c 55%, #a86631);
+  box-shadow:
+    0 0 0 1px rgba(255, 233, 177, 0.18) inset,
+    0 8px 18px rgba(0, 0, 0, 0.28);
+}
+
+.roulette-center-marker::after {
+  content: "";
+  position: absolute;
+  top: 16px;
+  bottom: 0;
+  left: 50%;
+  width: 4px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255, 226, 150, 0.95), rgba(203, 120, 52, 0.92));
+  box-shadow:
+    0 0 0 1px rgba(74, 36, 12, 0.75),
+    0 0 16px rgba(255, 203, 107, 0.18);
+}
+
 
 
 
