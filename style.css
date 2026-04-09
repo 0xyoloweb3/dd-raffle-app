@@ -786,6 +786,7 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
   padding: 0;
   border: none;
   background: transparent;
@@ -796,6 +797,10 @@ textarea {
   height: auto;
   display: block;
   image-rendering: pixelated;
+}
+
+.wheel-focus-pointer {
+  display: none;
 }
 
 body.wheel-focus .header,
@@ -847,6 +852,49 @@ body.wheel-focus #wheel-canvas {
   width: min(88vw, 88vh);
   height: min(88vw, 88vh);
   max-width: none;
+}
+
+body.wheel-focus .wheel-focus-pointer {
+  position: absolute;
+  left: max(18px, calc(50% - min(44vw, 44vh) - 8px));
+  top: 50%;
+  display: block;
+  width: 72px;
+  height: 46px;
+  transform: translateY(-50%);
+  z-index: 4;
+  pointer-events: none;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.28));
+}
+
+body.wheel-focus .wheel-focus-pointer::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  border: 4px solid #f0c76e;
+  background: #5c1713;
+  box-shadow: 0 0 0 2px rgba(85, 22, 17, 0.75);
+}
+
+body.wheel-focus .wheel-focus-pointer::after {
+  content: "";
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  width: 56px;
+  height: 40px;
+  transform: translateY(-50%);
+  clip-path: polygon(0 8%, 74% 20%, 100% 50%, 74% 80%, 0 92%, 18% 50%);
+  border-radius: 6px;
+  background: linear-gradient(90deg, #5f1714 0%, #9e241f 32%, #efc66c 72%, #fff1bf 100%);
+  box-shadow:
+    inset 0 0 0 3px #551611,
+    inset 0 0 0 7px rgba(255, 214, 144, 0.12);
 }
 
 body.wheel-focus .wheel-controls {
