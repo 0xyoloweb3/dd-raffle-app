@@ -1224,61 +1224,51 @@ function drawWheel(angle = wheelAngle) {
   wheelCtx.lineWidth = 4;
   wheelCtx.stroke();
 
-  const pointerLength = Math.max(46, Math.round(R * 0.16));
-  const pointerInset = Math.max(18, Math.round(R * 0.034));
-  const pointerHalfHeight = Math.max(20, Math.round(R * 0.062));
-  const pointerInnerHalfHeight = Math.max(10, Math.round(pointerHalfHeight * 0.48));
-  const pointerHubRadius = Math.max(11, Math.round(R * 0.032));
-  const pointerCoreRadius = Math.max(5, Math.round(R * 0.014));
-  const pointerRingRadius = Math.max(7, Math.round(R * 0.02));
-  const pointerStrokeWidth = Math.max(3, Math.round(R * 0.009));
+  const pointerLength = Math.max(40, Math.round(R * 0.145));
+  const pointerInset = Math.max(16, Math.round(R * 0.03));
+  const pointerHalfHeight = Math.max(22, Math.round(R * 0.07));
+  const pointerCurveOffset = Math.max(14, Math.round(R * 0.042));
+  const pointerHubRadius = Math.max(10, Math.round(R * 0.03));
+  const pointerCoreRadius = Math.max(4, Math.round(R * 0.012));
+  const pointerStrokeWidth = Math.max(4, Math.round(R * 0.01));
   const pointerBaseX = cx - R - pointerInset;
   const pointerTipX = cx - R + pointerLength;
-  const pointerBodyEndX = pointerTipX - Math.max(16, Math.round(R * 0.05));
-  const pointerGradient = wheelCtx.createLinearGradient(pointerBaseX, cy, pointerTipX, cy);
-  pointerGradient.addColorStop(0, '#4c140f');
-  pointerGradient.addColorStop(0.28, '#8f231b');
-  pointerGradient.addColorStop(0.7, '#d88943');
-  pointerGradient.addColorStop(1, '#fff0b6');
+  const pointerGradient = wheelCtx.createLinearGradient(pointerBaseX - pointerHubRadius, cy, pointerTipX, cy);
+  pointerGradient.addColorStop(0, '#5f1714');
+  pointerGradient.addColorStop(0.3, '#9e241f');
+  pointerGradient.addColorStop(0.62, '#efc66c');
+  pointerGradient.addColorStop(1, '#fff1bf');
 
   wheelCtx.save();
-  wheelCtx.shadowColor = 'rgba(68, 14, 10, 0.42)';
-  wheelCtx.shadowBlur = Math.max(14, Math.round(R * 0.045));
+  wheelCtx.shadowColor = 'rgba(82, 16, 12, 0.42)';
+  wheelCtx.shadowBlur = Math.max(16, Math.round(R * 0.05));
   wheelCtx.shadowOffsetX = -2;
   wheelCtx.shadowOffsetY = 4;
 
   wheelCtx.fillStyle = pointerGradient;
   wheelCtx.beginPath();
   wheelCtx.moveTo(pointerBaseX, cy - pointerHalfHeight);
-  wheelCtx.lineTo(pointerBodyEndX, cy - pointerInnerHalfHeight);
+  wheelCtx.quadraticCurveTo(pointerBaseX + pointerCurveOffset, cy - 6, pointerBaseX, cy);
+  wheelCtx.quadraticCurveTo(pointerBaseX + pointerCurveOffset, cy + 6, pointerBaseX, cy + pointerHalfHeight);
   wheelCtx.lineTo(pointerTipX, cy);
-  wheelCtx.lineTo(pointerBodyEndX, cy + pointerInnerHalfHeight);
-  wheelCtx.lineTo(pointerBaseX, cy + pointerHalfHeight);
-  wheelCtx.quadraticCurveTo(pointerBaseX + Math.max(14, Math.round(R * 0.04)), cy, pointerBaseX, cy - pointerHalfHeight);
   wheelCtx.closePath();
   wheelCtx.fill();
 
-  wheelCtx.strokeStyle = '#5a1812';
+  wheelCtx.strokeStyle = '#551611';
   wheelCtx.lineWidth = pointerStrokeWidth;
   wheelCtx.stroke();
 
   wheelCtx.beginPath();
   wheelCtx.arc(pointerBaseX - pointerHubRadius, cy, pointerHubRadius, 0, Math.PI * 2);
-  wheelCtx.fillStyle = '#57201a';
+  wheelCtx.fillStyle = '#5c1713';
   wheelCtx.fill();
-  wheelCtx.strokeStyle = '#f3cf77';
+  wheelCtx.strokeStyle = '#f0c76e';
   wheelCtx.lineWidth = Math.max(3, Math.round(R * 0.008));
   wheelCtx.stroke();
 
   wheelCtx.beginPath();
-  wheelCtx.arc(pointerBaseX - pointerHubRadius, cy, pointerRingRadius, 0, Math.PI * 2);
-  wheelCtx.strokeStyle = '#f8dd92';
-  wheelCtx.lineWidth = Math.max(2, Math.round(R * 0.005));
-  wheelCtx.stroke();
-
-  wheelCtx.beginPath();
   wheelCtx.arc(pointerBaseX - pointerHubRadius, cy, pointerCoreRadius, 0, Math.PI * 2);
-  wheelCtx.fillStyle = '#5c1a14';
+  wheelCtx.fillStyle = '#ffd7a6';
   wheelCtx.fill();
   wheelCtx.restore();
 }
