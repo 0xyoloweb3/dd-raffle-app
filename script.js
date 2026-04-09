@@ -128,14 +128,12 @@ const winnerPopupBody = document.getElementById('winner-popup-body');
 const modeTimerEls = {
   quick: document.getElementById('quick-timer'),
   roulette: document.getElementById('roulette-timer'),
-  wheel: document.getElementById('wheel-timer'),
   multi: document.getElementById('multi-timer'),
   battle: document.getElementById('battle-timer'),
 };
 const timerToggleEls = {
   quick: document.querySelector('[data-timer-toggle="quick"]'),
   roulette: document.querySelector('[data-timer-toggle="roulette"]'),
-  wheel: document.querySelector('[data-timer-toggle="wheel"]'),
   multi: document.querySelector('[data-timer-toggle="multi"]'),
   battle: document.querySelector('[data-timer-toggle="battle"]'),
 };
