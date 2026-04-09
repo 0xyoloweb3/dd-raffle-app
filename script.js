@@ -1,4 +1,4 @@
-const SAMPLE_PARTICIPANTS = [
+﻿const SAMPLE_PARTICIPANTS = [
   'Ava',
   'Noah',
   'Liam',
@@ -43,14 +43,14 @@ const WHEEL_COLORS = [
 ];
 
 const BATTLE_CHARACTERS = [
-  { id: 'knight', role: 'Knight', avatar: '🛡️', weapon: '⚔️', tint: '#d9c28b' },
-  { id: 'archer', role: 'Archer', avatar: '🏹', weapon: '🗡️', tint: '#87b06f' },
-  { id: 'mage', role: 'Mage', avatar: '🧙', weapon: '✨', tint: '#8ea7d8' },
-  { id: 'berserker', role: 'Berserker', avatar: '🪓', weapon: '🔥', tint: '#c88963' },
-  { id: 'rogue', role: 'Rogue', avatar: '🥷', weapon: '🗡️', tint: '#8b7d9f' },
-  { id: 'paladin', role: 'Paladin', avatar: '🛡️', weapon: '☀️', tint: '#d8b86f' },
-  { id: 'hunter', role: 'Hunter', avatar: '🪃', weapon: '🏹', tint: '#75a08f' },
-  { id: 'warlock', role: 'Warlock', avatar: '🔮', weapon: '☄️', tint: '#9a79ae' },
+  { id: 'knight', role: 'Knight', avatar: 'рџ›ЎпёЏ', weapon: 'вљ”пёЏ', tint: '#d9c28b' },
+  { id: 'archer', role: 'Archer', avatar: 'рџЏ№', weapon: 'рџ—ЎпёЏ', tint: '#87b06f' },
+  { id: 'mage', role: 'Mage', avatar: 'рџ§™', weapon: 'вњЁ', tint: '#8ea7d8' },
+  { id: 'berserker', role: 'Berserker', avatar: 'рџЄ“', weapon: 'рџ”Ґ', tint: '#c88963' },
+  { id: 'rogue', role: 'Rogue', avatar: 'рџҐ·', weapon: 'рџ—ЎпёЏ', tint: '#8b7d9f' },
+  { id: 'paladin', role: 'Paladin', avatar: 'рџ›ЎпёЏ', weapon: 'вЂпёЏ', tint: '#d8b86f' },
+  { id: 'hunter', role: 'Hunter', avatar: 'рџЄѓ', weapon: 'рџЏ№', tint: '#75a08f' },
+  { id: 'warlock', role: 'Warlock', avatar: 'рџ”®', weapon: 'в„пёЏ', tint: '#9a79ae' },
 ];
 
 let participants = [];
@@ -287,18 +287,18 @@ function extractNamesFromOcrText(text) {
       .replace(/^[#@]\s*/, '')
       .replace(/^\d+[\).\-\s]+/, '')
       .replace(/\s{2,}/g, ' ')
-      .replace(/[|\\/~^`"“”‘’<>[\]{}]+/g, '')
+      .replace(/[|\\/~^`"вЂњвЂќвЂвЂ™<>[\]{}]+/g, '')
       .trim();
 
     if (!candidate) return;
     if (candidate.length < 2 || candidate.length > 40) return;
-    if (!/[A-Za-zА-Яа-яІіЇїЄєҐґ]/.test(candidate)) return;
+    if (!/[A-Za-zРђ-РЇР°-СЏР†С–Р‡С—Р„С”ТђТ‘]/.test(candidate)) return;
     if (/^\d+$/.test(candidate)) return;
     if (/[!?=:;%]/.test(candidate)) return;
 
     candidate = candidate
-      .replace(/^[^A-Za-zА-Яа-яІіЇїЄєҐґ0-9_]+/, '')
-      .replace(/[^A-Za-zА-Яа-яІіЇїЄєҐґ0-9_.\-\s]+$/g, '')
+      .replace(/^[^A-Za-zРђ-РЇР°-СЏР†С–Р‡С—Р„С”ТђТ‘0-9_]+/, '')
+      .replace(/[^A-Za-zРђ-РЇР°-СЏР†С–Р‡С—Р„С”ТђТ‘0-9_.\-\s]+$/g, '')
       .trim();
 
     if (!candidate) return;
@@ -1198,17 +1198,46 @@ function drawWheel(angle = wheelAngle) {
   wheelCtx.lineWidth = 4;
   wheelCtx.stroke();
 
-  wheelCtx.fillStyle = '#e6c27a';
+  const pointerBaseX = cx - R + 10;
+  const pointerTipX = cx - R - 32;
+  const pointerHalfHeight = 24;
+  const pointerGradient = wheelCtx.createLinearGradient(pointerTipX, cy, pointerBaseX + 28, cy);
+  pointerGradient.addColorStop(0, '#fff1bf');
+  pointerGradient.addColorStop(0.42, '#efc66c');
+  pointerGradient.addColorStop(1, '#8f5829');
+
+  wheelCtx.save();
+  wheelCtx.shadowColor = 'rgba(16, 8, 3, 0.34)';
+  wheelCtx.shadowBlur = 16;
+  wheelCtx.shadowOffsetX = -2;
+  wheelCtx.shadowOffsetY = 4;
+
+  wheelCtx.fillStyle = pointerGradient;
   wheelCtx.beginPath();
-  wheelCtx.moveTo(cx - R - 8, cy);
-  wheelCtx.lineTo(cx - R + 18, cy - 14);
-  wheelCtx.lineTo(cx - R + 18, cy + 14);
+  wheelCtx.moveTo(pointerTipX, cy);
+  wheelCtx.lineTo(pointerBaseX + 20, cy - pointerHalfHeight);
+  wheelCtx.quadraticCurveTo(pointerBaseX + 36, cy - 5, pointerBaseX + 20, cy);
+  wheelCtx.quadraticCurveTo(pointerBaseX + 36, cy + 5, pointerBaseX + 20, cy + pointerHalfHeight);
   wheelCtx.closePath();
   wheelCtx.fill();
 
   wheelCtx.strokeStyle = '#5a3012';
+  wheelCtx.lineWidth = 4;
+  wheelCtx.stroke();
+
+  wheelCtx.beginPath();
+  wheelCtx.arc(pointerBaseX + 10, cy, 10, 0, Math.PI * 2);
+  wheelCtx.fillStyle = '#4b2b14';
+  wheelCtx.fill();
+  wheelCtx.strokeStyle = '#edc877';
   wheelCtx.lineWidth = 3;
   wheelCtx.stroke();
+
+  wheelCtx.beginPath();
+  wheelCtx.arc(pointerBaseX + 10, cy, 4, 0, Math.PI * 2);
+  wheelCtx.fillStyle = '#ffe3a0';
+  wheelCtx.fill();
+  wheelCtx.restore();
 }
 
 document.querySelectorAll('.duration-btn').forEach((btn) => {
@@ -1505,3 +1534,4 @@ setParticipantStatus(
   participants.length ? 'success' : ''
 );
 drawWheel();
+
