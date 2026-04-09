@@ -1198,43 +1198,49 @@ function drawWheel(angle = wheelAngle) {
   wheelCtx.lineWidth = 4;
   wheelCtx.stroke();
 
-  const pointerBaseX = cx - R - 22;
-  const pointerTipX = cx - R + 20;
-  const pointerHalfHeight = 24;
-  const pointerGradient = wheelCtx.createLinearGradient(pointerBaseX - 10, cy, pointerTipX, cy);
+  const pointerLength = Math.max(42, Math.round(R * 0.16));
+  const pointerInset = Math.max(18, Math.round(R * 0.035));
+  const pointerHalfHeight = Math.max(24, Math.round(R * 0.078));
+  const pointerCurveOffset = Math.max(16, Math.round(R * 0.05));
+  const pointerHubRadius = Math.max(10, Math.round(R * 0.03));
+  const pointerCoreRadius = Math.max(4, Math.round(R * 0.012));
+  const pointerStrokeWidth = Math.max(4, Math.round(R * 0.01));
+  const pointerBaseX = cx - R - pointerInset;
+  const pointerTipX = cx - R + pointerLength;
+  const pointerGradient = wheelCtx.createLinearGradient(pointerBaseX - pointerHubRadius, cy, pointerTipX, cy);
   pointerGradient.addColorStop(0, '#8f5829');
   pointerGradient.addColorStop(0.45, '#efc66c');
   pointerGradient.addColorStop(1, '#fff1bf');
 
   wheelCtx.save();
   wheelCtx.shadowColor = 'rgba(16, 8, 3, 0.34)';
-  wheelCtx.shadowBlur = 16;
+  wheelCtx.shadowBlur = Math.max(16, Math.round(R * 0.05));
   wheelCtx.shadowOffsetX = -2;
   wheelCtx.shadowOffsetY = 4;
 
   wheelCtx.fillStyle = pointerGradient;
   wheelCtx.beginPath();
   wheelCtx.moveTo(pointerBaseX, cy - pointerHalfHeight);
-  wheelCtx.quadraticCurveTo(pointerBaseX + 16, cy - 5, pointerBaseX, cy);
-  wheelCtx.quadraticCurveTo(pointerBaseX + 16, cy + 5, pointerBaseX, cy + pointerHalfHeight);
+  wheelCtx.quadraticCurveTo(pointerBaseX + pointerCurveOffset, cy - 6, pointerBaseX, cy);
+  wheelCtx.quadraticCurveTo(pointerBaseX + pointerCurveOffset, cy + 6, pointerBaseX, cy + pointerHalfHeight);
   wheelCtx.lineTo(pointerTipX, cy);
   wheelCtx.closePath();
   wheelCtx.fill();
 
   wheelCtx.strokeStyle = '#5a3012';
-  wheelCtx.lineWidth = 4;
+  wheelCtx.lineWidth = pointerStrokeWidth;
   wheelCtx.stroke();
 
   wheelCtx.beginPath();
-  wheelCtx.arc(pointerBaseX - 10, cy, 10, 0, Math.PI * 2);
+  wheelCtx.arc(pointerBaseX - pointerHubRadius, cy, pointerHubRadius, 0, Math.PI * 2);
   wheelCtx.fillStyle = '#4b2b14';
   wheelCtx.fill();
   wheelCtx.strokeStyle = '#edc877';
-  wheelCtx.lineWidth = 3;
+  wheelCtx.lineWidth = Math.max(3, Math.round(R * 0.008));
   wheelCtx.stroke();
 
   wheelCtx.beginPath();
-  wheelCtx.arc(pointerBaseX - 10, cy, 4, 0, Math.PI * 2);
+  wheelCtx.arc(pointerBaseX - pointerHubRadius, cy, pointerCoreRadius, 0, Math.PI * 2);
   wheelCtx.fillStyle = '#ffe3a0';
   wheelCtx.fill();
   wheelCtx.restore();
