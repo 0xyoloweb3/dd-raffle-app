@@ -1201,10 +1201,14 @@ body.battle-focus .battle-prototype-frame {
 
 .winner-popup-kicker {
   font-family: "Cinzel", Georgia, serif;
-  font-size: 12px;
-  letter-spacing: 0.22em;
+  font-size: clamp(20px, 3vw, 32px);
+  font-weight: 900;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--muted-soft);
+  color: #ffd98f;
+  text-shadow:
+    0 0 12px rgba(255, 101, 101, 0.22),
+    0 0 24px rgba(255, 207, 109, 0.26);
 }
 
 .winner-popup-title {

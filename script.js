@@ -382,7 +382,7 @@ function launchWinnerConfetti() {
 }
 
 function showWinnerPopup(winners) {
-  winnerPopupKicker.textContent = winners.length > 1 ? 'Winners' : 'Winner';
+  winnerPopupKicker.textContent = 'CONGRATSBRIA';
   winnerPopupBody.innerHTML = winners.map((name) => `<div>${escHtml(name)}</div>`).join('');
   launchWinnerConfetti();
   winnerPopup.hidden = false;
