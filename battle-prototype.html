@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Battle Prototype</title>
+  <script>
+    if (new URLSearchParams(window.location.search).get('embedded') === '1') {
+      document.documentElement.classList.add('battle-embedded');
+      document.addEventListener('DOMContentLoaded', function () {
+        document.body.classList.add('battle-embedded');
+      }, { once: true });
+    }
+  </script>
+  <link rel="stylesheet" href="battle-prototype.css" />
+</head>
+<body>
+  <main class="battle-prototype">
+    <section class="battle-shell">
+      <div class="battle-topbar">
+        <div>
+          <div class="battle-kicker">Prototype</div>
+          <h1>Battlebria Arena</h1>
+        </div>
+        <div class="battle-actions">
+          <div class="battle-mode-group">
+            <div class="battle-mode-switch" role="group" aria-label="Battle mode">
+              <button id="btn-battle-mode-normal" class="battle-btn battle-btn--mode is-active" type="button">Normal</button>
+              <button id="btn-battle-mode-mass" class="battle-btn battle-btn--mode" type="button">Mass</button>
+            </div>
+            <div class="battle-mode-note">Normal recommended up to 70. Mass recommended up to 150.</div>
+          </div>
+          <button id="btn-battle-hit-sound" class="battle-btn battle-btn--toggle is-active" type="button">Hit Sound: On</button>
+          <button id="btn-battle-shuffle" class="battle-btn">Shuffle</button>
+          <button id="btn-battle-reset" class="battle-btn">Reset</button>
+          <button id="btn-battle-start" class="battle-btn battle-btn--accent">Start Battle</button>
+        </div>
+      </div>
+
+      <div class="battle-controls">
+        <label class="battle-control">
+          <span>Participants</span>
+          <textarea id="battle-participants" spellcheck="false">Ava
+Noah
+Liam
+Mila
+Ethan
+Sofia
+Lucas
+Zoe
+Kai
+Nova
+Ezra
+Ruby</textarea>
+        </label>
+      </div>
+
+      <div class="battle-stage">
+        <canvas id="battle-canvas" width="1200" height="720"></canvas>
+        <button id="btn-battle-hit-sound-stage" class="battle-stage-toggle is-active" type="button">Hit Sound: On</button>
+        <div class="battle-alive-counter" id="battle-alive-counter">
+          <span class="battle-alive-counter__label">Alive</span>
+          <span class="battle-alive-counter__value" id="battle-alive-count">0</span>
+        </div>
+        <div class="battle-winner-modal" id="battle-winner-modal" hidden>
+          <div class="battle-winner-card">
+            <div class="battle-winner-kicker">Victory</div>
+            <div class="battle-winner-name" id="battle-winner-name">Winner</div>
+            <div class="battle-winner-subtitle">stands alone in the arena</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="battle-bottom">
+        <div class="battle-status" id="battle-status">Ready. Fighters will be assigned names from a test pool.</div>
+        <div class="battle-feed" id="battle-feed"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="battle-prototype.js"></script>
+</body>
+</html>
+
+
+

@@ -3,65 +3,118 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Raffle App</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Rafflebria</title>
+  <meta
+    name="description"
+    content="Fast raffle and giveaway picker with quick draw, strip roulette, spinning wheel, and multi-winner mode."
+  />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=20260408-0114" />
 </head>
 <body>
-
   <header class="header">
     <div class="header-inner">
-      <div class="logo">🎲 Raffle</div>
+        <div class="brand-block">
+          <div class="brand-logo-row">
+            <img class="brand-fire-gif" src="logo-fire.gif.gif" alt="" aria-hidden="true" />
+            <img class="brand-logo-image" src="logo-rollbria.png.png" alt="Rollbria" />
+          </div>
+          <div class="build-badge">Build 01:14</div>
+        </div>
+
       <div class="header-meta">
-        <span id="participant-count" class="participant-count">0 participants</span>
+        <div class="stat-pill stat-pill--accent">
+          <span class="stat-pill-label">Pool</span>
+          <span id="participant-count" class="participant-count">0 participants</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-pill-label">History</span>
+          <span id="history-count" class="stat-pill-value">0 draws</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-pill-label">Mode</span>
+          <span id="active-mode-label" class="stat-pill-value">Quick Draw</span>
+        </div>
       </div>
     </div>
   </header>
 
   <main class="layout">
-
-    <!-- LEFT: Participants -->
     <section class="panel panel--participants">
       <div class="panel-header">
         <h2>Participants</h2>
-        <button class="btn-icon" id="btn-clear-all" title="Clear all">✕ Clear</button>
       </div>
 
       <div class="add-row">
-        <input type="text" id="input-name" placeholder="Add name…" maxlength="50" />
+        <input type="text" id="input-name" placeholder="Add participant..." maxlength="50" />
         <button class="btn btn-accent" id="btn-add">Add</button>
       </div>
 
-      <div class="import-row">
-        <textarea id="input-bulk" placeholder="Bulk import: one name per line…" rows="3"></textarea>
-        <button class="btn" id="btn-import">Import</button>
+      <div class="participant-tools">
+        <button class="btn btn-soft" id="btn-dedupe">Remove duplicates</button>
+        <button class="btn btn-soft" id="btn-shuffle" title="Shuffle participants">Shuffle</button>
+        <button class="btn btn-soft" id="btn-clear-all" title="Clear all">Clear</button>
       </div>
+
+      <div class="import-row">
+        <textarea id="input-bulk" placeholder="Bulk import: one name per line..." rows="3"></textarea>
+        <div class="import-footer">
+          <span class="field-hint">One name per line. Existing names are skipped automatically.</span>
+          <button class="btn" id="btn-import">Import</button>
+        </div>
+      </div>
+
+      <div class="panel-status" id="participant-status">Ready to build your pool.</div>
 
       <ul class="participant-list" id="participant-list">
         <li class="list-empty">No participants yet</li>
       </ul>
     </section>
 
-    <!-- CENTER: Modes -->
     <section class="panel panel--main">
-
-      <div class="mode-tabs">
-        <button class="mode-tab active" data-mode="quick">⚡ Quick Draw</button>
-        <button class="mode-tab" data-mode="roulette">🎰 Roulette</button>
-        <button class="mode-tab" data-mode="multi">🏆 Multi Pick</button>
+      <div class="main-intro main-intro--idle" id="main-intro">
+        <div>
+          <span class="main-intro-kicker">Draw stage</span>
+        </div>
+        <p id="mode-description" class="mode-description">
+          Choose a raffle mode to see how this draw works and start the game.
+        </p>
       </div>
 
-      <!-- Quick Draw -->
-      <div class="mode-panel active" id="mode-quick">
+      <div class="mode-tabs">
+        <button class="mode-tab" data-mode="quick">Quickbria</button>
+        <button class="mode-tab" data-mode="roulette">Stripbria</button>
+        <button class="mode-tab" data-mode="wheel">Wheelbria</button>
+        <button class="mode-tab" data-mode="multi">Multibria</button>
+        <button class="mode-tab" data-mode="battle">Battlebria</button>
+      </div>
+
+      <div class="mode-panel" id="mode-quick">
         <div class="quick-stage">
           <div class="quick-winner" id="quick-winner">
             <span class="quick-winner-label">Winner</span>
-            <span class="quick-winner-name" id="quick-winner-name">—</span>
+            <span class="quick-winner-name" id="quick-winner-name">-</span>
           </div>
         </div>
-        <button class="btn btn-big btn-accent" id="btn-quick-draw">Draw!</button>
+        <div class="game-duration-row" data-duration-group="quick">
+          <label>Duration</label>
+          <div class="duration-btns">
+            <button class="duration-btn active" data-mode-duration="quick" data-duration="10">10s</button>
+            <button class="duration-btn" data-mode-duration="quick" data-duration="30">30s</button>
+            <button class="duration-btn" data-mode-duration="quick" data-duration="60">1m</button>
+            <button class="duration-btn" data-mode-duration="quick" data-duration="180">3m</button>
+          </div>
+          <div class="mode-timer-tools">
+            <span class="mode-timer" id="quick-timer">00:10</span>
+            <button class="timer-toggle" data-timer-toggle="quick" type="button">Hide timer</button>
+          </div>
+        </div>
+        <button class="btn btn-big btn-accent" id="btn-quick-draw">Draw</button>
       </div>
 
-      <!-- Roulette -->
       <div class="mode-panel" id="mode-roulette">
         <div class="roulette-stage">
           <div class="roulette-track-wrap">
@@ -70,38 +123,116 @@
           </div>
           <div class="roulette-result" id="roulette-result"></div>
         </div>
-        <button class="btn btn-big btn-accent" id="btn-spin">Spin!</button>
+        <div class="game-duration-row" data-duration-group="roulette">
+          <label>Duration</label>
+          <div class="duration-btns">
+            <button class="duration-btn active" data-mode-duration="roulette" data-duration="10">10s</button>
+            <button class="duration-btn" data-mode-duration="roulette" data-duration="30">30s</button>
+            <button class="duration-btn" data-mode-duration="roulette" data-duration="60">1m</button>
+            <button class="duration-btn" data-mode-duration="roulette" data-duration="180">3m</button>
+          </div>
+          <div class="mode-timer-tools">
+            <span class="mode-timer" id="roulette-timer">00:10</span>
+            <button class="timer-toggle" data-timer-toggle="roulette" type="button">Hide timer</button>
+          </div>
+        </div>
+        <button class="btn btn-big btn-accent" id="btn-spin">Spin Strip</button>
       </div>
 
-      <!-- Multi Pick -->
+      <div class="mode-panel" id="mode-wheel">
+        <div class="wheel-stage">
+          <canvas id="wheel-canvas" width="740" height="360"></canvas>
+        </div>
+
+        <div class="wheel-controls">
+          <div class="wheel-result-wrap">
+            <div class="wheel-result" id="wheel-result"></div>
+            <div class="wheel-debug" id="wheel-debug">
+              <span id="wheel-debug-progress">P 0%</span>
+              <span id="wheel-debug-velocity">V 0 deg/s</span>
+              <span id="wheel-debug-remaining">R 0 deg</span>
+            </div>
+          </div>
+          <div class="wheel-right-controls">
+            <div class="wheel-duration-row">
+              <label>Duration</label>
+              <div class="duration-btns">
+                <button class="duration-btn active" data-mode-duration="wheel" data-duration="10">10s</button>
+                <button class="duration-btn" data-mode-duration="wheel" data-duration="30">30s</button>
+                <button class="duration-btn" data-mode-duration="wheel" data-duration="60">1m</button>
+                <button class="duration-btn" data-mode-duration="wheel" data-duration="180">3m</button>
+              </div>
+              <div class="mode-timer-tools">
+                <span class="mode-timer" id="wheel-timer">00:10</span>
+                <button class="timer-toggle" data-timer-toggle="wheel" type="button">Hide timer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-big btn-accent" id="btn-wheel-spin">Spin the Wheel</button>
+      </div>
+
       <div class="mode-panel" id="mode-multi">
         <div class="multi-config">
           <label>Winners count</label>
           <div class="multi-count-row">
-            <button class="btn-icon" id="btn-winners-minus">−</button>
+            <button class="btn-icon" id="btn-winners-minus">-</button>
             <span id="winners-count">3</span>
             <button class="btn-icon" id="btn-winners-plus">+</button>
           </div>
         </div>
         <div class="multi-results" id="multi-results"></div>
-        <button class="btn btn-big btn-accent" id="btn-multi-draw">Pick Winners!</button>
+        <div class="game-duration-row" data-duration-group="multi">
+          <label>Duration</label>
+          <div class="duration-btns">
+            <button class="duration-btn active" data-mode-duration="multi" data-duration="10">10s</button>
+            <button class="duration-btn" data-mode-duration="multi" data-duration="30">30s</button>
+            <button class="duration-btn" data-mode-duration="multi" data-duration="60">1m</button>
+            <button class="duration-btn" data-mode-duration="multi" data-duration="180">3m</button>
+          </div>
+          <div class="mode-timer-tools">
+            <span class="mode-timer" id="multi-timer">00:10</span>
+            <button class="timer-toggle" data-timer-toggle="multi" type="button">Hide timer</button>
+          </div>
+        </div>
+        <button class="btn btn-big btn-accent" id="btn-multi-draw">Pick Winners</button>
       </div>
 
+      <div class="mode-panel" id="mode-battle">
+        <div class="battle-embed-shell">
+          <iframe
+            id="battle-prototype-frame"
+            class="battle-prototype-frame"
+            src="battle-prototype.html?embedded=1&v=20260409b"
+            title="Battlebria Arena"
+            loading="lazy"
+          ></iframe>
+        </div>
+      </div>
     </section>
 
-    <!-- RIGHT: History -->
     <section class="panel panel--history">
       <div class="panel-header">
         <h2>History</h2>
-        <button class="btn-icon" id="btn-clear-history" title="Clear history">✕</button>
+        <button class="btn-icon" id="btn-clear-history" title="Clear history">Clear</button>
+      </div>
+      <div class="history-helper">
+        Every result is logged here so the draw stays transparent after the animation ends.
       </div>
       <ul class="history-list" id="history-list">
         <li class="list-empty">No draws yet</li>
       </ul>
     </section>
-
   </main>
 
-  <script src="script.js"></script>
+  <div class="winner-popup" id="winner-popup" hidden>
+    <div class="winner-popup-card">
+      <button class="winner-popup-close" id="winner-popup-close" type="button">x</button>
+      <div class="winner-popup-kicker" id="winner-popup-kicker">Winner</div>
+      <div class="winner-popup-body" id="winner-popup-body"></div>
+    </div>
+  </div>
+
+  <script src="script.js?v=20260409-ai1"></script>
 </body>
 </html>
