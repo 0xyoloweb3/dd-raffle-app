@@ -1,4 +1,4 @@
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+﻿*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
   --bg: #161008;
@@ -669,12 +669,39 @@ textarea {
 
 .roulette-arrow {
   position: absolute;
-  top: 8px;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  font-size: 18px;
-  color: #e2b15d;
-  z-index: 2;
+  width: 44px;
+  height: 28px;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.roulette-arrow::before,
+.roulette-arrow::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+}
+
+.roulette-arrow::before {
+  left: 0;
+  width: 24px;
+  height: 8px;
+  transform: translateY(-50%);
+  border-radius: 999px;
+  background: linear-gradient(90deg, #5a3012, #f0ca78 38%, #8e5828 100%);
+  box-shadow: 0 0 0 2px rgba(47, 24, 10, 0.55), 0 4px 10px rgba(0, 0, 0, 0.28);
+}
+
+.roulette-arrow::after {
+  right: 0;
+  transform: translateY(-50%);
+  border-top: 14px solid transparent;
+  border-bottom: 14px solid transparent;
+  border-left: 20px solid #efc56c;
+  filter: drop-shadow(0 0 0 rgba(47, 24, 10, 0.55)) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.28));
 }
 
 .roulette-track {
@@ -1365,3 +1392,4 @@ body.battle-focus .battle-prototype-frame {
   }
   .quick-winner { padding: 32px 24px; }
 }
+
