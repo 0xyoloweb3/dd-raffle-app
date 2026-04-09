@@ -1231,8 +1231,10 @@ function drawWheel(angle = wheelAngle) {
   const pointerHubRadius = Math.max(10, Math.round(R * 0.03));
   const pointerCoreRadius = Math.max(4, Math.round(R * 0.012));
   const pointerStrokeWidth = Math.max(4, Math.round(R * 0.01));
-  const pointerBaseX = cx - R - pointerInset;
-  const pointerTipX = cx - R + pointerLength;
+  const pointerOuterOffset = Math.max(6, Math.round(R * 0.012));
+  const pointerLeftLimit = pointerHubRadius + 8;
+  const pointerTipX = cx - R + pointerOuterOffset + pointerLength;
+  const pointerBaseX = Math.max(pointerLeftLimit + pointerHubRadius, pointerTipX - pointerLength - pointerInset);
   const pointerGradient = wheelCtx.createLinearGradient(pointerBaseX - pointerHubRadius, cy, pointerTipX, cy);
   pointerGradient.addColorStop(0, '#5f1714');
   pointerGradient.addColorStop(0.3, '#9e241f');
