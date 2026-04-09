@@ -1224,17 +1224,17 @@ function drawWheel(angle = wheelAngle) {
   wheelCtx.lineWidth = 4;
   wheelCtx.stroke();
 
-  const pointerLength = Math.max(40, Math.round(R * 0.145));
-  const pointerInset = Math.max(16, Math.round(R * 0.03));
-  const pointerHalfHeight = Math.max(22, Math.round(R * 0.07));
-  const pointerCurveOffset = Math.max(14, Math.round(R * 0.042));
-  const pointerHubRadius = Math.max(10, Math.round(R * 0.03));
-  const pointerCoreRadius = Math.max(4, Math.round(R * 0.012));
-  const pointerStrokeWidth = Math.max(4, Math.round(R * 0.01));
-  const pointerOuterOffset = Math.max(6, Math.round(R * 0.012));
-  const pointerLeftLimit = pointerHubRadius + 8;
+  const pointerLength = Math.round(Math.min(72, Math.max(52, R * 0.11)));
+  const pointerInset = Math.round(Math.min(22, Math.max(16, R * 0.022)));
+  const pointerHalfHeight = Math.round(Math.min(28, Math.max(20, R * 0.045)));
+  const pointerCurveOffset = Math.round(Math.min(18, Math.max(12, R * 0.028)));
+  const pointerHubRadius = Math.round(Math.min(14, Math.max(10, R * 0.022)));
+  const pointerCoreRadius = Math.round(Math.min(6, Math.max(4, R * 0.01)));
+  const pointerStrokeWidth = Math.round(Math.min(5, Math.max(3, R * 0.008)));
+  const pointerOuterOffset = Math.round(Math.min(18, Math.max(10, R * 0.018)));
+  const pointerGapFromEdge = Math.round(Math.min(20, Math.max(12, R * 0.02)));
   const pointerTipX = cx - R + pointerOuterOffset + pointerLength;
-  const pointerBaseX = Math.max(pointerLeftLimit + pointerHubRadius, pointerTipX - pointerLength - pointerInset);
+  const pointerBaseX = pointerGapFromEdge + pointerHubRadius * 2;
   const pointerGradient = wheelCtx.createLinearGradient(pointerBaseX - pointerHubRadius, cy, pointerTipX, cy);
   pointerGradient.addColorStop(0, '#5f1714');
   pointerGradient.addColorStop(0.3, '#9e241f');
