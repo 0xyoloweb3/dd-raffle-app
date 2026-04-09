@@ -121,6 +121,7 @@ const battlePrototypeFrame = document.getElementById('battle-prototype-frame');
 const historyList = document.getElementById('history-list');
 const btnClearHistory = document.getElementById('btn-clear-history');
 const winnerPopup = document.getElementById('winner-popup');
+const winnerPopupConfetti = document.getElementById('winner-popup-confetti');
 const winnerPopupClose = document.getElementById('winner-popup-close');
 const winnerPopupKicker = document.getElementById('winner-popup-kicker');
 const winnerPopupBody = document.getElementById('winner-popup-body');
@@ -358,9 +359,32 @@ function updateHeaderStats() {
   mainIntro.classList.toggle('main-intro--idle', !currentMode);
 }
 
+function launchWinnerConfetti() {
+  if (!winnerPopupConfetti) return;
+
+  winnerPopupConfetti.innerHTML = '';
+  const colors = ['#ff5f5f', '#ffd36b', '#ff8c42', '#ffe7a8', '#f05a7e'];
+  const pieces = 28;
+
+  for (let i = 0; i < pieces; i++) {
+    const piece = document.createElement('span');
+    piece.className = 'winner-popup-confetti-piece';
+    piece.style.left = `${Math.random() * 100}%`;
+    piece.style.background = colors[i % colors.length];
+    piece.style.animationDelay = `${Math.random() * 0.28}s`;
+    piece.style.animationDuration = `${1.55 + Math.random() * 0.75}s`;
+    piece.style.setProperty('--confetti-x', `${(Math.random() * 42) - 21}vw`);
+    piece.style.setProperty('--confetti-rotate', `${320 + Math.round(Math.random() * 420)}deg`);
+    piece.style.width = `${8 + Math.round(Math.random() * 5)}px`;
+    piece.style.height = `${14 + Math.round(Math.random() * 10)}px`;
+    winnerPopupConfetti.appendChild(piece);
+  }
+}
+
 function showWinnerPopup(winners) {
   winnerPopupKicker.textContent = winners.length > 1 ? 'Winners' : 'Winner';
   winnerPopupBody.innerHTML = winners.map((name) => `<div>${escHtml(name)}</div>`).join('');
+  launchWinnerConfetti();
   winnerPopup.hidden = false;
   playWinnerTheme();
 }
