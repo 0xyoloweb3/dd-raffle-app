@@ -111,6 +111,15 @@ body::before {
   gap: 6px;
 }
 
+.brand-banner-image {
+  display: block;
+  width: clamp(260px, 24vw, 430px);
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.28));
+}
+
 .brand-fire-gif {
   width: 40px;
   height: 40px;
