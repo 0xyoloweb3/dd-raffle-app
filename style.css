@@ -77,19 +77,51 @@ body::before {
 }
 
 .brand-block {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0;
-  max-width: 540px;
-  height: 113px;
-  justify-content: center;
+  width: clamp(340px, 28vw, 460px);
+  max-width: none;
+  min-height: 136px;
+  padding: 16px 26px 30px;
+  justify-content: flex-start;
   overflow: visible;
+  background:
+    linear-gradient(180deg, rgba(95, 96, 162, 0.96), rgba(62, 61, 120, 0.96) 58%, rgba(79, 72, 132, 0.94));
+  clip-path: polygon(7% 0, 93% 0, 97% 11%, 97% 78%, 70% 92%, 50% 100%, 30% 92%, 3% 78%, 3% 11%);
+  box-shadow:
+    inset 0 0 0 3px rgba(215, 170, 95, 0.52),
+    inset 0 0 0 7px rgba(107, 71, 34, 0.38),
+    0 14px 28px rgba(0, 0, 0, 0.22);
+}
+
+.brand-block::before,
+.brand-block::after {
+  content: "";
+  position: absolute;
+  top: 14px;
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #f0d9a6, #b7853b);
+  box-shadow: 0 0 0 2px rgba(90, 58, 28, 0.7);
+}
+
+.brand-block::before {
+  left: -6px;
+  transform: rotate(45deg);
+}
+
+.brand-block::after {
+  right: -6px;
+  transform: rotate(45deg);
 }
 
 .build-badge {
-  margin-top: 2px;
-  margin-left: -120px;
-  color: rgba(240, 217, 166, 0.72);
+  margin-top: 6px;
+  margin-left: 66px;
+  color: rgba(240, 217, 166, 0.76);
   font-family: "Cinzel", Georgia, serif;
   font-size: 10px;
   letter-spacing: 0.18em;
@@ -99,16 +131,16 @@ body::before {
 .brand-logo-row {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 8px;
 }
 
 .brand-fire-gif {
-  width: 113px;
-  height: 113px;
+  width: 58px;
+  height: 58px;
   flex-shrink: 0;
   image-rendering: pixelated;
   filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
-  transform: translateX(-11px);
+  transform: none;
 }
 
 .brand-kicker,
@@ -124,11 +156,11 @@ body::before {
 
 .brand-logo-image {
   display: block;
-  width: clamp(134px, 17.9vw, 257px);
+  width: clamp(210px, 17vw, 300px);
   height: auto;
   image-rendering: auto;
   filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.35));
-  transform: translate(-60px, 12px);
+  transform: none;
 }
 
 .header-meta {
@@ -1548,6 +1580,18 @@ body.battle-focus .battle-prototype-frame {
     align-items: stretch;
   }
   .quick-winner { padding: 32px 24px; }
+  .brand-block {
+    width: 100%;
+    max-width: 360px;
+    min-height: 118px;
+    padding: 14px 20px 26px;
+  }
+  .brand-logo-image {
+    width: min(250px, 100%);
+  }
+  .build-badge {
+    margin-left: 58px;
+  }
 }
 
 
