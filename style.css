@@ -565,25 +565,30 @@ textarea {
 
 .participants-board__add-row input {
   padding: 8px 14px 9px;
-  border: 1px solid rgba(165, 114, 69, 0.18);
+  border: 2px solid rgba(255, 58, 58, 0.95);
   border-radius: 11px;
-  color: #edd7aa;
-  background: rgba(28, 14, 9, 0.42);
-  box-shadow: inset 0 0 0 1px rgba(252, 223, 172, 0.04);
+  color: #fff1ea;
+  background: rgba(120, 10, 10, 0.34);
+  box-shadow:
+    0 0 0 1px rgba(255, 120, 120, 0.22),
+    0 0 18px rgba(255, 44, 44, 0.22),
+    inset 0 0 0 1px rgba(255, 180, 180, 0.08);
   position: relative;
   z-index: 3;
   cursor: text;
 }
 
 .participants-board__add-row input::placeholder {
-  color: rgba(222, 193, 143, 0.55);
+  color: rgba(255, 214, 214, 0.82);
 }
 
 .participants-board__add-row input:focus,
 .participants-board__import textarea:focus {
-  border-color: rgba(182, 136, 82, 0.3);
-  box-shadow: 0 0 0 3px rgba(145, 98, 49, 0.08);
-  background: rgba(238, 219, 179, 0.28);
+  border-color: rgba(255, 120, 120, 1);
+  box-shadow:
+    0 0 0 3px rgba(255, 54, 54, 0.18),
+    0 0 26px rgba(255, 44, 44, 0.28);
+  background: rgba(145, 16, 16, 0.42);
 }
 
 .participants-board__add-row .board-move-slot--button {
