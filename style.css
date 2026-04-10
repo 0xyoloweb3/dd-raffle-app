@@ -121,7 +121,14 @@ body::before {
   align-items: flex-start;
   gap: 6px;
   padding: 8px 22px 0 16px;
-  pointer-events: none;
+  pointer-events: auto;
+  transform: translate(var(--brand-drag-x, 0px), var(--brand-drag-y, 0px));
+  cursor: grab;
+  touch-action: none;
+}
+
+.brand-banner-overlay.is-dragging {
+  cursor: grabbing;
 }
 
 .brand-fire-gif {

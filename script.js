@@ -75,6 +75,8 @@ let modeTimerVisible = {
 let wheelTabActive = false;
 let idleAnimId = null;
 let currentMode = null;
+let brandDragPosition = { x: 0, y: 0 };
+let activeBrandDrag = null;
 
 const inputName = document.getElementById('input-name');
 const btnAdd = document.getElementById('btn-add');
@@ -90,6 +92,7 @@ const historyCount = document.getElementById('history-count');
 const activeModeLabel = document.getElementById('active-mode-label');
 const modeDescription = document.getElementById('mode-description');
 const mainIntro = document.getElementById('main-intro');
+const brandBannerOverlay = document.getElementById('brand-banner-overlay');
 
 const btnQuickDraw = document.getElementById('btn-quick-draw');
 const quickWinner = document.getElementById('quick-winner');
@@ -152,6 +155,7 @@ const STRIP_ITEMS_PER_SECOND = 5.2;
 const WHEEL_BASE_ROTATIONS_PER_SECOND = 0.96;
 let activeSpinPlan = null;
 const BATTLE_PARTICIPANTS_STORAGE_KEY = 'rollbria-battle-participants';
+const BRAND_DRAG_STORAGE_KEY = 'rollbria-brand-drag';
 let lastBattleSyncSignature = null;
 let winnerThemeAudio = null;
 let uiAudioContext = null;
@@ -206,6 +210,65 @@ function setParticipantStatus(text, tone = '') {
   participantStatus.textContent = text;
   participantStatus.className = 'panel-status';
   if (tone) participantStatus.classList.add(`is-${tone}`);
+}
+
+function applyBrandDragPosition() {
+  if (!brandBannerOverlay) return;
+  brandBannerOverlay.style.setProperty('--brand-drag-x', `${brandDragPosition.x}px`);
+  brandBannerOverlay.style.setProperty('--brand-drag-y', `${brandDragPosition.y}px`);
+}
+
+function saveBrandDragPosition() {
+  try {
+    localStorage.setItem(BRAND_DRAG_STORAGE_KEY, JSON.stringify(brandDragPosition));
+  } catch (_) {
+    // Ignore storage issues.
+  }
+}
+
+function resetBrandDragPosition() {
+  brandDragPosition = { x: 0, y: 0 };
+  applyBrandDragPosition();
+  saveBrandDragPosition();
+}
+
+function setupBrandDrag() {
+  if (!brandBannerOverlay) return;
+
+  applyBrandDragPosition();
+
+  brandBannerOverlay.addEventListener('pointerdown', (event) => {
+    if (event.button !== 0) return;
+    activeBrandDrag = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: brandDragPosition.x,
+      originY: brandDragPosition.y,
+    };
+    brandBannerOverlay.classList.add('is-dragging');
+    brandBannerOverlay.setPointerCapture(event.pointerId);
+  });
+
+  brandBannerOverlay.addEventListener('pointermove', (event) => {
+    if (!activeBrandDrag || event.pointerId !== activeBrandDrag.pointerId) return;
+    brandDragPosition = {
+      x: activeBrandDrag.originX + (event.clientX - activeBrandDrag.startX),
+      y: activeBrandDrag.originY + (event.clientY - activeBrandDrag.startY),
+    };
+    applyBrandDragPosition();
+  });
+
+  function finishBrandDrag(event) {
+    if (!activeBrandDrag || event.pointerId !== activeBrandDrag.pointerId) return;
+    brandBannerOverlay.classList.remove('is-dragging');
+    saveBrandDragPosition();
+    activeBrandDrag = null;
+  }
+
+  brandBannerOverlay.addEventListener('pointerup', finishBrandDrag);
+  brandBannerOverlay.addEventListener('pointercancel', finishBrandDrag);
+  brandBannerOverlay.addEventListener('dblclick', resetBrandDragPosition);
 }
 
 function getWinnerThemeAudio() {
@@ -1532,6 +1595,7 @@ function load() {
     const storedWinnersCount = localStorage.getItem('raffle_winners_count');
     const storedDurations = localStorage.getItem('raffle_mode_durations');
     const storedTimerVisible = localStorage.getItem('raffle_mode_timer_visible');
+    const storedBrandDrag = localStorage.getItem(BRAND_DRAG_STORAGE_KEY);
 
     if (storedParticipants) participants = JSON.parse(storedParticipants);
     if (storedHistory) history = JSON.parse(storedHistory);
@@ -1548,6 +1612,12 @@ function load() {
     if (storedTimerVisible) {
       modeTimerVisible = { ...modeTimerVisible, ...JSON.parse(storedTimerVisible) };
     }
+    if (storedBrandDrag) {
+      const parsedBrandDrag = JSON.parse(storedBrandDrag);
+      if (Number.isFinite(parsedBrandDrag?.x) && Number.isFinite(parsedBrandDrag?.y)) {
+        brandDragPosition = { x: parsedBrandDrag.x, y: parsedBrandDrag.y };
+      }
+    }
   } catch {}
 }
 
@@ -1557,6 +1627,7 @@ winnerPopup.addEventListener('click', (e) => {
 });
 
 load();
+setupBrandDrag();
 Object.keys(modeTimerEls).forEach((mode) => syncTimerToggle(mode));
 renderParticipants();
 renderHistory();
