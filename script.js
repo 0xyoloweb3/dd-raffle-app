@@ -953,7 +953,7 @@ function addParticipant(name, options = {}) {
   const clean = name.trim().replace(/\s+/g, ' ');
   if (!clean) return { added: false, reason: 'empty' };
   if (hasParticipant(clean)) return { added: false, reason: 'duplicate' };
-  participants.push(clean);
+  participants.unshift(clean);
   if (!options.silent) {
     renderParticipants();
     save();
