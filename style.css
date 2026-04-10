@@ -305,6 +305,7 @@ body::before {
 
 .board-move-slot > * {
   width: 100%;
+  pointer-events: auto;
 }
 
 .board-move-slot--full {
@@ -559,6 +560,7 @@ textarea {
   flex: 1;
   min-width: 0;
   max-width: calc(100% - 64px);
+  z-index: 2;
 }
 
 .participants-board__add-row input {
@@ -613,8 +615,8 @@ textarea {
   border: none;
   background: transparent;
   box-shadow: none;
-  color: #24150a;
-  text-shadow: none;
+  color: #f4e2bc;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.52);
 }
 
 .participants-board .btn-accent:hover {
@@ -691,17 +693,7 @@ textarea {
 }
 
 .participants-board__status {
-  top: 49.3%;
-  padding: 8px 10px;
-  border: 1px solid rgba(134, 88, 44, 0.14);
-  border-radius: 12px;
-  color: rgba(89, 58, 28, 0.82);
-  background: rgba(245, 232, 198, 0.18);
-}
-
-.participants-board__status.is-success,
-.participants-board__status.is-warn {
-  background: rgba(245, 232, 198, 0.22);
+  display: none !important;
 }
 
 .participants-board__list {
