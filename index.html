@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=20260410-polish1" />
+  <link rel="stylesheet" href="style.css?v=20260409-battleheight1" />
 </head>
 <body>
   <header class="header">
@@ -27,7 +27,6 @@
             <img class="brand-fire-gif" src="logo-fire.gif.gif" alt="" aria-hidden="true" />
             <img class="brand-logo-image" src="logo-rollbria.png.png" alt="Rollbria" />
           </div>
-          <div class="brand-note">Live raffle stage for streams, giveaways, and community drops.</div>
           <div class="build-badge">Build 01:14</div>
         </div>
 
@@ -52,12 +51,6 @@
     <section class="panel panel--participants">
       <div class="panel-header">
         <h2>Participants</h2>
-      </div>
-
-      <div class="panel-callout panel-callout--participants">
-        <div class="panel-callout-kicker">Onboarding</div>
-        <div class="panel-callout-title">1. Build your pool</div>
-        <p>Paste names, clean duplicates, shuffle the lineup, then push them into any reveal mode.</p>
       </div>
 
       <div class="add-row">
@@ -88,85 +81,12 @@
 
     <section class="panel panel--main">
       <div class="main-intro main-intro--idle" id="main-intro">
-        <div class="main-intro-copy">
-          <span class="main-intro-kicker">Rollbria Live Stage</span>
-          <h1 class="main-hero-title">A dramatic raffle board built for fast picks, big reveals, and stream-ready moments.</h1>
-          <p id="mode-description" class="mode-description">
-            Choose a raffle mode to see how this draw works and start the game.
-          </p>
-          <div class="main-hero-tags">
-            <span class="hero-tag">Live giveaways</span>
-            <span class="hero-tag">Community events</span>
-            <span class="hero-tag">Instant winner reveals</span>
-          </div>
+        <div>
+          <span class="main-intro-kicker">Draw stage</span>
         </div>
-        <div class="main-intro-side">
-          <div class="hero-proof">
-            <div class="hero-proof-item">
-              <span class="hero-proof-value">5</span>
-              <span class="hero-proof-label">Game modes</span>
-            </div>
-            <div class="hero-proof-item">
-              <span class="hero-proof-value">3</span>
-              <span class="hero-proof-label">Steps to launch</span>
-            </div>
-            <div class="hero-proof-item">
-              <span class="hero-proof-value">1</span>
-              <span class="hero-proof-label">Winner story</span>
-            </div>
-          </div>
-          <div class="hero-steps">
-            <div class="hero-step">
-              <span class="hero-step-index">1</span>
-              <div>
-                <strong>Add participants</strong>
-                <span>Import or type names, then clean duplicates.</span>
-              </div>
-            </div>
-            <div class="hero-step">
-              <span class="hero-step-index">2</span>
-              <div>
-                <strong>Choose the vibe</strong>
-                <span>Use Quickbria, Stripbria, Wheelbria, Multibria, or Battlebria.</span>
-              </div>
-            </div>
-            <div class="hero-step">
-              <span class="hero-step-index">3</span>
-              <div>
-                <strong>Run the reveal</strong>
-                <span>Let the animation land, log the result, and celebrate the winner.</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="mode-preview-grid">
-        <button class="mode-preview-card" data-select-mode="quick" type="button">
-          <span class="mode-preview-kicker">Fastest</span>
-          <span class="mode-preview-title">Quickbria</span>
-          <span class="mode-preview-copy">Instant winner pick for fast-moving chats and repeated drops.</span>
-        </button>
-        <button class="mode-preview-card" data-select-mode="roulette" type="button">
-          <span class="mode-preview-kicker">Suspense</span>
-          <span class="mode-preview-title">Stripbria</span>
-          <span class="mode-preview-copy">Horizontal roulette with a clean stop and easy-to-read finish.</span>
-        </button>
-        <button class="mode-preview-card" data-select-mode="wheel" type="button">
-          <span class="mode-preview-kicker">Showpiece</span>
-          <span class="mode-preview-title">Wheelbria</span>
-          <span class="mode-preview-copy">Big visual wheel for dramatic full-screen winner reveals.</span>
-        </button>
-        <button class="mode-preview-card" data-select-mode="multi" type="button">
-          <span class="mode-preview-kicker">Batch picks</span>
-          <span class="mode-preview-title">Multibria</span>
-          <span class="mode-preview-copy">Pull multiple winners at once without repeating the same entrant.</span>
-        </button>
-        <button class="mode-preview-card" data-select-mode="battle" type="button">
-          <span class="mode-preview-kicker">Crowd favorite</span>
-          <span class="mode-preview-title">Battlebria</span>
-          <span class="mode-preview-copy">Turn entrants into fighters and let the arena decide the survivor.</span>
-        </button>
+        <p id="mode-description" class="mode-description">
+          Choose a raffle mode to see how this draw works and start the game.
+        </p>
       </div>
 
       <div class="mode-tabs">
@@ -298,11 +218,6 @@
         <h2>History</h2>
         <button class="btn-icon" id="btn-clear-history" title="Clear history">Clear</button>
       </div>
-      <div class="panel-callout panel-callout--history">
-        <div class="panel-callout-kicker">Transparency</div>
-        <div class="panel-callout-title">Every draw leaves a trail</div>
-        <p>Mode, winner set, and timestamp stay visible so each reveal still feels trustworthy after the animation ends.</p>
-      </div>
       <div class="history-helper">
         Every result is logged here so the draw stays transparent after the animation ends.
       </div>
@@ -321,7 +236,7 @@
     </div>
   </div>
 
-  <script src="script.js?v=20260410-polish1"></script>
+  <script src="script.js?v=20260409-ai15"></script>
 </body>
 </html>
 
