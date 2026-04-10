@@ -435,27 +435,9 @@ function ensureParticipantsBoardElementVisible(key) {
 function setupParticipantsBoardEditor() {
   if (!participantsBoard) return;
 
-  const isFormControl = (target) => target instanceof HTMLElement && !!target.closest('input, textarea');
-
   participantsBoardMovableEls.forEach((element) => {
     const key = element.dataset.boardMove;
     participantsBoardLayoutState[key] = participantsBoardLayoutState[key] || { x: 0, y: 0, scale: 1 };
-    element.addEventListener('click', (event) => {
-      const focusTarget = element.querySelector('input, textarea');
-      if (element.dataset.boardSuppressClick === 'true' && !event.shiftKey) {
-        element.dataset.boardSuppressClick = 'false';
-        if (focusTarget) {
-          focusTarget.focus();
-          if (focusTarget.select) focusTarget.select();
-        }
-        return;
-      }
-      if (event.shiftKey || element.dataset.boardSuppressClick === 'true') {
-        event.preventDefault();
-        event.stopPropagation();
-        element.dataset.boardSuppressClick = 'false';
-      }
-    });
 
     const focusTarget = element.querySelector('input, textarea');
     if (focusTarget) {
@@ -468,73 +450,6 @@ function setupParticipantsBoardEditor() {
       });
     }
   });
-
-  participantsBoard.addEventListener('pointerdown', (event) => {
-    if (event.button !== 0 || !event.shiftKey) return;
-    if (isFormControl(event.target)) return;
-    const moveTarget = event.target.closest('[data-board-move]');
-    if (!moveTarget || !participantsBoard.contains(moveTarget)) return;
-    const key = moveTarget.dataset.boardMove;
-    activeParticipantsBoardDrag = {
-      key,
-      pointerId: event.pointerId,
-      startX: event.clientX,
-      startY: event.clientY,
-      originX: participantsBoardLayoutState[key]?.x || 0,
-      originY: participantsBoardLayoutState[key]?.y || 0,
-      element: moveTarget,
-      moved: false,
-    };
-    participantsBoard.classList.add('is-edit-mode');
-    moveTarget.classList.add('is-dragging');
-    event.preventDefault();
-    moveTarget.setPointerCapture(event.pointerId);
-  });
-
-  participantsBoard.addEventListener('pointermove', (event) => {
-    if (!activeParticipantsBoardDrag || activeParticipantsBoardDrag.pointerId !== event.pointerId) return;
-    const deltaX = event.clientX - activeParticipantsBoardDrag.startX;
-    const deltaY = event.clientY - activeParticipantsBoardDrag.startY;
-    if (Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2) {
-      activeParticipantsBoardDrag.moved = true;
-    }
-    participantsBoardLayoutState[activeParticipantsBoardDrag.key] = {
-      x: activeParticipantsBoardDrag.originX + deltaX,
-      y: activeParticipantsBoardDrag.originY + deltaY,
-    };
-    applyParticipantsBoardLayout();
-  });
-
-  const finishParticipantsBoardDrag = (event) => {
-    if (!activeParticipantsBoardDrag || activeParticipantsBoardDrag.pointerId !== event.pointerId) return;
-    activeParticipantsBoardDrag.element.classList.remove('is-dragging');
-    participantsBoard.classList.remove('is-edit-mode');
-    if (activeParticipantsBoardDrag.moved) {
-      activeParticipantsBoardDrag.element.dataset.boardSuppressClick = 'true';
-    }
-    saveParticipantsBoardState();
-    activeParticipantsBoardDrag = null;
-  };
-
-  participantsBoard.addEventListener('pointerup', finishParticipantsBoardDrag);
-  participantsBoard.addEventListener('pointercancel', finishParticipantsBoardDrag);
-
-  participantsBoard.addEventListener('wheel', (event) => {
-    if (!event.altKey) return;
-    if (isFormControl(event.target)) return;
-    const moveTarget = event.target.closest('[data-board-move]');
-    if (!moveTarget || !participantsBoard.contains(moveTarget)) return;
-    const key = moveTarget.dataset.boardMove;
-    const current = participantsBoardLayoutState[key] || { x: 0, y: 0, scale: 1 };
-    const nextScale = Math.min(1.8, Math.max(0.55, (current.scale ?? 1) + (event.deltaY < 0 ? 0.05 : -0.05)));
-    participantsBoardLayoutState[key] = {
-      ...current,
-      scale: Number(nextScale.toFixed(2)),
-    };
-    event.preventDefault();
-    applyParticipantsBoardLayout();
-    saveParticipantsBoardState();
-  }, { passive: false });
 
   participantsBoardTextEls.forEach((element) => {
     element.dataset.defaultBoardText = getParticipantsBoardTextValue(element);
@@ -550,11 +465,6 @@ function setupParticipantsBoardEditor() {
       applyParticipantsBoardText();
       saveParticipantsBoardState();
     });
-  });
-
-  participantsBoard.addEventListener('dblclick', (event) => {
-    if (!event.shiftKey || event.target !== participantsBoard) return;
-    resetParticipantsBoardState();
   });
 
   applyParticipantsBoardLayout();
