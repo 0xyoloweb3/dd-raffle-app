@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=20260410-participantsboard2" />
+  <link rel="stylesheet" href="style.css?v=20260410-participantsboard3" />
 </head>
 <body>
   <header class="header">
@@ -55,8 +55,8 @@
       </div>
 
       <div class="add-row participants-board__add-row">
-        <div class="participants-board__input-shell">
-          <input class="participants-board__input-field" type="text" id="input-name" placeholder="Add users: comma, ; or | separated" maxlength="400" data-board-text="input-name-placeholder" data-board-text-type="placeholder" />
+        <div class="participants-board__input-shell" style="position:absolute;left:0;top:0;width:calc(100% - 66px);height:100%;z-index:9999;display:block;">
+          <input class="participants-board__input-field" type="text" id="input-name" placeholder="Add users: comma, ; or | separated" maxlength="400" data-board-text="input-name-placeholder" data-board-text-type="placeholder" style="display:block;width:100%;height:100%;padding:8px 14px 9px;border:2px solid rgba(255,58,58,.95);border-radius:11px;background:rgba(120,10,10,.34);color:#fff1ea;box-shadow:0 0 0 1px rgba(255,120,120,.22),0 0 18px rgba(255,44,44,.22),inset 0 0 0 1px rgba(255,180,180,.08);position:relative;z-index:10000;pointer-events:auto;" />
         </div>
         <div class="board-move-slot board-move-slot--button" data-board-move="btn-add">
           <button class="btn btn-accent" id="btn-add" data-board-text="btn-add-label">Add</button>
@@ -251,7 +251,7 @@
     </div>
   </div>
 
-  <script src="script.js?v=20260409-ai15"></script>
+  <script src="script.js?v=20260410-ai16"></script>
 </body>
 </html>
 
