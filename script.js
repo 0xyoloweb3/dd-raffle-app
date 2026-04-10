@@ -90,6 +90,7 @@ const historyCount = document.getElementById('history-count');
 const activeModeLabel = document.getElementById('active-mode-label');
 const modeDescription = document.getElementById('mode-description');
 const mainIntro = document.getElementById('main-intro');
+const modePreviewCards = Array.from(document.querySelectorAll('.mode-preview-card'));
 
 const btnQuickDraw = document.getElementById('btn-quick-draw');
 const quickWinner = document.getElementById('quick-winner');
@@ -355,6 +356,33 @@ function updateHeaderStats() {
     ? MODE_META[currentMode].description
     : 'Choose a raffle mode to see how this draw works and start the game.';
   mainIntro.classList.toggle('main-intro--idle', !currentMode);
+  modePreviewCards.forEach((card) => {
+    card.classList.toggle('is-active', card.dataset.selectMode === currentMode);
+  });
+}
+
+function getParticipantsEmptyMarkup() {
+  return `
+    <li class="list-empty">
+      <div class="list-empty-card">
+        <div class="list-empty-kicker">Pool empty</div>
+        <div class="list-empty-title">Add your first entrants</div>
+        <div class="list-empty-copy">Type names one by one or paste a bulk list to get Rollbria ready for a live draw.</div>
+      </div>
+    </li>
+  `;
+}
+
+function getHistoryEmptyMarkup() {
+  return `
+    <li class="list-empty">
+      <div class="list-empty-card">
+        <div class="list-empty-kicker">No history yet</div>
+        <div class="list-empty-title">The reveal log will appear here</div>
+        <div class="list-empty-copy">Every finished draw stores its mode, winners, and timestamp so the result stays transparent.</div>
+      </div>
+    </li>
+  `;
 }
 
 function launchWinnerConfetti() {
@@ -707,7 +735,7 @@ function removeParticipant(idx) {
 function renderParticipants() {
   updateHeaderStats();
   if (!participants.length) {
-    participantList.innerHTML = '<li class="list-empty">No participants yet</li>';
+    participantList.innerHTML = getParticipantsEmptyMarkup();
     if (wheelTabActive && !isSpinning) drawWheel();
     syncBattlePrototypeParticipants();
     return;
@@ -901,27 +929,31 @@ window.addEventListener('message', (event) => {
   }
 });
 
+function setCurrentMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-tab').forEach((item) => item.classList.toggle('active', item.dataset.mode === mode));
+  document.querySelectorAll('.mode-panel').forEach((panel) => panel.classList.toggle('active', panel.id === `mode-${mode}`));
+  updateHeaderStats();
+  if (currentMode === 'wheel') {
+    wheelTabActive = true;
+    startIdleAnim();
+  } else {
+    stopIdleAnim();
+    setWheelFocus(false);
+  }
+  if (currentMode === 'battle') {
+    syncBattlePrototypeParticipants();
+  } else {
+    setBattleFocus(false);
+  }
+}
+
 document.querySelectorAll('.mode-tab').forEach((tab) => {
-  tab.addEventListener('click', () => {
-    currentMode = tab.dataset.mode;
-    document.querySelectorAll('.mode-tab').forEach((item) => item.classList.remove('active'));
-    document.querySelectorAll('.mode-panel').forEach((panel) => panel.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById(`mode-${currentMode}`).classList.add('active');
-    updateHeaderStats();
-    if (currentMode === 'wheel') {
-      wheelTabActive = true;
-      startIdleAnim();
-    } else {
-      stopIdleAnim();
-      setWheelFocus(false);
-    }
-    if (currentMode === 'battle') {
-      syncBattlePrototypeParticipants();
-    } else {
-      setBattleFocus(false);
-    }
-  });
+  tab.addEventListener('click', () => setCurrentMode(tab.dataset.mode));
+});
+
+modePreviewCards.forEach((card) => {
+  card.addEventListener('click', () => setCurrentMode(card.dataset.selectMode));
 });
 
 function requireParticipants() {
@@ -1480,7 +1512,7 @@ function addHistory(mode, names) {
 function renderHistory() {
   updateHeaderStats();
   if (!history.length) {
-    historyList.innerHTML = '<li class="list-empty">No draws yet</li>';
+    historyList.innerHTML = getHistoryEmptyMarkup();
     return;
   }
 
