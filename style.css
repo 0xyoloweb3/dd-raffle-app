@@ -22,21 +22,6 @@
 
 html { color-scheme: dark; }
 
-.top-hanger {
-  display: flex;
-  justify-content: center;
-  padding-top: 0;
-  margin-bottom: 10px;
-  pointer-events: none;
-}
-
-.top-hanger-image {
-  display: block;
-  width: min(100%, 980px);
-  height: auto;
-  object-fit: contain;
-}
-
 body {
   min-height: 100vh;
   color: var(--text);
