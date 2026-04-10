@@ -81,9 +81,9 @@ body::before {
   gap: 0;
   width: clamp(250px, 22vw, 330px);
   max-width: none;
-  min-height: 88px;
-  padding: 10px 18px 18px;
-  justify-content: center;
+  min-height: 118px;
+  padding: 8px 12px 18px;
+  justify-content: flex-start;
   overflow: visible;
   background: transparent;
   clip-path: none;
@@ -96,8 +96,8 @@ body::before {
 }
 
 .build-badge {
-  margin-top: 2px;
-  margin-left: 44px;
+  margin-top: -4px;
+  margin-left: 68px;
   color: rgba(240, 217, 166, 0.76);
   font-family: "Cinzel", Georgia, serif;
   font-size: 10px;
@@ -105,28 +105,33 @@ body::before {
   text-transform: uppercase;
 }
 
-.brand-logo-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
 .brand-banner-image {
   display: block;
-  width: clamp(260px, 24vw, 430px);
+  width: 100%;
   max-width: 100%;
   height: auto;
   object-fit: contain;
   filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.28));
 }
 
+.brand-banner-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 16px 22px 0;
+  pointer-events: none;
+}
+
 .brand-fire-gif {
-  width: 40px;
-  height: 40px;
+  width: 34px;
+  height: 34px;
   flex-shrink: 0;
   image-rendering: pixelated;
   filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
   transform: none;
+  margin-top: 10px;
 }
 
 .brand-kicker,
@@ -142,7 +147,7 @@ body::before {
 
 .brand-logo-image {
   display: block;
-  width: clamp(170px, 14vw, 230px);
+  width: clamp(168px, 13.5vw, 224px);
   height: auto;
   image-rendering: auto;
   filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.35));
@@ -1569,14 +1574,17 @@ body.battle-focus .battle-prototype-frame {
   .brand-block {
     width: 100%;
     max-width: 300px;
-    min-height: 84px;
-    padding: 10px 16px 18px;
+    min-height: 98px;
+    padding: 6px 8px 14px;
   }
   .brand-logo-image {
-    width: min(210px, 100%);
+    width: min(190px, 100%);
   }
   .build-badge {
-    margin-left: 42px;
+    margin-left: 58px;
+  }
+  .brand-banner-overlay {
+    padding: 14px 18px 0;
   }
 }
 
