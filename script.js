@@ -418,54 +418,6 @@ function setupParticipantsBoardEditor() {
   participantsBoardMovableEls.forEach((element) => {
     const key = element.dataset.boardMove;
     participantsBoardLayoutState[key] = participantsBoardLayoutState[key] || { x: 0, y: 0 };
-
-    element.addEventListener('pointerdown', (event) => {
-      if (event.button !== 0 || !event.shiftKey) return;
-      activeParticipantsBoardDrag = {
-        key,
-        pointerId: event.pointerId,
-        startX: event.clientX,
-        startY: event.clientY,
-        originX: participantsBoardLayoutState[key].x,
-        originY: participantsBoardLayoutState[key].y,
-        element,
-        moved: false,
-      };
-      participantsBoard.classList.add('is-edit-mode');
-      element.classList.add('is-dragging');
-      event.preventDefault();
-      event.stopPropagation();
-      element.setPointerCapture(event.pointerId);
-    });
-
-    element.addEventListener('pointermove', (event) => {
-      if (!activeParticipantsBoardDrag || activeParticipantsBoardDrag.pointerId !== event.pointerId || activeParticipantsBoardDrag.key !== key) return;
-      const deltaX = event.clientX - activeParticipantsBoardDrag.startX;
-      const deltaY = event.clientY - activeParticipantsBoardDrag.startY;
-      if (Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2) {
-        activeParticipantsBoardDrag.moved = true;
-      }
-      participantsBoardLayoutState[key] = {
-        x: activeParticipantsBoardDrag.originX + deltaX,
-        y: activeParticipantsBoardDrag.originY + deltaY,
-      };
-      applyParticipantsBoardLayout();
-    });
-
-    const finishDrag = (event) => {
-      if (!activeParticipantsBoardDrag || activeParticipantsBoardDrag.pointerId !== event.pointerId || activeParticipantsBoardDrag.key !== key) return;
-      element.classList.remove('is-dragging');
-      participantsBoard.classList.remove('is-edit-mode');
-      if (activeParticipantsBoardDrag.moved) {
-        element.dataset.boardSuppressClick = 'true';
-      }
-      saveParticipantsBoardState();
-      activeParticipantsBoardDrag = null;
-    };
-
-    element.addEventListener('pointerup', finishDrag);
-    element.addEventListener('pointercancel', finishDrag);
-
     element.addEventListener('click', (event) => {
       if (event.shiftKey || element.dataset.boardSuppressClick === 'true') {
         event.preventDefault();
@@ -473,8 +425,56 @@ function setupParticipantsBoardEditor() {
         element.dataset.boardSuppressClick = 'false';
       }
     });
-
   });
+
+  participantsBoard.addEventListener('pointerdown', (event) => {
+    if (event.button !== 0 || !event.shiftKey) return;
+    const moveTarget = event.target.closest('[data-board-move]');
+    if (!moveTarget || !participantsBoard.contains(moveTarget)) return;
+    const key = moveTarget.dataset.boardMove;
+    activeParticipantsBoardDrag = {
+      key,
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: participantsBoardLayoutState[key]?.x || 0,
+      originY: participantsBoardLayoutState[key]?.y || 0,
+      element: moveTarget,
+      moved: false,
+    };
+    participantsBoard.classList.add('is-edit-mode');
+    moveTarget.classList.add('is-dragging');
+    event.preventDefault();
+    moveTarget.setPointerCapture(event.pointerId);
+  });
+
+  participantsBoard.addEventListener('pointermove', (event) => {
+    if (!activeParticipantsBoardDrag || activeParticipantsBoardDrag.pointerId !== event.pointerId) return;
+    const deltaX = event.clientX - activeParticipantsBoardDrag.startX;
+    const deltaY = event.clientY - activeParticipantsBoardDrag.startY;
+    if (Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2) {
+      activeParticipantsBoardDrag.moved = true;
+    }
+    participantsBoardLayoutState[activeParticipantsBoardDrag.key] = {
+      x: activeParticipantsBoardDrag.originX + deltaX,
+      y: activeParticipantsBoardDrag.originY + deltaY,
+    };
+    applyParticipantsBoardLayout();
+  });
+
+  const finishParticipantsBoardDrag = (event) => {
+    if (!activeParticipantsBoardDrag || activeParticipantsBoardDrag.pointerId !== event.pointerId) return;
+    activeParticipantsBoardDrag.element.classList.remove('is-dragging');
+    participantsBoard.classList.remove('is-edit-mode');
+    if (activeParticipantsBoardDrag.moved) {
+      activeParticipantsBoardDrag.element.dataset.boardSuppressClick = 'true';
+    }
+    saveParticipantsBoardState();
+    activeParticipantsBoardDrag = null;
+  };
+
+  participantsBoard.addEventListener('pointerup', finishParticipantsBoardDrag);
+  participantsBoard.addEventListener('pointercancel', finishParticipantsBoardDrag);
 
   participantsBoardTextEls.forEach((element) => {
     element.dataset.defaultBoardText = getParticipantsBoardTextValue(element);
