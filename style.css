@@ -562,9 +562,9 @@ textarea {
 .participants-board__input-shell {
   position: absolute;
   left: 0;
-  top: 0;
+  top: 5px;
   width: calc(100% - 66px);
-  height: 100%;
+  height: calc(100% - 5px);
   min-width: 0;
   z-index: 60;
   display: block;
