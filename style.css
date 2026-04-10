@@ -1510,7 +1510,6 @@ body.battle-focus .battle-prototype-frame {
   justify-content: center;
   padding: 20px;
   background: rgba(16, 10, 6, 0.48);
-  backdrop-filter: blur(8px);
   overflow: hidden;
 }
 
