@@ -811,15 +811,18 @@ textarea {
 .participant-item .btn-remove {
   border: none;
   background: transparent;
-  color: var(--muted-soft);
-  padding: 0 4px;
+  color: #7b4d28;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0 6px;
   cursor: pointer;
   opacity: 0;
   transition: opacity 0.16s ease, color 0.16s ease;
 }
 
 .participant-item:hover .btn-remove { opacity: 1; }
-.participant-item .btn-remove:hover { color: var(--red); }
+.participant-item .btn-remove:hover { color: #a25e33; }
 
 .participant-item.highlight {
   border-color: rgba(224, 179, 90, 0.44);
