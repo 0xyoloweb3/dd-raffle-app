@@ -147,7 +147,7 @@ body::before {
 
 .brand-logo-image {
   display: block;
-  width: clamp(103px, 7.9vw, 127px);
+  width: clamp(113px, 8.7vw, 137px);
   height: auto;
   image-rendering: auto;
   filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.35));
