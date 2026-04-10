@@ -79,10 +79,10 @@ body::before {
   display: flex;
   flex-direction: column;
   gap: 0;
-  width: clamp(250px, 22vw, 340px);
+  width: clamp(300px, 26vw, 430px);
   max-width: none;
-  min-height: 84px;
-  padding: 2px 10px 6px;
+  min-height: 126px;
+  padding: 0;
   justify-content: flex-start;
   overflow: visible;
   background: transparent;
@@ -96,8 +96,8 @@ body::before {
 }
 
 .build-badge {
-  margin-top: -18px;
-  margin-left: 58px;
+  margin-top: 4px;
+  margin-left: 84px;
   color: rgba(240, 217, 166, 0.76);
   font-family: "Cinzel", Georgia, serif;
   font-size: 10px;
@@ -114,26 +114,6 @@ body::before {
   filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.28));
 }
 
-.brand-banner-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: flex-start;
-  gap: 6px;
-  padding: 8px 22px 0 16px;
-  pointer-events: none;
-}
-
-.brand-fire-gif {
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-  image-rendering: pixelated;
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
-  transform: none;
-  margin-top: 8px;
-}
-
 .brand-kicker,
 .main-intro-kicker {
   font-family: "Cinzel", Georgia, serif;
@@ -143,15 +123,6 @@ body::before {
   line-height: 1.35;
   text-transform: uppercase;
   color: #e7c98e;
-}
-
-.brand-logo-image {
-  display: block;
-  width: clamp(132px, 10vw, 168px);
-  height: auto;
-  image-rendering: auto;
-  filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.35));
-  transform: none;
 }
 
 .header-meta {
@@ -1573,19 +1544,12 @@ body.battle-focus .battle-prototype-frame {
   .quick-winner { padding: 32px 24px; }
   .brand-block {
     width: 100%;
-    max-width: 300px;
-    min-height: 78px;
-    padding: 2px 8px 4px;
-  }
-  .brand-logo-image {
-    width: min(148px, 100%);
+    max-width: 360px;
+    min-height: 104px;
   }
   .build-badge {
-    margin-top: -14px;
-    margin-left: 50px;
-  }
-  .brand-banner-overlay {
-    padding: 8px 16px 0 12px;
+    margin-top: 2px;
+    margin-left: 68px;
   }
 }
 
