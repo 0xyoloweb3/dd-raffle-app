@@ -144,10 +144,11 @@ body::before {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: 12px 14px;
+  padding: 12px 18px;
   border-radius: 14px;
   border: 1px solid rgba(160, 113, 63, 0.5);
   background: linear-gradient(180deg, rgba(72, 47, 25, 0.72), rgba(40, 25, 14, 0.7));
+  overflow: visible;
 }
 
 .stat-pill--accent {
@@ -156,6 +157,7 @@ body::before {
 }
 
 .stat-pill-label {
+  display: block;
   font-family: "Cinzel", Georgia, serif;
   font-weight: 600;
   font-size: 10px;
@@ -163,6 +165,7 @@ body::before {
   line-height: 1.35;
   text-transform: uppercase;
   color: var(--muted-soft);
+  padding-left: 1px;
 }
 
 .participant-count,
