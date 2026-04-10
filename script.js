@@ -990,6 +990,27 @@ function addParticipant(name, options = {}) {
   return { added: true, value: clean };
 }
 
+function parseParticipantBatch(text) {
+  return text
+    .split(/[\n,;|]+/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function addParticipantsBatch(text) {
+  const entries = parseParticipantBatch(text);
+  let added = 0;
+  let duplicates = 0;
+
+  entries.forEach((entry) => {
+    const result = addParticipant(entry, { silent: true });
+    if (result.added) added++;
+    else if (result.reason === 'duplicate') duplicates++;
+  });
+
+  return { entries, added, duplicates };
+}
+
 function removeParticipant(idx) {
   participants.splice(idx, 1);
   renderParticipants();
@@ -1026,17 +1047,9 @@ function renderParticipants() {
 }
 
 function importParticipants(text) {
-  const lines = text.split('\n').map((line) => line.trim()).filter(Boolean);
-  let added = 0;
-  let duplicates = 0;
+  const { entries, added, duplicates } = addParticipantsBatch(text);
 
-  lines.forEach((line) => {
-    const result = addParticipant(line, { silent: true });
-    if (result.added) added++;
-    else if (result.reason === 'duplicate') duplicates++;
-  });
-
-  if (!lines.length) {
+  if (!entries.length) {
     setParticipantStatus('Nothing to import yet.', 'warn');
     return;
   }
@@ -1077,16 +1090,23 @@ function dedupeParticipants() {
 }
 
 btnAdd.addEventListener('click', () => {
-  const result = addParticipant(inputName.value);
-  if (result.added) {
+  const { entries, added, duplicates } = addParticipantsBatch(inputName.value);
+
+  if (!entries.length) {
+    setParticipantStatus('Enter a name first.', 'warn');
+  } else if (added) {
     renderParticipants();
     save();
-    setParticipantStatus(`Added ${result.value}.`, 'success');
+    if (added === 1 && entries.length === 1) {
+      setParticipantStatus(`Added ${entries[0]}.`, 'success');
+    } else if (duplicates) {
+      setParticipantStatus(`Added ${added} users. Skipped ${duplicates} duplicate${duplicates !== 1 ? 's' : ''}.`, 'success');
+    } else {
+      setParticipantStatus(`Added ${added} users.`, 'success');
+    }
     inputName.value = '';
-  } else if (result.reason === 'duplicate') {
-    setParticipantStatus('That participant already exists.', 'warn');
   } else {
-    setParticipantStatus('Enter a name first.', 'warn');
+    setParticipantStatus('All entered users already exist.', 'warn');
   }
   inputName.focus();
 });
