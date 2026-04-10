@@ -160,12 +160,13 @@ body::before {
   display: block;
   font-family: "Cinzel", Georgia, serif;
   font-weight: 600;
-  font-size: 10px;
-  letter-spacing: 0.22em;
+  font-size: 11px;
+  letter-spacing: 0.16em;
   line-height: 1.35;
   text-transform: uppercase;
   color: var(--muted-soft);
-  padding-left: 1px;
+  padding-left: 4px;
+  text-indent: 2px;
 }
 
 .participant-count,
