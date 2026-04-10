@@ -167,6 +167,7 @@ let activeSpinPlan = null;
 const BATTLE_PARTICIPANTS_STORAGE_KEY = 'rollbria-battle-participants';
 const BRAND_DRAG_STORAGE_KEY = 'rollbria-brand-drag';
 const PARTICIPANTS_BOARD_LAYOUT_KEY = 'rollbria-participants-board-layout';
+const PARTICIPANTS_BOARD_LAYOUT_VERSION = 2;
 let lastBattleSyncSignature = null;
 let winnerThemeAudio = null;
 let uiAudioContext = null;
@@ -364,6 +365,7 @@ function saveParticipantsBoardState() {
     localStorage.setItem(
       PARTICIPANTS_BOARD_LAYOUT_KEY,
       JSON.stringify({
+        version: PARTICIPANTS_BOARD_LAYOUT_VERSION,
         layout: participantsBoardLayoutState,
         text: participantsBoardTextState,
       })
@@ -1922,11 +1924,16 @@ function load() {
     }
     if (storedParticipantsBoardState) {
       const parsedParticipantsBoardState = JSON.parse(storedParticipantsBoardState);
+      const storedBoardVersion = Number(parsedParticipantsBoardState?.version || 0);
       if (parsedParticipantsBoardState?.layout && typeof parsedParticipantsBoardState.layout === 'object') {
         participantsBoardLayoutState = parsedParticipantsBoardState.layout;
       }
       if (parsedParticipantsBoardState?.text && typeof parsedParticipantsBoardState.text === 'object') {
         participantsBoardTextState = parsedParticipantsBoardState.text;
+      }
+      if (storedBoardVersion < PARTICIPANTS_BOARD_LAYOUT_VERSION) {
+        participantsBoardLayoutState['input-name'] = { x: 0, y: 0, scale: 1 };
+        participantsBoardLayoutState['btn-add'] = { x: 0, y: 0, scale: 1 };
       }
     }
   } catch {}
