@@ -17,24 +17,15 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=20260410-topmedieval2" />
+  <link rel="stylesheet" href="style.css?v=20260410-topmedieval1" />
 </head>
 <body>
   <div class="top-medieval-header" id="top-medieval-header" aria-label="Primary navigation">
     <img class="top-medieval-header__image" src="top-hanger.png" alt="" aria-hidden="true" />
     <div class="top-medieval-header__nav">
-      <div class="top-medieval-header__sign" aria-label="Pool">
-        <span class="top-medieval-header__sign-label">Pool</span>
-        <span id="participant-count" class="top-medieval-header__sign-value">0 participants</span>
-      </div>
-      <div class="top-medieval-header__sign" aria-label="History">
-        <span class="top-medieval-header__sign-label">History</span>
-        <span id="history-count" class="top-medieval-header__sign-value">0 draws</span>
-      </div>
-      <div class="top-medieval-header__sign" aria-label="Mode">
-        <span class="top-medieval-header__sign-label">Mode</span>
-        <span id="active-mode-label" class="top-medieval-header__sign-value">Quick Draw</span>
-      </div>
+      <button class="top-medieval-header__button" data-section-target="participants" type="button">Participants</button>
+      <button class="top-medieval-header__button" data-section-target="draw-stage" type="button">Draw</button>
+      <button class="top-medieval-header__button" data-section-target="history" type="button">History</button>
     </div>
   </div>
   <header class="header">
@@ -47,6 +38,21 @@
           </div>
           <div class="build-badge">Build 01:14</div>
         </div>
+
+      <div class="header-meta">
+        <div class="stat-pill">
+          <span class="stat-pill-label">Pool</span>
+          <span id="participant-count" class="participant-count">0 participants</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-pill-label">History</span>
+          <span id="history-count" class="stat-pill-value">0 draws</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-pill-label">Mode</span>
+          <span id="active-mode-label" class="stat-pill-value">Quick Draw</span>
+        </div>
+      </div>
     </div>
   </header>
 

@@ -52,40 +52,30 @@ html { color-scheme: dark; }
   justify-content: center;
   gap: clamp(64px, 12vw, 116px);
   width: min(92vw, 760px);
-  pointer-events: none;
+  pointer-events: auto;
 }
 
-.top-medieval-header__sign {
+.top-medieval-header__button {
   min-width: clamp(110px, 12vw, 138px);
   min-height: 54px;
-  padding: 0 14px 4px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
+  padding: 0 14px 6px;
+  border: none;
   background: transparent;
   color: #f0d7a3;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
-}
-
-.top-medieval-header__sign-label {
-  font: 600 10px/1.1 "Cinzel", Georgia, serif;
-  letter-spacing: 0.18em;
+  font: 700 12px/1.1 "Cinzel", Georgia, serif;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(235, 206, 149, 0.92);
-}
-
-.top-medieval-header__sign-value {
-  max-width: 100%;
-  font: 700 15px/1.12 "Cinzel", Georgia, serif;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  color: #fff1cb;
   text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  cursor: pointer;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  transition: transform 0.18s ease, filter 0.18s ease, color 0.18s ease;
+}
+
+.top-medieval-header__button:hover,
+.top-medieval-header__button.is-active {
+  color: #fff0c8;
+  filter: drop-shadow(0 0 8px rgba(255, 220, 142, 0.24));
+  transform: translateY(-2px);
 }
 
 body {
@@ -129,7 +119,7 @@ body::before {
   margin: 0 auto;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   gap: 12px;
   padding: 8px 12px;
   min-height: 123px;
@@ -234,6 +224,51 @@ body::before {
 .brand-fire-gif.is-dragging,
 .brand-logo-image.is-dragging {
   cursor: grabbing;
+}
+
+.header-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+
+.stat-pill {
+  min-width: 158px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 18px;
+  border-radius: 14px;
+  border: 1px solid rgba(160, 113, 63, 0.5);
+  background: linear-gradient(180deg, rgba(72, 47, 25, 0.72), rgba(40, 25, 14, 0.7));
+  overflow: visible;
+}
+
+.stat-pill--accent {
+  border-color: rgba(208, 164, 92, 0.5);
+  background: linear-gradient(180deg, rgba(115, 80, 42, 0.78), rgba(59, 37, 20, 0.78));
+}
+
+.stat-pill-label {
+  display: block;
+  font-family: "Cinzel", Georgia, serif;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  line-height: 1.35;
+  text-transform: uppercase;
+  color: var(--muted-soft);
+  padding-left: 4px;
+  text-indent: 2px;
+}
+
+.participant-count,
+.stat-pill-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
 }
 
 .layout {
@@ -1592,6 +1627,11 @@ body.battle-focus .battle-prototype-frame {
     align-items: stretch;
   }
 
+  .header-meta {
+    justify-content: flex-start;
+  }
+
+
   .layout {
     padding: 10px 14px 20px;
     grid-template-columns: 1fr;
@@ -1624,22 +1664,16 @@ body.battle-focus .battle-prototype-frame {
     width: min(96vw, 520px);
   }
 
-  .top-medieval-header__sign {
+  .top-medieval-header__button {
     min-width: 82px;
     min-height: 40px;
-    padding-bottom: 4px;
-  }
-
-  .top-medieval-header__sign-label {
-    font-size: 9px;
-  }
-
-  .top-medieval-header__sign-value {
     font-size: 10px;
+    padding-bottom: 4px;
   }
 
   .header-inner { padding: 18px; border-radius: 22px; }
   .logo { font-size: 32px; }
+  .stat-pill { width: calc(50% - 5px); min-width: 0; }
   .mode-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .participant-tools,
   .import-footer {
