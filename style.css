@@ -556,14 +556,15 @@ textarea {
   align-items: stretch;
   gap: 8px;
   padding: 0;
+  z-index: 6;
 }
 
-.participants-board__add-row .board-move-slot--input {
+.participants-board__add-row > input {
   flex: 1;
   min-width: 0;
   max-width: calc(100% - 64px);
-  z-index: 2;
-  transform: none !important;
+  position: relative;
+  z-index: 7;
 }
 
 .participants-board__add-row input {
@@ -577,8 +578,9 @@ textarea {
     0 0 18px rgba(255, 44, 44, 0.22),
     inset 0 0 0 1px rgba(255, 180, 180, 0.08);
   position: relative;
-  z-index: 3;
+  z-index: 7;
   cursor: text;
+  pointer-events: auto;
 }
 
 .participants-board__add-row input::placeholder {
@@ -597,6 +599,8 @@ textarea {
 .participants-board__add-row .board-move-slot--button {
   width: 58px;
   min-width: 58px;
+  position: relative;
+  z-index: 7;
 }
 
 .participants-board__add-row #btn-add {
