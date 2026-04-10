@@ -281,6 +281,7 @@ body::before {
 .participants-board.is-edit-mode [data-board-move] {
   outline: 1px dashed rgba(231, 201, 142, 0.35);
   outline-offset: 2px;
+  cursor: grab;
 }
 
 .participants-board [data-board-move].is-dragging {

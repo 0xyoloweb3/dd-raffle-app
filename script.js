@@ -429,6 +429,7 @@ function setupParticipantsBoardEditor() {
         originX: participantsBoardLayoutState[key].x,
         originY: participantsBoardLayoutState[key].y,
         element,
+        moved: false,
       };
       participantsBoard.classList.add('is-edit-mode');
       element.classList.add('is-dragging');
@@ -439,9 +440,14 @@ function setupParticipantsBoardEditor() {
 
     element.addEventListener('pointermove', (event) => {
       if (!activeParticipantsBoardDrag || activeParticipantsBoardDrag.pointerId !== event.pointerId || activeParticipantsBoardDrag.key !== key) return;
+      const deltaX = event.clientX - activeParticipantsBoardDrag.startX;
+      const deltaY = event.clientY - activeParticipantsBoardDrag.startY;
+      if (Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2) {
+        activeParticipantsBoardDrag.moved = true;
+      }
       participantsBoardLayoutState[key] = {
-        x: activeParticipantsBoardDrag.originX + (event.clientX - activeParticipantsBoardDrag.startX),
-        y: activeParticipantsBoardDrag.originY + (event.clientY - activeParticipantsBoardDrag.startY),
+        x: activeParticipantsBoardDrag.originX + deltaX,
+        y: activeParticipantsBoardDrag.originY + deltaY,
       };
       applyParticipantsBoardLayout();
     });
@@ -450,12 +456,23 @@ function setupParticipantsBoardEditor() {
       if (!activeParticipantsBoardDrag || activeParticipantsBoardDrag.pointerId !== event.pointerId || activeParticipantsBoardDrag.key !== key) return;
       element.classList.remove('is-dragging');
       participantsBoard.classList.remove('is-edit-mode');
+      if (activeParticipantsBoardDrag.moved) {
+        element.dataset.boardSuppressClick = 'true';
+      }
       saveParticipantsBoardState();
       activeParticipantsBoardDrag = null;
     };
 
     element.addEventListener('pointerup', finishDrag);
     element.addEventListener('pointercancel', finishDrag);
+
+    element.addEventListener('click', (event) => {
+      if (event.shiftKey || element.dataset.boardSuppressClick === 'true') {
+        event.preventDefault();
+        event.stopPropagation();
+        element.dataset.boardSuppressClick = 'false';
+      }
+    });
 
   });
 
