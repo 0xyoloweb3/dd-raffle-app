@@ -65,8 +65,8 @@ body::before {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 4px 10px;
-  height: 123px;
+  padding: 8px 12px;
+  min-height: 123px;
   border: 1px solid rgba(185, 137, 77, 0.45);
   border-radius: 20px;
   background:
@@ -81,11 +81,11 @@ body::before {
   display: flex;
   flex-direction: column;
   gap: 0;
-  width: clamp(340px, 28vw, 460px);
+  width: clamp(250px, 22vw, 330px);
   max-width: none;
-  min-height: 136px;
-  padding: 16px 26px 30px;
-  justify-content: flex-start;
+  min-height: 88px;
+  padding: 10px 18px 18px;
+  justify-content: center;
   overflow: visible;
   background:
     linear-gradient(180deg, rgba(95, 96, 162, 0.96), rgba(62, 61, 120, 0.96) 58%, rgba(79, 72, 132, 0.94));
@@ -100,9 +100,9 @@ body::before {
 .brand-block::after {
   content: "";
   position: absolute;
-  top: 14px;
-  width: 18px;
-  height: 18px;
+  top: 10px;
+  width: 14px;
+  height: 14px;
   border-radius: 3px;
   background: linear-gradient(180deg, #f0d9a6, #b7853b);
   box-shadow: 0 0 0 2px rgba(90, 58, 28, 0.7);
@@ -119,8 +119,8 @@ body::before {
 }
 
 .build-badge {
-  margin-top: 6px;
-  margin-left: 66px;
+  margin-top: 2px;
+  margin-left: 44px;
   color: rgba(240, 217, 166, 0.76);
   font-family: "Cinzel", Georgia, serif;
   font-size: 10px;
@@ -131,12 +131,12 @@ body::before {
 .brand-logo-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .brand-fire-gif {
-  width: 58px;
-  height: 58px;
+  width: 40px;
+  height: 40px;
   flex-shrink: 0;
   image-rendering: pixelated;
   filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
@@ -156,7 +156,7 @@ body::before {
 
 .brand-logo-image {
   display: block;
-  width: clamp(210px, 17vw, 300px);
+  width: clamp(170px, 14vw, 230px);
   height: auto;
   image-rendering: auto;
   filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.35));
@@ -1582,15 +1582,15 @@ body.battle-focus .battle-prototype-frame {
   .quick-winner { padding: 32px 24px; }
   .brand-block {
     width: 100%;
-    max-width: 360px;
-    min-height: 118px;
-    padding: 14px 20px 26px;
+    max-width: 300px;
+    min-height: 84px;
+    padding: 10px 16px 18px;
   }
   .brand-logo-image {
-    width: min(250px, 100%);
+    width: min(210px, 100%);
   }
   .build-badge {
-    margin-left: 58px;
+    margin-left: 42px;
   }
 }
 
