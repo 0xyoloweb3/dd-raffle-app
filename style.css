@@ -249,14 +249,18 @@ body::before {
 
 .panel--participants.participants-board {
   position: relative;
-  height: min(calc(100vh - 170px), 804px);
-  max-height: none;
+  width: min(100%, 343px);
+  height: auto;
+  max-height: calc(100vh - 150px);
+  aspect-ratio: 343 / 716;
   border: none;
   border-radius: 0;
   background: transparent;
   box-shadow: none;
   overflow: visible;
   isolation: isolate;
+  justify-self: center;
+  align-self: start;
 }
 
 .panel--participants.participants-board::before {
@@ -506,24 +510,26 @@ textarea {
 .participants-board__status,
 .participants-board__list {
   position: absolute;
-  left: 9.5%;
-  right: 9.5%;
+  left: 10.5%;
+  right: 10.5%;
   margin: 0;
 }
 
 .participants-board__add-row {
-  top: 6.2%;
+  top: 6.1%;
   gap: 8px;
   padding: 0;
+  align-items: stretch;
 }
 
 .participants-board__add-row input {
-  padding: 8px 14px 9px;
-  border: 1px solid rgba(165, 114, 69, 0.18);
+  min-height: 38px;
+  padding: 6px 14px 8px;
+  border: 1px solid rgba(165, 114, 69, 0.14);
   border-radius: 11px;
   color: #edd7aa;
-  background: rgba(28, 14, 9, 0.42);
-  box-shadow: inset 0 0 0 1px rgba(252, 223, 172, 0.04);
+  background: rgba(28, 14, 9, 0.18);
+  box-shadow: none;
 }
 
 .participants-board__add-row input::placeholder {
@@ -538,8 +544,9 @@ textarea {
 }
 
 .participants-board__add-row #btn-add {
-  width: 70px;
-  min-width: 70px;
+  width: 22%;
+  min-width: 64px;
+  min-height: 38px;
   padding: 0 10px 2px;
 }
 
@@ -549,6 +556,11 @@ textarea {
   background: transparent;
   box-shadow: none;
   color: #f4e2bc;
+  font-family: "Cinzel", Georgia, serif;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
   text-shadow: 0 2px 5px rgba(0, 0, 0, 0.52);
 }
 
@@ -575,36 +587,43 @@ textarea {
 }
 
 .participants-board__tools {
-  top: 15.8%;
+  top: 13.4%;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px 10px;
+  gap: 6px 10px;
   padding: 0;
 }
 
 .participants-board__tools .btn {
-  min-height: 42px;
-  padding: 0 10px 2px;
+  min-height: 52px;
+  padding: 4px 10px 4px;
 }
 
 .participants-board__tools #btn-clear-all {
-  min-height: 32px;
-  margin-top: 5px;
+  min-height: 30px;
+  margin-top: 1px;
+  padding-top: 2px;
 }
 
 .participants-board__import {
-  top: 34%;
+  top: 32.2%;
+  bottom: 48.4%;
   padding: 0;
+  overflow: hidden;
 }
 
 .participants-board__import textarea {
-  min-height: 74px;
-  padding: 10px 12px;
-  border: 1px solid rgba(134, 88, 44, 0.2);
-  border-radius: 12px;
+  min-height: 100%;
+  height: 100%;
+  padding: 8px 10px 44px;
+  border: none;
+  border-radius: 0;
+  font-size: 12px;
   color: #5c3b19;
-  background: rgba(238, 219, 179, 0.24);
-  box-shadow: inset 0 1px 2px rgba(92, 59, 25, 0.14);
+  background: transparent;
+  box-shadow: none;
+  resize: none;
+  line-height: 1.32;
 }
 
 .participants-board__import textarea::placeholder {
@@ -616,36 +635,30 @@ textarea {
 }
 
 .participants-board__import .import-footer {
-  margin-top: 6px;
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  margin: 0;
   justify-content: flex-end;
 }
 
 .participants-board__import #btn-import {
-  padding: 7px 12px 8px;
+  min-height: 34px;
+  padding: 7px 14px 8px;
   color: #4d3119;
   background: rgba(227, 197, 135, 0.62);
   box-shadow: inset 0 0 0 1px rgba(255, 236, 199, 0.24);
 }
 
 .participants-board__status {
-  top: 49.3%;
-  padding: 8px 10px;
-  border: 1px solid rgba(134, 88, 44, 0.14);
-  border-radius: 12px;
-  color: rgba(89, 58, 28, 0.82);
-  background: rgba(245, 232, 198, 0.18);
-}
-
-.participants-board__status.is-success,
-.participants-board__status.is-warn {
-  background: rgba(245, 232, 198, 0.22);
+  display: none;
 }
 
 .participants-board__list {
-  top: 55%;
-  bottom: 9.5%;
+  top: 52.2%;
+  bottom: 9.8%;
   flex: none;
-  padding: 6px 4px 4px;
+  padding: 4px 4px 2px;
   overflow: auto;
 }
 
@@ -654,11 +667,12 @@ textarea {
 }
 
 .participants-board .participant-item {
-  margin-bottom: 8px;
-  border-color: rgba(126, 86, 47, 0.18);
-  background: rgba(255, 242, 213, 0.18);
+  margin-bottom: 7px;
+  padding: 10px 10px;
+  border-color: rgba(126, 86, 47, 0.12);
+  background: rgba(255, 248, 231, 0.36);
   color: #52341a;
-  box-shadow: 0 6px 16px rgba(81, 49, 21, 0.08);
+  box-shadow: 0 3px 10px rgba(81, 49, 21, 0.06);
 }
 
 .participants-board .participant-index {
@@ -672,7 +686,7 @@ textarea {
 .participants-board .btn-icon {
   color: #52341a;
   border-color: rgba(126, 86, 47, 0.2);
-  background: rgba(255, 242, 213, 0.18);
+  background: rgba(255, 242, 213, 0.28);
 }
 
 .participants-board .btn-icon:hover {
@@ -1828,6 +1842,29 @@ body.battle-focus .battle-prototype-frame {
   }
   .brand-banner-overlay {
     padding: 8px 16px 0 12px;
+  }
+
+  .panel--participants.participants-board {
+    width: min(100%, 332px);
+    max-height: calc(100vh - 138px);
+  }
+
+  .participants-board__add-row,
+  .participants-board__tools,
+  .participants-board__import,
+  .participants-board__status,
+  .participants-board__list {
+    left: 11.2%;
+    right: 11.2%;
+  }
+
+  .participants-board__tools .btn {
+    font-size: 10px;
+  }
+
+  .participants-board__list {
+    top: 52.8%;
+    bottom: 10.4%;
   }
 }
 
