@@ -552,6 +552,8 @@ textarea {
 
 .participants-board__add-row {
   top: 6.2%;
+  display: flex;
+  align-items: stretch;
   gap: 8px;
   padding: 0;
 }
@@ -561,6 +563,7 @@ textarea {
   min-width: 0;
   max-width: calc(100% - 64px);
   z-index: 2;
+  transform: none !important;
 }
 
 .participants-board__add-row input {
