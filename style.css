@@ -299,6 +299,18 @@ body::before {
   display: none !important;
 }
 
+.board-move-slot {
+  display: block;
+}
+
+.board-move-slot > * {
+  width: 100%;
+}
+
+.board-move-slot--full {
+  grid-column: 1 / -1;
+}
+
 .panel--history {
   max-height: calc(100vh - 150px);
 }
@@ -563,9 +575,12 @@ textarea {
   background: rgba(238, 219, 179, 0.28);
 }
 
-.participants-board__add-row #btn-add {
+.participants-board__add-row .board-move-slot--button {
   width: 70px;
   min-width: 70px;
+}
+
+.participants-board__add-row #btn-add {
   padding: 0 10px 2px;
 }
 
@@ -608,9 +623,17 @@ textarea {
   padding: 0;
 }
 
+.participants-board__tools .board-move-slot {
+  min-width: 0;
+}
+
 .participants-board__tools .btn {
   min-height: 42px;
   padding: 0 10px 2px;
+}
+
+.participants-board__tools .board-move-slot--full {
+  grid-column: 1 / -1;
 }
 
 .participants-board__tools #btn-clear-all {
@@ -621,6 +644,10 @@ textarea {
 .participants-board__import {
   top: 34%;
   padding: 0;
+}
+
+.participants-board__import .board-move-slot--textarea {
+  width: 100%;
 }
 
 .participants-board__import textarea {
@@ -644,6 +671,10 @@ textarea {
 .participants-board__import .import-footer {
   margin-top: 6px;
   justify-content: flex-end;
+}
+
+.participants-board__import .board-move-slot--import {
+  width: auto;
 }
 
 .participants-board__import #btn-import {
