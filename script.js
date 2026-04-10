@@ -167,7 +167,7 @@ let activeSpinPlan = null;
 const BATTLE_PARTICIPANTS_STORAGE_KEY = 'rollbria-battle-participants';
 const BRAND_DRAG_STORAGE_KEY = 'rollbria-brand-drag';
 const PARTICIPANTS_BOARD_LAYOUT_KEY = 'rollbria-participants-board-layout';
-const PARTICIPANTS_BOARD_LAYOUT_VERSION = 2;
+const PARTICIPANTS_BOARD_LAYOUT_VERSION = 3;
 let lastBattleSyncSignature = null;
 let winnerThemeAudio = null;
 let uiAudioContext = null;
@@ -1958,6 +1958,8 @@ function load() {
       if (storedBoardVersion < PARTICIPANTS_BOARD_LAYOUT_VERSION) {
         participantsBoardLayoutState['input-name'] = { x: 0, y: 0, scale: 1 };
         participantsBoardLayoutState['btn-add'] = { x: 0, y: 0, scale: 1 };
+        delete participantsBoardTextState['input-name-placeholder'];
+        delete participantsBoardTextState['btn-add-label'];
       }
     }
   } catch {}
