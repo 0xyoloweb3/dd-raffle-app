@@ -55,7 +55,9 @@
       </div>
 
       <div class="add-row participants-board__add-row">
-        <input type="text" id="input-name" placeholder="Add users: comma, ; or | separated" maxlength="400" data-board-text="input-name-placeholder" data-board-text-type="placeholder" />
+        <div class="participants-board__input-shell">
+          <input class="participants-board__input-field" type="text" id="input-name" placeholder="Add users: comma, ; or | separated" maxlength="400" data-board-text="input-name-placeholder" data-board-text-type="placeholder" />
+        </div>
         <div class="board-move-slot board-move-slot--button" data-board-move="btn-add">
           <button class="btn btn-accent" id="btn-add" data-board-text="btn-add-label">Add</button>
         </div>
