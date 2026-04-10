@@ -435,6 +435,8 @@ function ensureParticipantsBoardElementVisible(key) {
 function setupParticipantsBoardEditor() {
   if (!participantsBoard) return;
 
+  const isFormControl = (target) => target instanceof HTMLElement && !!target.closest('input, textarea, button');
+
   participantsBoardMovableEls.forEach((element) => {
     const key = element.dataset.boardMove;
     participantsBoardLayoutState[key] = participantsBoardLayoutState[key] || { x: 0, y: 0, scale: 1 };
@@ -457,9 +459,11 @@ function setupParticipantsBoardEditor() {
 
     const focusTarget = element.querySelector('input, textarea');
     if (focusTarget) {
-      element.addEventListener('pointerdown', (event) => {
-        if (event.shiftKey) return;
-        if (event.button !== 0) return;
+      focusTarget.addEventListener('pointerdown', (event) => {
+        event.stopPropagation();
+      });
+      focusTarget.addEventListener('click', (event) => {
+        event.stopPropagation();
         focusTarget.focus();
       });
     }
@@ -467,6 +471,7 @@ function setupParticipantsBoardEditor() {
 
   participantsBoard.addEventListener('pointerdown', (event) => {
     if (event.button !== 0 || !event.shiftKey) return;
+    if (isFormControl(event.target)) return;
     const moveTarget = event.target.closest('[data-board-move]');
     if (!moveTarget || !participantsBoard.contains(moveTarget)) return;
     const key = moveTarget.dataset.boardMove;
@@ -516,6 +521,7 @@ function setupParticipantsBoardEditor() {
 
   participantsBoard.addEventListener('wheel', (event) => {
     if (!event.altKey) return;
+    if (isFormControl(event.target)) return;
     const moveTarget = event.target.closest('[data-board-move]');
     if (!moveTarget || !participantsBoard.contains(moveTarget)) return;
     const key = moveTarget.dataset.boardMove;
