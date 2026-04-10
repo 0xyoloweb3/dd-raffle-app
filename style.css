@@ -151,7 +151,7 @@ body::before {
   height: auto;
   image-rendering: auto;
   filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.35));
-  transform: translate(95px, -14px);
+  transform: translate(95px, -16px);
 }
 
 .header-meta {
