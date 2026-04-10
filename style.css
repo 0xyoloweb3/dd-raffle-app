@@ -555,6 +555,12 @@ textarea {
   padding: 0;
 }
 
+.participants-board__add-row .board-move-slot--input {
+  flex: 1;
+  min-width: 0;
+  max-width: calc(100% - 64px);
+}
+
 .participants-board__add-row input {
   padding: 8px 14px 9px;
   border: 1px solid rgba(165, 114, 69, 0.18);
@@ -576,8 +582,8 @@ textarea {
 }
 
 .participants-board__add-row .board-move-slot--button {
-  width: 70px;
-  min-width: 70px;
+  width: 58px;
+  min-width: 58px;
 }
 
 .participants-board__add-row #btn-add {
@@ -674,7 +680,7 @@ textarea {
 }
 
 .participants-board__import .board-move-slot--import {
-  width: auto;
+  display: none;
 }
 
 .participants-board__import #btn-import {
