@@ -147,11 +147,11 @@ body::before {
 
 .brand-logo-image {
   display: block;
-  width: clamp(132px, 10vw, 168px);
+  width: clamp(88px, 6.7vw, 112px);
   height: auto;
   image-rendering: auto;
   filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.35));
-  transform: translate(35px, -14px);
+  transform: translate(50px, -14px);
 }
 
 .header-meta {
