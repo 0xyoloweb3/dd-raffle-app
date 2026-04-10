@@ -574,7 +574,7 @@ textarea {
 
 .mode-panel.active {
   display: flex;
-  animation: mode-panel-reveal 260ms cubic-bezier(0.2, 0.9, 0.25, 1);
+  animation: mode-panel-reveal 420ms cubic-bezier(0.16, 1, 0.3, 1);
   transform-origin: top center;
 }
 
@@ -1474,7 +1474,11 @@ body.battle-focus .battle-prototype-frame {
 @keyframes mode-panel-reveal {
   0% {
     opacity: 0;
-    transform: translateY(10px) scale(0.985);
+    transform: translateY(14px) scale(0.982);
+  }
+  55% {
+    opacity: 1;
+    transform: translateY(0) scale(1.006);
   }
   100% {
     opacity: 1;
