@@ -571,6 +571,13 @@ textarea {
   background: rgba(94, 15, 15, 0.18);
   border-radius: 11px;
   overflow: visible;
+  cursor: grab;
+  transform: translate(var(--board-offset-x, 0px), var(--board-offset-y, 0px)) scale(var(--board-scale, 1));
+  transform-origin: top left;
+}
+
+.participants-board__input-shell.is-dragging {
+  cursor: grabbing;
 }
 
 .participants-board__input-field {
@@ -817,11 +824,10 @@ textarea {
   line-height: 1;
   padding: 0 6px;
   cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.16s ease, color 0.16s ease;
+  opacity: 1;
+  transition: color 0.16s ease;
 }
 
-.participant-item:hover .btn-remove { opacity: 1; }
 .participant-item .btn-remove:hover { color: #a25e33; }
 
 .participant-item.highlight {

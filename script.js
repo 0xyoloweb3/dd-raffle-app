@@ -442,13 +442,54 @@ function setupParticipantsBoardEditor() {
     const focusTarget = element.querySelector('input, textarea');
     if (focusTarget) {
       focusTarget.addEventListener('pointerdown', (event) => {
+        if (event.shiftKey && key === 'input-shell') return;
         event.stopPropagation();
       });
       focusTarget.addEventListener('click', (event) => {
+        if (event.shiftKey && key === 'input-shell') return;
         event.stopPropagation();
         focusTarget.focus();
       });
     }
+
+    if (key !== 'input-shell') return;
+
+    let activeInputShellDrag = null;
+
+    element.addEventListener('pointerdown', (event) => {
+      if (event.button !== 0 || !event.shiftKey) return;
+      activeInputShellDrag = {
+        pointerId: event.pointerId,
+        startX: event.clientX,
+        startY: event.clientY,
+        originX: participantsBoardLayoutState[key]?.x || 0,
+        originY: participantsBoardLayoutState[key]?.y || 0,
+      };
+      element.classList.add('is-dragging');
+      event.preventDefault();
+      event.stopPropagation();
+      element.setPointerCapture(event.pointerId);
+    });
+
+    element.addEventListener('pointermove', (event) => {
+      if (!activeInputShellDrag || activeInputShellDrag.pointerId !== event.pointerId) return;
+      participantsBoardLayoutState[key] = {
+        ...participantsBoardLayoutState[key],
+        x: activeInputShellDrag.originX + (event.clientX - activeInputShellDrag.startX),
+        y: activeInputShellDrag.originY + (event.clientY - activeInputShellDrag.startY),
+      };
+      applyParticipantsBoardLayout();
+    });
+
+    const finishInputShellDrag = (event) => {
+      if (!activeInputShellDrag || activeInputShellDrag.pointerId !== event.pointerId) return;
+      element.classList.remove('is-dragging');
+      saveParticipantsBoardState();
+      activeInputShellDrag = null;
+    };
+
+    element.addEventListener('pointerup', finishInputShellDrag);
+    element.addEventListener('pointercancel', finishInputShellDrag);
   });
 
   participantsBoardTextEls.forEach((element) => {
