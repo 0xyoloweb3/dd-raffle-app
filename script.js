@@ -439,12 +439,30 @@ function setupParticipantsBoardEditor() {
     const key = element.dataset.boardMove;
     participantsBoardLayoutState[key] = participantsBoardLayoutState[key] || { x: 0, y: 0, scale: 1 };
     element.addEventListener('click', (event) => {
+      const focusTarget = element.querySelector('input, textarea');
+      if (element.dataset.boardSuppressClick === 'true' && !event.shiftKey) {
+        element.dataset.boardSuppressClick = 'false';
+        if (focusTarget) {
+          focusTarget.focus();
+          if (focusTarget.select) focusTarget.select();
+        }
+        return;
+      }
       if (event.shiftKey || element.dataset.boardSuppressClick === 'true') {
         event.preventDefault();
         event.stopPropagation();
         element.dataset.boardSuppressClick = 'false';
       }
     });
+
+    const focusTarget = element.querySelector('input, textarea');
+    if (focusTarget) {
+      element.addEventListener('pointerdown', (event) => {
+        if (event.shiftKey) return;
+        if (event.button !== 0) return;
+        focusTarget.focus();
+      });
+    }
   });
 
   participantsBoard.addEventListener('pointerdown', (event) => {
