@@ -435,7 +435,7 @@ function ensureParticipantsBoardElementVisible(key) {
 function setupParticipantsBoardEditor() {
   if (!participantsBoard) return;
 
-  const isFormControl = (target) => target instanceof HTMLElement && !!target.closest('input, textarea, button');
+  const isFormControl = (target) => target instanceof HTMLElement && !!target.closest('input, textarea');
 
   participantsBoardMovableEls.forEach((element) => {
     const key = element.dataset.boardMove;
