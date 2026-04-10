@@ -29,7 +29,7 @@ body {
   overflow: hidden;
   background:
     linear-gradient(rgba(22, 14, 8, 0.58), rgba(22, 14, 8, 0.78)),
-    url("site-bg.png.png"),
+    url("site-bg-castle.png"),
     radial-gradient(circle at top left, rgba(224, 179, 90, 0.16), transparent 30%),
     radial-gradient(circle at top right, rgba(114, 62, 27, 0.2), transparent 28%),
     linear-gradient(160deg, var(--bg) 0%, #20140b 55%, var(--bg2) 100%);
