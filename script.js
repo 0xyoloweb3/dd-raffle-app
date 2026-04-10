@@ -100,6 +100,9 @@ const mainIntro = document.getElementById('main-intro');
 const brandBannerOverlay = document.getElementById('brand-banner-overlay');
 const brandFireGif = document.getElementById('brand-fire-gif');
 const brandLogoImage = document.getElementById('brand-logo-image');
+const participantsBoard = document.querySelector('.participants-board');
+const participantsBoardMovableEls = Array.from(document.querySelectorAll('.participants-board [data-board-move]'));
+const participantsBoardTextEls = Array.from(document.querySelectorAll('.participants-board [data-board-text]'));
 
 const btnQuickDraw = document.getElementById('btn-quick-draw');
 const quickWinner = document.getElementById('quick-winner');
@@ -163,9 +166,13 @@ const WHEEL_BASE_ROTATIONS_PER_SECOND = 0.96;
 let activeSpinPlan = null;
 const BATTLE_PARTICIPANTS_STORAGE_KEY = 'rollbria-battle-participants';
 const BRAND_DRAG_STORAGE_KEY = 'rollbria-brand-drag';
+const PARTICIPANTS_BOARD_LAYOUT_KEY = 'rollbria-participants-board-layout';
 let lastBattleSyncSignature = null;
 let winnerThemeAudio = null;
 let uiAudioContext = null;
+let activeParticipantsBoardDrag = null;
+let participantsBoardLayoutState = {};
+let participantsBoardTextState = {};
 
 function getCryptoRandomInt(maxExclusive) {
   if (!Number.isInteger(maxExclusive) || maxExclusive <= 0) {
@@ -350,6 +357,131 @@ function setupBrandDrag() {
   brandBannerOverlay.addEventListener('dblclick', resetBrandDragPosition);
   setupBrandElementControl(brandFireGif, 'fire');
   setupBrandElementControl(brandLogoImage, 'title');
+}
+
+function saveParticipantsBoardState() {
+  try {
+    localStorage.setItem(
+      PARTICIPANTS_BOARD_LAYOUT_KEY,
+      JSON.stringify({
+        layout: participantsBoardLayoutState,
+        text: participantsBoardTextState,
+      })
+    );
+  } catch (_) {
+    // Ignore storage issues.
+  }
+}
+
+function applyParticipantsBoardLayout() {
+  participantsBoardMovableEls.forEach((element) => {
+    const key = element.dataset.boardMove;
+    const state = participantsBoardLayoutState[key] || { x: 0, y: 0 };
+    element.style.setProperty('--board-offset-x', `${state.x}px`);
+    element.style.setProperty('--board-offset-y', `${state.y}px`);
+  });
+}
+
+function getParticipantsBoardTextValue(element) {
+  return element.dataset.boardTextType === 'placeholder'
+    ? element.getAttribute('placeholder') || ''
+    : element.textContent || '';
+}
+
+function applyParticipantsBoardText() {
+  participantsBoardTextEls.forEach((element) => {
+    const key = element.dataset.boardText;
+    const nextValue = Object.prototype.hasOwnProperty.call(participantsBoardTextState, key)
+      ? participantsBoardTextState[key]
+      : element.dataset.defaultBoardText || '';
+
+    if (element.dataset.boardTextType === 'placeholder') {
+      element.setAttribute('placeholder', nextValue);
+    } else {
+      element.textContent = nextValue;
+      element.classList.toggle('board-text-hidden', !nextValue.trim());
+    }
+  });
+}
+
+function resetParticipantsBoardState() {
+  participantsBoardLayoutState = {};
+  participantsBoardTextState = {};
+  applyParticipantsBoardLayout();
+  applyParticipantsBoardText();
+  saveParticipantsBoardState();
+}
+
+function setupParticipantsBoardEditor() {
+  if (!participantsBoard) return;
+
+  participantsBoardMovableEls.forEach((element) => {
+    const key = element.dataset.boardMove;
+    participantsBoardLayoutState[key] = participantsBoardLayoutState[key] || { x: 0, y: 0 };
+
+    element.addEventListener('pointerdown', (event) => {
+      if (event.button !== 0 || !event.shiftKey) return;
+      activeParticipantsBoardDrag = {
+        key,
+        pointerId: event.pointerId,
+        startX: event.clientX,
+        startY: event.clientY,
+        originX: participantsBoardLayoutState[key].x,
+        originY: participantsBoardLayoutState[key].y,
+        element,
+      };
+      participantsBoard.classList.add('is-edit-mode');
+      element.classList.add('is-dragging');
+      event.preventDefault();
+      event.stopPropagation();
+      element.setPointerCapture(event.pointerId);
+    });
+
+    element.addEventListener('pointermove', (event) => {
+      if (!activeParticipantsBoardDrag || activeParticipantsBoardDrag.pointerId !== event.pointerId || activeParticipantsBoardDrag.key !== key) return;
+      participantsBoardLayoutState[key] = {
+        x: activeParticipantsBoardDrag.originX + (event.clientX - activeParticipantsBoardDrag.startX),
+        y: activeParticipantsBoardDrag.originY + (event.clientY - activeParticipantsBoardDrag.startY),
+      };
+      applyParticipantsBoardLayout();
+    });
+
+    const finishDrag = (event) => {
+      if (!activeParticipantsBoardDrag || activeParticipantsBoardDrag.pointerId !== event.pointerId || activeParticipantsBoardDrag.key !== key) return;
+      element.classList.remove('is-dragging');
+      participantsBoard.classList.remove('is-edit-mode');
+      saveParticipantsBoardState();
+      activeParticipantsBoardDrag = null;
+    };
+
+    element.addEventListener('pointerup', finishDrag);
+    element.addEventListener('pointercancel', finishDrag);
+
+  });
+
+  participantsBoardTextEls.forEach((element) => {
+    element.dataset.defaultBoardText = getParticipantsBoardTextValue(element);
+    element.addEventListener('dblclick', (event) => {
+      if (!event.altKey) return;
+      event.preventDefault();
+      event.stopPropagation();
+      const textKey = element.dataset.boardText;
+      const currentValue = getParticipantsBoardTextValue(element);
+      const nextValue = window.prompt('Edit text. Leave empty to clear it.', currentValue);
+      if (nextValue === null) return;
+      participantsBoardTextState[textKey] = nextValue;
+      applyParticipantsBoardText();
+      saveParticipantsBoardState();
+    });
+  });
+
+  participantsBoard.addEventListener('dblclick', (event) => {
+    if (!event.shiftKey || event.target !== participantsBoard) return;
+    resetParticipantsBoardState();
+  });
+
+  applyParticipantsBoardLayout();
+  applyParticipantsBoardText();
 }
 
 function getWinnerThemeAudio() {
@@ -1677,6 +1809,7 @@ function load() {
     const storedDurations = localStorage.getItem('raffle_mode_durations');
     const storedTimerVisible = localStorage.getItem('raffle_mode_timer_visible');
     const storedBrandDrag = localStorage.getItem(BRAND_DRAG_STORAGE_KEY);
+    const storedParticipantsBoardState = localStorage.getItem(PARTICIPANTS_BOARD_LAYOUT_KEY);
 
     if (storedParticipants) participants = JSON.parse(storedParticipants);
     if (storedHistory) history = JSON.parse(storedHistory);
@@ -1715,6 +1848,15 @@ function load() {
         };
       }
     }
+    if (storedParticipantsBoardState) {
+      const parsedParticipantsBoardState = JSON.parse(storedParticipantsBoardState);
+      if (parsedParticipantsBoardState?.layout && typeof parsedParticipantsBoardState.layout === 'object') {
+        participantsBoardLayoutState = parsedParticipantsBoardState.layout;
+      }
+      if (parsedParticipantsBoardState?.text && typeof parsedParticipantsBoardState.text === 'object') {
+        participantsBoardTextState = parsedParticipantsBoardState.text;
+      }
+    }
   } catch {}
 }
 
@@ -1725,6 +1867,7 @@ winnerPopup.addEventListener('click', (e) => {
 
 load();
 setupBrandDrag();
+setupParticipantsBoardEditor();
 Object.keys(modeTimerEls).forEach((mode) => syncTimerToggle(mode));
 renderParticipants();
 renderHistory();
