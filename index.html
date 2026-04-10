@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=20260410-participantskin1" />
+  <link rel="stylesheet" href="style.css?v=20260410-statclip2" />
 </head>
 <body>
   <header class="header">
@@ -53,34 +53,30 @@
         <h2>Participants</h2>
       </div>
 
-      <div class="participants-stage">
-        <div class="add-row">
-          <input type="text" id="input-name" placeholder="Add participant..." maxlength="50" />
-          <button class="btn btn-accent" id="btn-add">Add</button>
-        </div>
+      <div class="add-row">
+        <input type="text" id="input-name" placeholder="Add participant..." maxlength="50" />
+        <button class="btn btn-accent" id="btn-add">Add</button>
+      </div>
 
-        <div class="participant-tools">
-          <button class="btn btn-soft" id="btn-dedupe">Remove duplicates</button>
-          <button class="btn btn-soft" id="btn-shuffle" title="Shuffle participants">Shuffle</button>
-          <button class="btn btn-soft" id="btn-clear-all" title="Clear all">Clear</button>
-        </div>
+      <div class="participant-tools">
+        <button class="btn btn-soft" id="btn-dedupe">Remove duplicates</button>
+        <button class="btn btn-soft" id="btn-shuffle" title="Shuffle participants">Shuffle</button>
+        <button class="btn btn-soft" id="btn-clear-all" title="Clear all">Clear</button>
+      </div>
 
-        <div class="import-row">
-          <textarea id="input-bulk" placeholder="Bulk import: one name per line..." rows="3"></textarea>
-          <div class="import-footer">
-            <span class="field-hint">One name per line. Existing names are skipped automatically.</span>
-            <button class="btn" id="btn-import">Import</button>
-          </div>
-        </div>
-
-        <div class="panel-status" id="participant-status">Ready to build your pool.</div>
-
-        <div class="participant-scroll-shell">
-          <ul class="participant-list" id="participant-list">
-            <li class="list-empty">No participants yet</li>
-          </ul>
+      <div class="import-row">
+        <textarea id="input-bulk" placeholder="Bulk import: one name per line..." rows="3"></textarea>
+        <div class="import-footer">
+          <span class="field-hint">One name per line. Existing names are skipped automatically.</span>
+          <button class="btn" id="btn-import">Import</button>
         </div>
       </div>
+
+      <div class="panel-status" id="participant-status">Ready to build your pool.</div>
+
+      <ul class="participant-list" id="participant-list">
+        <li class="list-empty">No participants yet</li>
+      </ul>
     </section>
 
     <section class="panel panel--main">
