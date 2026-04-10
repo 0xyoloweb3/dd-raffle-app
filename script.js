@@ -77,6 +77,11 @@ let idleAnimId = null;
 let currentMode = null;
 let brandDragPosition = { x: 0, y: 0 };
 let activeBrandDrag = null;
+let brandElementState = {
+  fire: { x: 0, y: 0, scale: 1 },
+  title: { x: 0, y: 0, scale: 1 },
+};
+let activeBrandElementDrag = null;
 
 const inputName = document.getElementById('input-name');
 const btnAdd = document.getElementById('btn-add');
@@ -93,6 +98,8 @@ const activeModeLabel = document.getElementById('active-mode-label');
 const modeDescription = document.getElementById('mode-description');
 const mainIntro = document.getElementById('main-intro');
 const brandBannerOverlay = document.getElementById('brand-banner-overlay');
+const brandFireGif = document.getElementById('brand-fire-gif');
+const brandLogoImage = document.getElementById('brand-logo-image');
 
 const btnQuickDraw = document.getElementById('btn-quick-draw');
 const quickWinner = document.getElementById('quick-winner');
@@ -216,11 +223,21 @@ function applyBrandDragPosition() {
   if (!brandBannerOverlay) return;
   brandBannerOverlay.style.setProperty('--brand-drag-x', `${brandDragPosition.x}px`);
   brandBannerOverlay.style.setProperty('--brand-drag-y', `${brandDragPosition.y}px`);
+  brandBannerOverlay.style.setProperty('--brand-fire-x', `${brandElementState.fire.x}px`);
+  brandBannerOverlay.style.setProperty('--brand-fire-y', `${brandElementState.fire.y}px`);
+  brandBannerOverlay.style.setProperty('--brand-fire-scale', `${brandElementState.fire.scale}`);
+  brandBannerOverlay.style.setProperty('--brand-title-x', `${brandElementState.title.x}px`);
+  brandBannerOverlay.style.setProperty('--brand-title-y', `${brandElementState.title.y}px`);
+  brandBannerOverlay.style.setProperty('--brand-title-scale', `${brandElementState.title.scale}`);
 }
 
 function saveBrandDragPosition() {
   try {
-    localStorage.setItem(BRAND_DRAG_STORAGE_KEY, JSON.stringify(brandDragPosition));
+    localStorage.setItem(BRAND_DRAG_STORAGE_KEY, JSON.stringify({
+      overlay: brandDragPosition,
+      fire: brandElementState.fire,
+      title: brandElementState.title,
+    }));
   } catch (_) {
     // Ignore storage issues.
   }
@@ -230,6 +247,68 @@ function resetBrandDragPosition() {
   brandDragPosition = { x: 0, y: 0 };
   applyBrandDragPosition();
   saveBrandDragPosition();
+}
+
+function resetBrandElement(key) {
+  brandElementState[key] = { x: 0, y: 0, scale: 1 };
+  applyBrandDragPosition();
+  saveBrandDragPosition();
+}
+
+function setupBrandElementControl(element, key) {
+  if (!element || !brandBannerOverlay) return;
+
+  element.addEventListener('pointerdown', (event) => {
+    if (event.button !== 0) return;
+    event.stopPropagation();
+    activeBrandElementDrag = {
+      key,
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: brandElementState[key].x,
+      originY: brandElementState[key].y,
+    };
+    element.classList.add('is-dragging');
+    element.setPointerCapture(event.pointerId);
+  });
+
+  element.addEventListener('pointermove', (event) => {
+    if (!activeBrandElementDrag || activeBrandElementDrag.pointerId !== event.pointerId || activeBrandElementDrag.key !== key) return;
+    brandElementState[key] = {
+      ...brandElementState[key],
+      x: activeBrandElementDrag.originX + (event.clientX - activeBrandElementDrag.startX),
+      y: activeBrandElementDrag.originY + (event.clientY - activeBrandElementDrag.startY),
+    };
+    applyBrandDragPosition();
+  });
+
+  function finishElementDrag(event) {
+    if (!activeBrandElementDrag || activeBrandElementDrag.pointerId !== event.pointerId || activeBrandElementDrag.key !== key) return;
+    element.classList.remove('is-dragging');
+    saveBrandDragPosition();
+    activeBrandElementDrag = null;
+  }
+
+  element.addEventListener('pointerup', finishElementDrag);
+  element.addEventListener('pointercancel', finishElementDrag);
+
+  element.addEventListener('wheel', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const nextScale = Math.min(3, Math.max(0.35, brandElementState[key].scale + (event.deltaY < 0 ? 0.05 : -0.05)));
+    brandElementState[key] = {
+      ...brandElementState[key],
+      scale: Number(nextScale.toFixed(2)),
+    };
+    applyBrandDragPosition();
+    saveBrandDragPosition();
+  }, { passive: false });
+
+  element.addEventListener('dblclick', (event) => {
+    event.stopPropagation();
+    resetBrandElement(key);
+  });
 }
 
 function setupBrandDrag() {
@@ -269,6 +348,8 @@ function setupBrandDrag() {
   brandBannerOverlay.addEventListener('pointerup', finishBrandDrag);
   brandBannerOverlay.addEventListener('pointercancel', finishBrandDrag);
   brandBannerOverlay.addEventListener('dblclick', resetBrandDragPosition);
+  setupBrandElementControl(brandFireGif, 'fire');
+  setupBrandElementControl(brandLogoImage, 'title');
 }
 
 function getWinnerThemeAudio() {
@@ -1614,8 +1695,24 @@ function load() {
     }
     if (storedBrandDrag) {
       const parsedBrandDrag = JSON.parse(storedBrandDrag);
-      if (Number.isFinite(parsedBrandDrag?.x) && Number.isFinite(parsedBrandDrag?.y)) {
+      if (Number.isFinite(parsedBrandDrag?.overlay?.x) && Number.isFinite(parsedBrandDrag?.overlay?.y)) {
+        brandDragPosition = { x: parsedBrandDrag.overlay.x, y: parsedBrandDrag.overlay.y };
+      } else if (Number.isFinite(parsedBrandDrag?.x) && Number.isFinite(parsedBrandDrag?.y)) {
         brandDragPosition = { x: parsedBrandDrag.x, y: parsedBrandDrag.y };
+      }
+      if (Number.isFinite(parsedBrandDrag?.fire?.x) && Number.isFinite(parsedBrandDrag?.fire?.y) && Number.isFinite(parsedBrandDrag?.fire?.scale)) {
+        brandElementState.fire = {
+          x: parsedBrandDrag.fire.x,
+          y: parsedBrandDrag.fire.y,
+          scale: parsedBrandDrag.fire.scale,
+        };
+      }
+      if (Number.isFinite(parsedBrandDrag?.title?.x) && Number.isFinite(parsedBrandDrag?.title?.y) && Number.isFinite(parsedBrandDrag?.title?.scale)) {
+        brandElementState.title = {
+          x: parsedBrandDrag.title.x,
+          y: parsedBrandDrag.title.y,
+          scale: parsedBrandDrag.title.scale,
+        };
       }
     }
   } catch {}
