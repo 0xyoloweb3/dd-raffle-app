@@ -376,9 +376,10 @@ function saveParticipantsBoardState() {
 function applyParticipantsBoardLayout() {
   participantsBoardMovableEls.forEach((element) => {
     const key = element.dataset.boardMove;
-    const state = participantsBoardLayoutState[key] || { x: 0, y: 0 };
+    const state = participantsBoardLayoutState[key] || { x: 0, y: 0, scale: 1 };
     element.style.setProperty('--board-offset-x', `${state.x}px`);
     element.style.setProperty('--board-offset-y', `${state.y}px`);
+    element.style.setProperty('--board-scale', `${state.scale ?? 1}`);
   });
 }
 
@@ -412,12 +413,29 @@ function resetParticipantsBoardState() {
   saveParticipantsBoardState();
 }
 
+function ensureParticipantsBoardElementVisible(key) {
+  if (!participantsBoard) return;
+  const element = participantsBoardMovableEls.find((item) => item.dataset.boardMove === key);
+  if (!element) return;
+  const boardRect = participantsBoard.getBoundingClientRect();
+  const elementRect = element.getBoundingClientRect();
+  const outside =
+    elementRect.right < boardRect.left + 12 ||
+    elementRect.left > boardRect.right - 12 ||
+    elementRect.bottom < boardRect.top + 12 ||
+    elementRect.top > boardRect.bottom - 12;
+  if (!outside) return;
+  participantsBoardLayoutState[key] = { x: 0, y: 0, scale: 1 };
+  applyParticipantsBoardLayout();
+  saveParticipantsBoardState();
+}
+
 function setupParticipantsBoardEditor() {
   if (!participantsBoard) return;
 
   participantsBoardMovableEls.forEach((element) => {
     const key = element.dataset.boardMove;
-    participantsBoardLayoutState[key] = participantsBoardLayoutState[key] || { x: 0, y: 0 };
+    participantsBoardLayoutState[key] = participantsBoardLayoutState[key] || { x: 0, y: 0, scale: 1 };
     element.addEventListener('click', (event) => {
       if (event.shiftKey || element.dataset.boardSuppressClick === 'true') {
         event.preventDefault();
@@ -476,6 +494,22 @@ function setupParticipantsBoardEditor() {
   participantsBoard.addEventListener('pointerup', finishParticipantsBoardDrag);
   participantsBoard.addEventListener('pointercancel', finishParticipantsBoardDrag);
 
+  participantsBoard.addEventListener('wheel', (event) => {
+    if (!event.altKey) return;
+    const moveTarget = event.target.closest('[data-board-move]');
+    if (!moveTarget || !participantsBoard.contains(moveTarget)) return;
+    const key = moveTarget.dataset.boardMove;
+    const current = participantsBoardLayoutState[key] || { x: 0, y: 0, scale: 1 };
+    const nextScale = Math.min(1.8, Math.max(0.55, (current.scale ?? 1) + (event.deltaY < 0 ? 0.05 : -0.05)));
+    participantsBoardLayoutState[key] = {
+      ...current,
+      scale: Number(nextScale.toFixed(2)),
+    };
+    event.preventDefault();
+    applyParticipantsBoardLayout();
+    saveParticipantsBoardState();
+  }, { passive: false });
+
   participantsBoardTextEls.forEach((element) => {
     element.dataset.defaultBoardText = getParticipantsBoardTextValue(element);
     element.addEventListener('dblclick', (event) => {
@@ -499,6 +533,7 @@ function setupParticipantsBoardEditor() {
 
   applyParticipantsBoardLayout();
   applyParticipantsBoardText();
+  ensureParticipantsBoardElementVisible('btn-add');
 }
 
 function getWinnerThemeAudio() {

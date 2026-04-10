@@ -274,7 +274,7 @@ body::before {
 }
 
 .participants-board [data-board-move] {
-  transform: translate(var(--board-offset-x, 0px), var(--board-offset-y, 0px));
+  transform: translate(var(--board-offset-x, 0px), var(--board-offset-y, 0px)) scale(var(--board-scale, 1));
   transform-origin: top left;
 }
 
