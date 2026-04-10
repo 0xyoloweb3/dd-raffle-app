@@ -67,12 +67,10 @@ body::before {
   gap: 12px;
   padding: 8px 12px;
   min-height: 123px;
-  border: 1px solid rgba(185, 137, 77, 0.45);
-  border-radius: 20px;
-  background:
-    linear-gradient(180deg, rgba(108, 73, 41, 0.32), rgba(47, 29, 16, 0.68)),
-    linear-gradient(135deg, rgba(224, 179, 90, 0.08), rgba(84, 48, 21, 0.08));
-  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.3);
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
   overflow: visible;
 }
 
