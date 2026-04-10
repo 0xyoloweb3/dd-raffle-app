@@ -100,6 +100,7 @@ const mainIntro = document.getElementById('main-intro');
 const brandBannerOverlay = document.getElementById('brand-banner-overlay');
 const brandFireGif = document.getElementById('brand-fire-gif');
 const brandLogoImage = document.getElementById('brand-logo-image');
+const topHeaderNavButtons = Array.from(document.querySelectorAll('.top-medieval-header__button'));
 
 const btnQuickDraw = document.getElementById('btn-quick-draw');
 const quickWinner = document.getElementById('quick-winner');
@@ -350,6 +351,27 @@ function setupBrandDrag() {
   brandBannerOverlay.addEventListener('dblclick', resetBrandDragPosition);
   setupBrandElementControl(brandFireGif, 'fire');
   setupBrandElementControl(brandLogoImage, 'title');
+}
+
+function focusSection(sectionKey) {
+  const target = document.getElementById(sectionKey);
+  if (!target) return;
+
+  topHeaderNavButtons.forEach((button) => {
+    button.classList.toggle('is-active', button.dataset.sectionTarget === sectionKey);
+  });
+
+  target.classList.remove('section-highlight');
+  void target.offsetWidth;
+  target.classList.add('section-highlight');
+  target.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+}
+
+function setupTopMedievalHeaderNav() {
+  if (!topHeaderNavButtons.length) return;
+  topHeaderNavButtons.forEach((button) => {
+    button.addEventListener('click', () => focusSection(button.dataset.sectionTarget));
+  });
 }
 
 function getWinnerThemeAudio() {
@@ -1725,6 +1747,7 @@ winnerPopup.addEventListener('click', (e) => {
 
 load();
 setupBrandDrag();
+setupTopMedievalHeaderNav();
 Object.keys(modeTimerEls).forEach((mode) => syncTimerToggle(mode));
 renderParticipants();
 renderHistory();
