@@ -501,10 +501,12 @@ function setupWoodNormalDecorControl() {
     if (event.button !== 0) return;
     activeWoodNormalDecorDrag = {
       pointerId: event.pointerId,
+      mode: event.shiftKey ? 'scale' : 'move',
       startX: event.clientX,
       startY: event.clientY,
       originX: woodNormalDecorState.x || 0,
       originY: woodNormalDecorState.y || 0,
+      originScale: Number.isFinite(woodNormalDecorState.scale) ? woodNormalDecorState.scale : 1,
     };
     woodNormalDecor.classList.add('is-dragging');
     woodNormalDecor.setPointerCapture(event.pointerId);
@@ -514,6 +516,15 @@ function setupWoodNormalDecorControl() {
 
   woodNormalDecor.addEventListener('pointermove', (event) => {
     if (!activeWoodNormalDecorDrag || activeWoodNormalDecorDrag.pointerId !== event.pointerId) return;
+    if (activeWoodNormalDecorDrag.mode === 'scale') {
+      const delta = ((event.clientX - activeWoodNormalDecorDrag.startX) - (event.clientY - activeWoodNormalDecorDrag.startY)) * 0.01;
+      woodNormalDecorState = {
+        ...woodNormalDecorState,
+        scale: Number(clamp(activeWoodNormalDecorDrag.originScale + delta, 0.08, 20).toFixed(3)),
+      };
+      applyWoodNormalDecorLayout();
+      return;
+    }
     woodNormalDecorState = {
       ...woodNormalDecorState,
       x: activeWoodNormalDecorDrag.originX + (event.clientX - activeWoodNormalDecorDrag.startX),
