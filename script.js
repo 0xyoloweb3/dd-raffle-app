@@ -82,7 +82,6 @@ let brandElementState = {
   title: { x: 0, y: 0, scale: 1 },
 };
 let activeBrandElementDrag = null;
-let activeParticipantsScrollbarDrag = null;
 
 const inputName = document.getElementById('input-name');
 const btnAdd = document.getElementById('btn-add');
@@ -92,8 +91,6 @@ const btnShuffle = document.getElementById('btn-shuffle');
 const btnDedupe = document.getElementById('btn-dedupe');
 const inputBulk = document.getElementById('input-bulk');
 const participantList = document.getElementById('participant-list');
-const participantsScrollUi = document.getElementById('participants-scroll-ui');
-const participantsScrollThumb = document.getElementById('participants-scroll-thumb');
 const participantCount = document.getElementById('participant-count');
 const participantStatus = document.getElementById('participant-status');
 const historyCount = document.getElementById('history-count');
@@ -955,7 +952,6 @@ function renderParticipants() {
   updateHeaderStats();
   if (!participants.length) {
     participantList.innerHTML = '<li class="list-empty">No participants yet</li>';
-    syncParticipantsScrollbar();
     if (wheelTabActive && !isSpinning) drawWheel();
     syncBattlePrototypeParticipants();
     return;
@@ -976,73 +972,8 @@ function renderParticipants() {
     });
   });
 
-  syncParticipantsScrollbar();
   if (wheelTabActive && !isSpinning) drawWheel();
   syncBattlePrototypeParticipants();
-}
-
-function syncParticipantsScrollbar() {
-  if (!participantList || !participantsScrollUi || !participantsScrollThumb) return;
-
-  const maxScroll = Math.max(0, participantList.scrollHeight - participantList.clientHeight);
-  const uiHeight = participantsScrollUi.clientHeight;
-  const trackPadding = 14;
-  const thumbMin = 28;
-  const thumbMax = 38;
-  const thumbHeight = maxScroll > 0
-    ? Math.max(thumbMin, Math.min(thumbMax, Math.round(uiHeight * (participantList.clientHeight / participantList.scrollHeight))))
-    : thumbMax;
-  const travel = Math.max(0, uiHeight - trackPadding * 2 - thumbHeight);
-  const progress = maxScroll > 0 ? participantList.scrollTop / maxScroll : 0;
-  const top = trackPadding + travel * progress;
-
-  participantsScrollUi.style.display = 'block';
-  participantsScrollUi.style.opacity = maxScroll > 0 ? '1' : '0.6';
-  participantsScrollThumb.style.height = `${thumbHeight}px`;
-  participantsScrollThumb.style.top = `${top}px`;
-}
-
-function setupParticipantsScrollbar() {
-  if (!participantList || !participantsScrollUi || !participantsScrollThumb) return;
-
-  participantList.addEventListener('scroll', syncParticipantsScrollbar, { passive: true });
-  window.addEventListener('resize', syncParticipantsScrollbar);
-
-  participantsScrollThumb.addEventListener('pointerdown', (event) => {
-    if (event.button !== 0) return;
-    activeParticipantsScrollbarDrag = {
-      pointerId: event.pointerId,
-      startY: event.clientY,
-      startTop: parseFloat(participantsScrollThumb.style.top || '0'),
-    };
-    participantsScrollThumb.classList.add('is-dragging');
-    participantsScrollThumb.setPointerCapture(event.pointerId);
-    event.preventDefault();
-    event.stopPropagation();
-  });
-
-  participantsScrollThumb.addEventListener('pointermove', (event) => {
-    if (!activeParticipantsScrollbarDrag || activeParticipantsScrollbarDrag.pointerId !== event.pointerId) return;
-    const uiHeight = participantsScrollUi.clientHeight;
-    const thumbHeight = participantsScrollThumb.offsetHeight;
-    const trackPadding = 14;
-    const minTop = trackPadding;
-    const maxTop = Math.max(minTop, uiHeight - trackPadding - thumbHeight);
-    const nextTop = Math.min(maxTop, Math.max(minTop, activeParticipantsScrollbarDrag.startTop + (event.clientY - activeParticipantsScrollbarDrag.startY)));
-    const maxScroll = Math.max(0, participantList.scrollHeight - participantList.clientHeight);
-    const progress = maxTop > minTop ? (nextTop - minTop) / (maxTop - minTop) : 0;
-    participantList.scrollTop = maxScroll * progress;
-    syncParticipantsScrollbar();
-  });
-
-  const finishParticipantsScrollbarDrag = (event) => {
-    if (!activeParticipantsScrollbarDrag || activeParticipantsScrollbarDrag.pointerId !== event.pointerId) return;
-    participantsScrollThumb.classList.remove('is-dragging');
-    activeParticipantsScrollbarDrag = null;
-  };
-
-  participantsScrollThumb.addEventListener('pointerup', finishParticipantsScrollbarDrag);
-  participantsScrollThumb.addEventListener('pointercancel', finishParticipantsScrollbarDrag);
 }
 
 function importParticipants(text) {
@@ -1914,7 +1845,6 @@ winnerPopup.addEventListener('click', (e) => {
 load();
 setupBrandDrag();
 setupParticipantsBoardEditor();
-setupParticipantsScrollbar();
 Object.keys(modeTimerEls).forEach((mode) => syncTimerToggle(mode));
 renderParticipants();
 renderHistory();
