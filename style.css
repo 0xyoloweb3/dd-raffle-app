@@ -349,7 +349,7 @@ body::before {
   cursor: grab;
   transform: translate(var(--participants-title-x, 0px), var(--participants-title-y, 0px)) scale(var(--participants-title-scale, 1));
   transform-origin: center top;
-  filter: drop-shadow(0 6px 10px rgba(32, 15, 7, 0.38));
+  filter: none;
 }
 
 .panel-header--participants .participants-title-art.is-dragging {
