@@ -534,7 +534,7 @@ function setupWoodNormalDecorControl() {
     event.preventDefault();
     event.stopPropagation();
     const currentScale = Number.isFinite(woodNormalDecorState.scale) ? woodNormalDecorState.scale : 1;
-    const nextScale = clamp(currentScale + (event.deltaY < 0 ? 0.06 : -0.06), 0.45, 2.4);
+    const nextScale = clamp(currentScale + (event.deltaY < 0 ? 0.08 : -0.08), 0.08, 20);
     woodNormalDecorState = {
       ...woodNormalDecorState,
       scale: Number(nextScale.toFixed(3)),
