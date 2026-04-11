@@ -568,8 +568,8 @@ textarea {
   min-width: 0;
   z-index: 60;
   display: block;
-  background: rgba(94, 15, 15, 0.18);
-  border-radius: 11px;
+  background: transparent;
+  border-radius: 0;
   overflow: visible;
   cursor: grab;
   transform: translate(var(--board-offset-x, 0px), var(--board-offset-y, 0px)) scale(var(--board-scale, 1));
