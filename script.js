@@ -222,6 +222,7 @@ function hasParticipant(name) {
 }
 
 function setParticipantStatus(text, tone = '') {
+  if (!participantStatus) return;
   participantStatus.textContent = text;
   participantStatus.className = 'panel-status';
   if (tone) participantStatus.classList.add(`is-${tone}`);
