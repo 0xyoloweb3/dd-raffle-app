@@ -742,7 +742,7 @@ textarea {
   top: 37%;
   bottom: 18%;
   flex: none;
-  padding: 6px 8px 4px 4px;
+  padding: 6px 8px 4px 10px;
   overflow: auto;
   scrollbar-width: thin;
   scrollbar-color: rgba(132, 89, 47, 0.9) rgba(78, 49, 25, 0.18);
@@ -801,7 +801,7 @@ textarea {
   align-items: center;
   gap: 9px;
   margin-bottom: 7px;
-  padding: 9px 11px;
+  padding: 8px 10px;
   border: 1px solid rgba(132, 89, 47, 0.52);
   border-radius: 13px;
   background: linear-gradient(180deg, rgba(255, 244, 224, 0.16), rgba(214, 185, 142, 0.1));
@@ -818,8 +818,8 @@ textarea {
 }
 
 .participant-item .idx {
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
@@ -837,7 +837,7 @@ textarea {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -845,7 +845,7 @@ textarea {
   border: none;
   background: transparent;
   color: #8d6136;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 700;
   line-height: 1;
   padding: 0 6px;
