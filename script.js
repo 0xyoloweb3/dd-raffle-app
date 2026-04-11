@@ -515,6 +515,7 @@ function setupWoodNormalDecorControl() {
   woodNormalDecor.addEventListener('pointermove', (event) => {
     if (!activeWoodNormalDecorDrag || activeWoodNormalDecorDrag.pointerId !== event.pointerId) return;
     woodNormalDecorState = {
+      ...woodNormalDecorState,
       x: activeWoodNormalDecorDrag.originX + (event.clientX - activeWoodNormalDecorDrag.startX),
       y: activeWoodNormalDecorDrag.originY + (event.clientY - activeWoodNormalDecorDrag.startY),
     };
