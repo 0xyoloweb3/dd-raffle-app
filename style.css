@@ -77,7 +77,7 @@ body::before {
   left: 50%;
   width: min(540px, 74vw);
   height: auto;
-  z-index: 41;
+  z-index: 120;
   pointer-events: auto;
   user-select: none;
   cursor: grab;
