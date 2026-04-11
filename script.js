@@ -410,6 +410,9 @@ function setupBrandBannerControl() {
 
 function setupBrandElementControl(element, key) {
   if (!element || !brandBannerOverlay) return;
+  const minScale = key === 'fire' ? 0.2 : 0.35;
+  const maxScale = key === 'fire' ? 5.5 : 3;
+  const scaleStep = key === 'fire' ? 0.08 : 0.05;
 
   element.addEventListener('pointerdown', (event) => {
     if (event.button !== 0) return;
@@ -450,7 +453,7 @@ function setupBrandElementControl(element, key) {
   element.addEventListener('wheel', (event) => {
     event.preventDefault();
     event.stopPropagation();
-    const nextScale = Math.min(3, Math.max(0.35, brandElementState[key].scale + (event.deltaY < 0 ? 0.05 : -0.05)));
+    const nextScale = Math.min(maxScale, Math.max(minScale, brandElementState[key].scale + (event.deltaY < 0 ? scaleStep : -scaleStep)));
     brandElementState[key] = {
       ...brandElementState[key],
       scale: Number(nextScale.toFixed(2)),
