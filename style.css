@@ -127,6 +127,12 @@ body::before {
   background: transparent;
   clip-path: none;
   box-shadow: none;
+  cursor: grab;
+  user-select: none;
+}
+
+.brand-block.is-dragging {
+  cursor: grabbing;
 }
 
 .brand-block::before,
@@ -153,7 +159,7 @@ body::before {
   transform: translate(var(--brand-banner-x, 0px), var(--brand-banner-y, 0px)) scale(var(--brand-banner-scale, 1));
   transform-origin: center top;
   filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.28));
-  cursor: grab;
+  cursor: default;
   user-select: none;
 }
 

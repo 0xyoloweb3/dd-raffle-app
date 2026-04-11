@@ -100,6 +100,7 @@ const historyCount = document.getElementById('history-count');
 const activeModeLabel = document.getElementById('active-mode-label');
 const modeDescription = document.getElementById('mode-description');
 const mainIntro = document.getElementById('main-intro');
+const brandBlock = document.getElementById('brand-block');
 const brandBannerImage = document.getElementById('brand-banner-image');
 const brandBannerOverlay = document.getElementById('brand-banner-overlay');
 const brandFireGif = document.getElementById('brand-fire-gif');
@@ -346,6 +347,67 @@ function resetBrandElement(key) {
   saveBrandDragPosition();
 }
 
+function setupBrandBannerControl() {
+  if (!brandBlock || !brandBannerImage) return;
+
+  brandBlock.addEventListener('pointerdown', (event) => {
+    if (event.button !== 0) return;
+    if (event.target === brandFireGif || event.target === brandLogoImage) return;
+    activeBrandElementDrag = {
+      key: 'banner',
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: brandElementState.banner.x,
+      originY: brandElementState.banner.y,
+    };
+    brandBlock.classList.add('is-dragging');
+    brandBlock.setPointerCapture(event.pointerId);
+    event.preventDefault();
+    event.stopPropagation();
+  });
+
+  brandBlock.addEventListener('pointermove', (event) => {
+    if (!activeBrandElementDrag || activeBrandElementDrag.pointerId !== event.pointerId || activeBrandElementDrag.key !== 'banner') return;
+    brandElementState.banner = {
+      ...brandElementState.banner,
+      x: activeBrandElementDrag.originX + (event.clientX - activeBrandElementDrag.startX),
+      y: activeBrandElementDrag.originY + (event.clientY - activeBrandElementDrag.startY),
+    };
+    applyBrandDragPosition();
+  });
+
+  const finishBannerDrag = (event) => {
+    if (!activeBrandElementDrag || activeBrandElementDrag.pointerId !== event.pointerId || activeBrandElementDrag.key !== 'banner') return;
+    brandBlock.classList.remove('is-dragging');
+    saveBrandDragPosition();
+    activeBrandElementDrag = null;
+  };
+
+  brandBlock.addEventListener('pointerup', finishBannerDrag);
+  brandBlock.addEventListener('pointercancel', finishBannerDrag);
+
+  brandBlock.addEventListener('wheel', (event) => {
+    if (event.target === brandFireGif || event.target === brandLogoImage) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const nextScale = Math.min(3, Math.max(0.35, brandElementState.banner.scale + (event.deltaY < 0 ? 0.05 : -0.05)));
+    brandElementState.banner = {
+      ...brandElementState.banner,
+      scale: Number(nextScale.toFixed(2)),
+    };
+    applyBrandDragPosition();
+    saveBrandDragPosition();
+  }, { passive: false });
+
+  brandBlock.addEventListener('dblclick', (event) => {
+    if (event.target === brandFireGif || event.target === brandLogoImage) return;
+    event.preventDefault();
+    event.stopPropagation();
+    resetBrandElement('banner');
+  });
+}
+
 function setupBrandElementControl(element, key) {
   if (!element || !brandBannerOverlay) return;
 
@@ -410,7 +472,7 @@ function setupBrandDrag() {
   if (!brandBannerOverlay) return;
 
   applyBrandDragPosition();
-  setupBrandElementControl(brandBannerImage, 'banner');
+  setupBrandBannerControl();
   setupBrandElementControl(brandFireGif, 'fire');
   setupBrandElementControl(brandLogoImage, 'title');
 }
