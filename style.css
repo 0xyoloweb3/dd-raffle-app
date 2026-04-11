@@ -589,7 +589,7 @@ textarea {
   border: 2px solid rgba(255, 58, 58, 0.95);
   border-radius: 11px;
   color: #fff1ea;
-  background: rgba(120, 10, 10, 0.34);
+  background: transparent;
   box-shadow:
     0 0 0 1px rgba(255, 120, 120, 0.22),
     0 0 18px rgba(255, 44, 44, 0.22),
@@ -612,7 +612,7 @@ textarea {
   box-shadow:
     0 0 0 3px rgba(255, 54, 54, 0.18),
     0 0 26px rgba(255, 44, 44, 0.28);
-  background: rgba(145, 16, 16, 0.42);
+  background: transparent;
 }
 
 .participants-board__add-row .board-move-slot--button {
