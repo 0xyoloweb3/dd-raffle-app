@@ -71,6 +71,25 @@ body::before {
   object-position: center;
 }
 
+.top-beam__gargona {
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  width: 56px;
+  height: auto;
+  z-index: 1;
+  pointer-events: auto;
+  user-select: none;
+  cursor: grab;
+  transform: translate(calc(-50% + var(--gargona-x, 0px)), var(--gargona-y, 0px));
+  transform-origin: center top;
+  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.34));
+}
+
+.top-beam__gargona.is-dragging {
+  cursor: grabbing;
+}
+
 .header {
   position: static;
   padding: calc(18px + var(--top-beam-height)) 24px 0;
@@ -131,7 +150,15 @@ body::before {
   max-width: 100%;
   height: auto;
   object-fit: contain;
+  transform: translate(var(--brand-banner-x, 0px), var(--brand-banner-y, 0px)) scale(var(--brand-banner-scale, 1));
+  transform-origin: center top;
   filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.28));
+  cursor: grab;
+  user-select: none;
+}
+
+.brand-banner-image.is-dragging {
+  cursor: grabbing;
 }
 
 .brand-banner-overlay {

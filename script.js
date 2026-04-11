@@ -78,10 +78,13 @@ let currentMode = null;
 let brandDragPosition = { x: 0, y: 0 };
 let activeBrandDrag = null;
 let brandElementState = {
+  banner: { x: 0, y: 0, scale: 1 },
   fire: { x: 0, y: 0, scale: 1 },
   title: { x: 0, y: 0, scale: 1 },
 };
 let activeBrandElementDrag = null;
+let gargonaArtState = { x: 0, y: 0 };
+let activeGargonaDrag = null;
 
 const inputName = document.getElementById('input-name');
 const btnAdd = document.getElementById('btn-add');
@@ -97,9 +100,11 @@ const historyCount = document.getElementById('history-count');
 const activeModeLabel = document.getElementById('active-mode-label');
 const modeDescription = document.getElementById('mode-description');
 const mainIntro = document.getElementById('main-intro');
+const brandBannerImage = document.getElementById('brand-banner-image');
 const brandBannerOverlay = document.getElementById('brand-banner-overlay');
 const brandFireGif = document.getElementById('brand-fire-gif');
 const brandLogoImage = document.getElementById('brand-logo-image');
+const topBeamGargona = document.getElementById('top-beam-gargona');
 const participantsTitleArt = document.getElementById('participants-title-art');
 const participantsBoard = document.querySelector('.participants-board');
 const participantsBoardMovableEls = Array.from(document.querySelectorAll('.participants-board [data-board-move]'));
@@ -302,7 +307,10 @@ function setupParticipantsTitleArtControl() {
 }
 
 function applyBrandDragPosition() {
-  if (!brandBannerOverlay) return;
+  if (!brandBannerOverlay || !brandBannerImage) return;
+  brandBannerImage.style.setProperty('--brand-banner-x', `${brandElementState.banner.x}px`);
+  brandBannerImage.style.setProperty('--brand-banner-y', `${brandElementState.banner.y}px`);
+  brandBannerImage.style.setProperty('--brand-banner-scale', `${brandElementState.banner.scale}`);
   brandBannerOverlay.style.setProperty('--brand-drag-x', `${brandDragPosition.x}px`);
   brandBannerOverlay.style.setProperty('--brand-drag-y', `${brandDragPosition.y}px`);
   brandBannerOverlay.style.setProperty('--brand-fire-x', `${brandElementState.fire.x}px`);
@@ -317,6 +325,7 @@ function saveBrandDragPosition() {
   try {
     localStorage.setItem(BRAND_DRAG_STORAGE_KEY, JSON.stringify({
       overlay: brandDragPosition,
+      banner: brandElementState.banner,
       fire: brandElementState.fire,
       title: brandElementState.title,
     }));
@@ -339,6 +348,61 @@ function resetBrandElement(key) {
 
 function setupBrandElementControl(element, key) {
   if (!element || !brandBannerOverlay) return;
+
+  element.addEventListener('pointerdown', (event) => {
+    if (event.button !== 0) return;
+    activeBrandElementDrag = {
+      key,
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: brandElementState[key].x,
+      originY: brandElementState[key].y,
+    };
+    element.classList.add('is-dragging');
+    element.setPointerCapture(event.pointerId);
+    event.preventDefault();
+    event.stopPropagation();
+  });
+
+  element.addEventListener('pointermove', (event) => {
+    if (!activeBrandElementDrag || activeBrandElementDrag.pointerId !== event.pointerId || activeBrandElementDrag.key !== key) return;
+    brandElementState[key] = {
+      ...brandElementState[key],
+      x: activeBrandElementDrag.originX + (event.clientX - activeBrandElementDrag.startX),
+      y: activeBrandElementDrag.originY + (event.clientY - activeBrandElementDrag.startY),
+    };
+    applyBrandDragPosition();
+  });
+
+  const finishElementDrag = (event) => {
+    if (!activeBrandElementDrag || activeBrandElementDrag.pointerId !== event.pointerId || activeBrandElementDrag.key !== key) return;
+    element.classList.remove('is-dragging');
+    saveBrandDragPosition();
+    activeBrandElementDrag = null;
+  };
+
+  element.addEventListener('pointerup', finishElementDrag);
+  element.addEventListener('pointercancel', finishElementDrag);
+
+  element.addEventListener('wheel', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const nextScale = Math.min(3, Math.max(0.35, brandElementState[key].scale + (event.deltaY < 0 ? 0.05 : -0.05)));
+    brandElementState[key] = {
+      ...brandElementState[key],
+      scale: Number(nextScale.toFixed(2)),
+    };
+    applyBrandDragPosition();
+    saveBrandDragPosition();
+  }, { passive: false });
+
+  element.addEventListener('dblclick', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    resetBrandElement(key);
+  });
+
   applyBrandDragPosition();
 }
 
@@ -346,8 +410,66 @@ function setupBrandDrag() {
   if (!brandBannerOverlay) return;
 
   applyBrandDragPosition();
+  setupBrandElementControl(brandBannerImage, 'banner');
   setupBrandElementControl(brandFireGif, 'fire');
   setupBrandElementControl(brandLogoImage, 'title');
+}
+
+function applyGargonaArtLayout() {
+  if (!topBeamGargona) return;
+  topBeamGargona.style.setProperty('--gargona-x', `${gargonaArtState.x || 0}px`);
+  topBeamGargona.style.setProperty('--gargona-y', `${gargonaArtState.y || 0}px`);
+}
+
+function saveGargonaArtLayout() {
+  try {
+    localStorage.setItem('rollbria-gargona-art-layout', JSON.stringify(gargonaArtState));
+  } catch (_) {}
+}
+
+function setupGargonaArtControl() {
+  if (!topBeamGargona) return;
+  applyGargonaArtLayout();
+
+  topBeamGargona.addEventListener('pointerdown', (event) => {
+    if (event.button !== 0) return;
+    activeGargonaDrag = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: gargonaArtState.x || 0,
+      originY: gargonaArtState.y || 0,
+    };
+    topBeamGargona.classList.add('is-dragging');
+    topBeamGargona.setPointerCapture(event.pointerId);
+    event.preventDefault();
+    event.stopPropagation();
+  });
+
+  topBeamGargona.addEventListener('pointermove', (event) => {
+    if (!activeGargonaDrag || activeGargonaDrag.pointerId !== event.pointerId) return;
+    gargonaArtState = {
+      x: activeGargonaDrag.originX + (event.clientX - activeGargonaDrag.startX),
+      y: activeGargonaDrag.originY + (event.clientY - activeGargonaDrag.startY),
+    };
+    applyGargonaArtLayout();
+  });
+
+  const finishGargonaDrag = (event) => {
+    if (!activeGargonaDrag || activeGargonaDrag.pointerId !== event.pointerId) return;
+    topBeamGargona.classList.remove('is-dragging');
+    saveGargonaArtLayout();
+    activeGargonaDrag = null;
+  };
+
+  topBeamGargona.addEventListener('pointerup', finishGargonaDrag);
+  topBeamGargona.addEventListener('pointercancel', finishGargonaDrag);
+  topBeamGargona.addEventListener('dblclick', (event) => {
+    event.preventDefault();
+    gargonaArtState = { x: 0, y: 0 };
+    applyGargonaArtLayout();
+    saveGargonaArtLayout();
+  });
 }
 
 function saveParticipantsBoardState() {
@@ -1884,6 +2006,13 @@ function load() {
           scale: parsedBrandDrag.fire.scale,
         };
       }
+      if (Number.isFinite(parsedBrandDrag?.banner?.x) && Number.isFinite(parsedBrandDrag?.banner?.y) && Number.isFinite(parsedBrandDrag?.banner?.scale)) {
+        brandElementState.banner = {
+          x: parsedBrandDrag.banner.x,
+          y: parsedBrandDrag.banner.y,
+          scale: parsedBrandDrag.banner.scale,
+        };
+      }
       if (Number.isFinite(parsedBrandDrag?.title?.x) && Number.isFinite(parsedBrandDrag?.title?.y) && Number.isFinite(parsedBrandDrag?.title?.scale)) {
         brandElementState.title = {
           x: parsedBrandDrag.title.x,
@@ -1909,6 +2038,17 @@ function load() {
         delete participantsBoardLayoutState['participants-title-art'];
       }
     }
+
+    const storedGargonaArtLayout = localStorage.getItem('rollbria-gargona-art-layout');
+    if (storedGargonaArtLayout) {
+      const parsedGargonaArtLayout = JSON.parse(storedGargonaArtLayout);
+      if (Number.isFinite(parsedGargonaArtLayout?.x) && Number.isFinite(parsedGargonaArtLayout?.y)) {
+        gargonaArtState = {
+          x: parsedGargonaArtLayout.x,
+          y: parsedGargonaArtLayout.y,
+        };
+      }
+    }
   } catch {}
 }
 
@@ -1919,6 +2059,7 @@ winnerPopup.addEventListener('click', (e) => {
 
 load();
 setupBrandDrag();
+setupGargonaArtControl();
 setupParticipantsBoardEditor();
 setupParticipantsTitleArtControl();
 Object.keys(modeTimerEls).forEach((mode) => syncTimerToggle(mode));
