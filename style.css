@@ -586,14 +586,11 @@ textarea {
   width: 100%;
   height: 100%;
   padding: 10px 14px 10px;
-  border: 2px solid rgba(255, 58, 58, 0.95);
+  border: 1px solid rgba(231, 201, 142, 0.2);
   border-radius: 11px;
   color: #fff1ea;
   background: transparent;
-  box-shadow:
-    0 0 0 1px rgba(255, 120, 120, 0.22),
-    0 0 18px rgba(255, 44, 44, 0.22),
-    inset 0 0 0 1px rgba(255, 180, 180, 0.08);
+  box-shadow: none;
   position: relative;
   z-index: 80;
   cursor: text;
@@ -608,10 +605,8 @@ textarea {
 
 .participants-board__input-field:focus,
 .participants-board__import textarea:focus {
-  border-color: rgba(255, 120, 120, 1);
-  box-shadow:
-    0 0 0 3px rgba(255, 54, 54, 0.18),
-    0 0 26px rgba(255, 44, 44, 0.28);
+  border-color: rgba(231, 201, 142, 0.42);
+  box-shadow: none;
   background: transparent;
 }
 
