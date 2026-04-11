@@ -744,77 +744,54 @@ textarea {
   flex: none;
   padding: 6px 8px 4px 10px;
   overflow: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(173, 128, 74, 0.98) rgba(42, 24, 12, 0.88);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .participants-board__list::-webkit-scrollbar {
-  width: 18px;
+  width: 0;
+  height: 0;
 }
 
-.participants-board__list::-webkit-scrollbar-track {
-  border-radius: 999px;
-  border: 2px solid rgba(41, 24, 12, 0.96);
-  background:
-    linear-gradient(90deg, rgba(37, 21, 11, 0.94), rgba(76, 46, 24, 0.92) 18%, rgba(205, 163, 103, 0.98) 38%, rgba(240, 211, 157, 0.98) 50%, rgba(201, 158, 99, 0.98) 62%, rgba(72, 43, 22, 0.92) 82%, rgba(35, 20, 10, 0.94)),
-    linear-gradient(180deg, rgba(60, 35, 19, 0.96), rgba(31, 18, 9, 0.98));
-  box-shadow:
-    inset 0 0 0 1px rgba(232, 193, 129, 0.08),
-    inset 0 6px 10px rgba(0, 0, 0, 0.24);
+.participants-scroll-ui {
+  position: absolute;
+  top: 37%;
+  right: 8.7%;
+  bottom: 18%;
+  width: 24px;
+  z-index: 4;
+  pointer-events: none;
 }
 
-.participants-board__list::-webkit-scrollbar-button:single-button {
-  display: block;
-  height: 18px;
-  border: 2px solid rgba(41, 24, 12, 0.96);
-  background:
-    linear-gradient(180deg, rgba(92, 55, 29, 0.98), rgba(48, 29, 15, 0.98));
-  box-shadow: inset 0 0 0 1px rgba(218, 177, 115, 0.1);
-}
-
-.participants-board__list::-webkit-scrollbar-button:single-button:vertical:decrement {
-  border-bottom: none;
-  border-radius: 9px 9px 0 0;
-  background-image:
-    linear-gradient(135deg, transparent 48%, rgba(231, 198, 138, 0.98) 49%, rgba(231, 198, 138, 0.98) 58%, transparent 59%),
-    linear-gradient(225deg, transparent 48%, rgba(231, 198, 138, 0.98) 49%, rgba(231, 198, 138, 0.98) 58%, transparent 59%),
-    linear-gradient(180deg, rgba(92, 55, 29, 0.98), rgba(48, 29, 15, 0.98));
-  background-position: center 9px, center 9px, center;
-  background-size: 8px 8px, 8px 8px, 100% 100%;
+.participants-scroll-track,
+.participants-scroll-thumb {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
 }
 
-.participants-board__list::-webkit-scrollbar-button:single-button:vertical:increment {
-  border-top: none;
-  border-radius: 0 0 9px 9px;
-  background-image:
-    linear-gradient(315deg, transparent 48%, rgba(231, 198, 138, 0.98) 49%, rgba(231, 198, 138, 0.98) 58%, transparent 59%),
-    linear-gradient(45deg, transparent 48%, rgba(231, 198, 138, 0.98) 49%, rgba(231, 198, 138, 0.98) 58%, transparent 59%),
-    linear-gradient(180deg, rgba(92, 55, 29, 0.98), rgba(48, 29, 15, 0.98));
-  background-position: center 8px, center 8px, center;
-  background-size: 8px 8px, 8px 8px, 100% 100%;
-  background-repeat: no-repeat;
+.participants-scroll-track {
+  inset: 0;
+  width: 24px;
+  background-image: url("participants-scroll-track.png");
+  pointer-events: none;
 }
 
-.participants-board__list::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  border: 3px solid rgba(50, 30, 16, 0.98);
-  background:
-    radial-gradient(circle at 50% 18%, rgba(245, 220, 169, 0.88), transparent 26%),
-    radial-gradient(circle at 50% 82%, rgba(245, 220, 169, 0.88), transparent 26%),
-    linear-gradient(90deg, rgba(77, 45, 22, 0.98), rgba(178, 133, 77, 0.98) 20%, rgba(240, 210, 155, 0.98) 50%, rgba(171, 127, 72, 0.98) 80%, rgba(73, 43, 21, 0.98)),
-    linear-gradient(180deg, rgba(166, 118, 65, 0.98), rgba(118, 75, 40, 0.98));
-  box-shadow:
-    inset 0 0 0 1px rgba(246, 220, 171, 0.18),
-    0 2px 5px rgba(26, 13, 6, 0.26);
+.participants-scroll-thumb {
+  top: 0;
+  width: 24px;
+  min-height: 28px;
+  background-image: url("participants-scroll-thumb.png");
+  pointer-events: auto;
+  cursor: grab;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.24));
 }
 
-.participants-board__list::-webkit-scrollbar-thumb:hover {
-  background:
-    radial-gradient(circle at 50% 18%, rgba(255, 231, 185, 0.92), transparent 26%),
-    radial-gradient(circle at 50% 82%, rgba(255, 231, 185, 0.92), transparent 26%),
-    linear-gradient(90deg, rgba(85, 50, 24, 1), rgba(192, 145, 86, 1) 20%, rgba(249, 221, 168, 1) 50%, rgba(185, 138, 80, 1) 80%, rgba(80, 46, 22, 1)),
-    linear-gradient(180deg, rgba(181, 131, 74, 1), rgba(127, 82, 43, 1));
+.participants-scroll-thumb.is-dragging {
+  cursor: grabbing;
 }
 
 .participants-board__list .list-empty {
