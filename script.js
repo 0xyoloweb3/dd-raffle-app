@@ -452,13 +452,14 @@ function setupParticipantsBoardEditor() {
       });
     }
 
-    if (key !== 'input-shell') return;
+    const canDragBoardElement = key === 'input-shell' || key.startsWith('btn-');
+    if (!canDragBoardElement) return;
 
-    let activeInputShellDrag = null;
+    let activeBoardElementDrag = null;
 
     element.addEventListener('pointerdown', (event) => {
       if (event.button !== 0 || !event.shiftKey) return;
-      activeInputShellDrag = {
+      activeBoardElementDrag = {
         pointerId: event.pointerId,
         startX: event.clientX,
         startY: event.clientY,
@@ -472,24 +473,24 @@ function setupParticipantsBoardEditor() {
     });
 
     element.addEventListener('pointermove', (event) => {
-      if (!activeInputShellDrag || activeInputShellDrag.pointerId !== event.pointerId) return;
+      if (!activeBoardElementDrag || activeBoardElementDrag.pointerId !== event.pointerId) return;
       participantsBoardLayoutState[key] = {
         ...participantsBoardLayoutState[key],
-        x: activeInputShellDrag.originX + (event.clientX - activeInputShellDrag.startX),
-        y: activeInputShellDrag.originY + (event.clientY - activeInputShellDrag.startY),
+        x: activeBoardElementDrag.originX + (event.clientX - activeBoardElementDrag.startX),
+        y: activeBoardElementDrag.originY + (event.clientY - activeBoardElementDrag.startY),
       };
       applyParticipantsBoardLayout();
     });
 
-    const finishInputShellDrag = (event) => {
-      if (!activeInputShellDrag || activeInputShellDrag.pointerId !== event.pointerId) return;
+    const finishBoardElementDrag = (event) => {
+      if (!activeBoardElementDrag || activeBoardElementDrag.pointerId !== event.pointerId) return;
       element.classList.remove('is-dragging');
       saveParticipantsBoardState();
-      activeInputShellDrag = null;
+      activeBoardElementDrag = null;
     };
 
-    element.addEventListener('pointerup', finishInputShellDrag);
-    element.addEventListener('pointercancel', finishInputShellDrag);
+    element.addEventListener('pointerup', finishBoardElementDrag);
+    element.addEventListener('pointercancel', finishBoardElementDrag);
   });
 
   participantsBoardTextEls.forEach((element) => {
