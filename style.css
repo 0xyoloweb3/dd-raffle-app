@@ -752,10 +752,12 @@ textarea {
 
 .participants-board .participant-item {
   margin-bottom: 8px;
-  border-color: rgba(126, 86, 47, 0.18);
-  background: rgba(255, 242, 213, 0.18);
+  border-color: rgba(146, 104, 58, 0.34);
+  background: linear-gradient(180deg, rgba(255, 244, 220, 0.36), rgba(232, 208, 167, 0.28));
   color: #52341a;
-  box-shadow: 0 6px 16px rgba(81, 49, 21, 0.08);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 241, 210, 0.18),
+    0 8px 18px rgba(81, 49, 21, 0.12);
 }
 
 .participants-board .participant-index {
@@ -782,16 +784,19 @@ textarea {
   gap: 10px;
   margin-bottom: 8px;
   padding: 11px 12px;
-  border: 1px solid transparent;
+  border: 1px solid rgba(167, 122, 71, 0.28);
   border-radius: 14px;
-  background: rgba(255, 244, 224, 0.03);
-  transition: border-color 0.16s ease, transform 0.16s ease, background 0.16s ease;
+  background: linear-gradient(180deg, rgba(255, 244, 224, 0.16), rgba(214, 185, 142, 0.1));
+  transition: border-color 0.16s ease, transform 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
 }
 
 .participant-item:hover {
   transform: translateX(2px);
-  border-color: rgba(192, 142, 84, 0.22);
-  background: rgba(111, 74, 41, 0.22);
+  border-color: rgba(196, 149, 92, 0.44);
+  background: linear-gradient(180deg, rgba(255, 244, 224, 0.24), rgba(188, 143, 88, 0.16));
+  box-shadow:
+    inset 0 0 0 1px rgba(245, 221, 171, 0.14),
+    0 8px 18px rgba(92, 55, 24, 0.14);
 }
 
 .participant-item .idx {
@@ -802,8 +807,9 @@ textarea {
   align-items: center;
   justify-content: center;
   font-size: 11px;
-  color: var(--muted);
-  background: rgba(106, 69, 37, 0.5);
+  color: #f4dfb4;
+  background: linear-gradient(180deg, rgba(150, 116, 71, 0.75), rgba(108, 76, 42, 0.82));
+  box-shadow: inset 0 0 0 1px rgba(245, 220, 169, 0.18);
   flex-shrink: 0;
 }
 
@@ -820,7 +826,7 @@ textarea {
 .participant-item .btn-remove {
   border: none;
   background: transparent;
-  color: #7b4d28;
+  color: #8d6136;
   font-size: 18px;
   font-weight: 700;
   line-height: 1;
@@ -830,7 +836,7 @@ textarea {
   transition: color 0.16s ease;
 }
 
-.participant-item .btn-remove:hover { color: #a25e33; }
+.participant-item .btn-remove:hover { color: #b57a40; }
 
 .participant-item.highlight {
   border-color: rgba(224, 179, 90, 0.44);
