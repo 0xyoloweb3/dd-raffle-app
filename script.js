@@ -265,97 +265,13 @@ function resetBrandElement(key) {
 
 function setupBrandElementControl(element, key) {
   if (!element || !brandBannerOverlay) return;
-
-  element.addEventListener('pointerdown', (event) => {
-    if (event.button !== 0) return;
-    event.stopPropagation();
-    activeBrandElementDrag = {
-      key,
-      pointerId: event.pointerId,
-      startX: event.clientX,
-      startY: event.clientY,
-      originX: brandElementState[key].x,
-      originY: brandElementState[key].y,
-    };
-    element.classList.add('is-dragging');
-    element.setPointerCapture(event.pointerId);
-  });
-
-  element.addEventListener('pointermove', (event) => {
-    if (!activeBrandElementDrag || activeBrandElementDrag.pointerId !== event.pointerId || activeBrandElementDrag.key !== key) return;
-    brandElementState[key] = {
-      ...brandElementState[key],
-      x: activeBrandElementDrag.originX + (event.clientX - activeBrandElementDrag.startX),
-      y: activeBrandElementDrag.originY + (event.clientY - activeBrandElementDrag.startY),
-    };
-    applyBrandDragPosition();
-  });
-
-  function finishElementDrag(event) {
-    if (!activeBrandElementDrag || activeBrandElementDrag.pointerId !== event.pointerId || activeBrandElementDrag.key !== key) return;
-    element.classList.remove('is-dragging');
-    saveBrandDragPosition();
-    activeBrandElementDrag = null;
-  }
-
-  element.addEventListener('pointerup', finishElementDrag);
-  element.addEventListener('pointercancel', finishElementDrag);
-
-  element.addEventListener('wheel', (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    const nextScale = Math.min(3, Math.max(0.35, brandElementState[key].scale + (event.deltaY < 0 ? 0.05 : -0.05)));
-    brandElementState[key] = {
-      ...brandElementState[key],
-      scale: Number(nextScale.toFixed(2)),
-    };
-    applyBrandDragPosition();
-    saveBrandDragPosition();
-  }, { passive: false });
-
-  element.addEventListener('dblclick', (event) => {
-    event.stopPropagation();
-    resetBrandElement(key);
-  });
+  applyBrandDragPosition();
 }
 
 function setupBrandDrag() {
   if (!brandBannerOverlay) return;
 
   applyBrandDragPosition();
-
-  brandBannerOverlay.addEventListener('pointerdown', (event) => {
-    if (event.button !== 0) return;
-    activeBrandDrag = {
-      pointerId: event.pointerId,
-      startX: event.clientX,
-      startY: event.clientY,
-      originX: brandDragPosition.x,
-      originY: brandDragPosition.y,
-    };
-    brandBannerOverlay.classList.add('is-dragging');
-    brandBannerOverlay.setPointerCapture(event.pointerId);
-  });
-
-  brandBannerOverlay.addEventListener('pointermove', (event) => {
-    if (!activeBrandDrag || event.pointerId !== activeBrandDrag.pointerId) return;
-    brandDragPosition = {
-      x: activeBrandDrag.originX + (event.clientX - activeBrandDrag.startX),
-      y: activeBrandDrag.originY + (event.clientY - activeBrandDrag.startY),
-    };
-    applyBrandDragPosition();
-  });
-
-  function finishBrandDrag(event) {
-    if (!activeBrandDrag || event.pointerId !== activeBrandDrag.pointerId) return;
-    brandBannerOverlay.classList.remove('is-dragging');
-    saveBrandDragPosition();
-    activeBrandDrag = null;
-  }
-
-  brandBannerOverlay.addEventListener('pointerup', finishBrandDrag);
-  brandBannerOverlay.addEventListener('pointercancel', finishBrandDrag);
-  brandBannerOverlay.addEventListener('dblclick', resetBrandDragPosition);
   setupBrandElementControl(brandFireGif, 'fire');
   setupBrandElementControl(brandLogoImage, 'title');
 }
@@ -452,7 +368,7 @@ function setupParticipantsBoardEditor() {
       });
     }
 
-    const canDragBoardElement = key === 'input-shell' || key.startsWith('btn-');
+    const canDragBoardElement = key === 'input-shell';
     if (!canDragBoardElement) return;
 
     let activeBoardElementDrag = null;

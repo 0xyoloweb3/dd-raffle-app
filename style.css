@@ -123,12 +123,12 @@ body::before {
   padding: 8px 22px 0 16px;
   pointer-events: auto;
   transform: translate(var(--brand-drag-x, 0px), var(--brand-drag-y, 0px));
-  cursor: grab;
+  cursor: default;
   touch-action: none;
 }
 
 .brand-banner-overlay.is-dragging {
-  cursor: grabbing;
+  cursor: default;
 }
 
 .brand-fire-gif {
@@ -140,7 +140,7 @@ body::before {
   transform: translate(var(--brand-fire-x, 0px), var(--brand-fire-y, 0px)) scale(var(--brand-fire-scale, 1));
   transform-origin: top left;
   margin-top: 8px;
-  cursor: grab;
+  cursor: default;
 }
 
 .brand-kicker,
@@ -162,12 +162,12 @@ body::before {
   filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.35));
   transform: translate(calc(95px + var(--brand-title-x, 0px)), calc(-16px + var(--brand-title-y, 0px))) scale(var(--brand-title-scale, 1));
   transform-origin: top left;
-  cursor: grab;
+  cursor: default;
 }
 
 .brand-fire-gif.is-dragging,
 .brand-logo-image.is-dragging {
-  cursor: grabbing;
+  cursor: default;
 }
 
 .header-meta {
