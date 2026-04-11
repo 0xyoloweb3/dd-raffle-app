@@ -71,22 +71,22 @@ body::before {
   object-position: center;
 }
 
-.top-beam__gargona {
-  position: absolute;
+.wood-normal-decor {
+  position: fixed;
   top: -2px;
   left: 50%;
-  width: 56px;
+  width: min(540px, 74vw);
   height: auto;
-  z-index: 1;
+  z-index: 31;
   pointer-events: auto;
   user-select: none;
   cursor: grab;
-  transform: translate(calc(-50% + var(--gargona-x, 0px)), var(--gargona-y, 0px));
+  transform: translate(calc(-50% + var(--wood-normal-x, 0px)), var(--wood-normal-y, 0px));
   transform-origin: center top;
-  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.34));
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.28));
 }
 
-.top-beam__gargona.is-dragging {
+.wood-normal-decor.is-dragging {
   cursor: grabbing;
 }
 

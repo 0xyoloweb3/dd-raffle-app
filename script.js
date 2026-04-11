@@ -83,8 +83,8 @@ let brandElementState = {
   title: { x: 0, y: 0, scale: 1 },
 };
 let activeBrandElementDrag = null;
-let gargonaArtState = { x: 0, y: 0 };
-let activeGargonaDrag = null;
+let woodNormalDecorState = { x: 0, y: 0 };
+let activeWoodNormalDecorDrag = null;
 
 const inputName = document.getElementById('input-name');
 const btnAdd = document.getElementById('btn-add');
@@ -105,7 +105,7 @@ const brandBannerImage = document.getElementById('brand-banner-image');
 const brandBannerOverlay = document.getElementById('brand-banner-overlay');
 const brandFireGif = document.getElementById('brand-fire-gif');
 const brandLogoImage = document.getElementById('brand-logo-image');
-const topBeamGargona = document.getElementById('top-beam-gargona');
+const woodNormalDecor = document.getElementById('wood-normal-decor');
 const participantsTitleArt = document.getElementById('participants-title-art');
 const participantsBoard = document.querySelector('.participants-board');
 const participantsBoardMovableEls = Array.from(document.querySelectorAll('.participants-board [data-board-move]'));
@@ -477,60 +477,60 @@ function setupBrandDrag() {
   setupBrandElementControl(brandLogoImage, 'title');
 }
 
-function applyGargonaArtLayout() {
-  if (!topBeamGargona) return;
-  topBeamGargona.style.setProperty('--gargona-x', `${gargonaArtState.x || 0}px`);
-  topBeamGargona.style.setProperty('--gargona-y', `${gargonaArtState.y || 0}px`);
+function applyWoodNormalDecorLayout() {
+  if (!woodNormalDecor) return;
+  woodNormalDecor.style.setProperty('--wood-normal-x', `${woodNormalDecorState.x || 0}px`);
+  woodNormalDecor.style.setProperty('--wood-normal-y', `${woodNormalDecorState.y || 0}px`);
 }
 
-function saveGargonaArtLayout() {
+function saveWoodNormalDecorLayout() {
   try {
-    localStorage.setItem('rollbria-gargona-art-layout', JSON.stringify(gargonaArtState));
+    localStorage.setItem('rollbria-wood-normal-layout', JSON.stringify(woodNormalDecorState));
   } catch (_) {}
 }
 
-function setupGargonaArtControl() {
-  if (!topBeamGargona) return;
-  applyGargonaArtLayout();
+function setupWoodNormalDecorControl() {
+  if (!woodNormalDecor) return;
+  applyWoodNormalDecorLayout();
 
-  topBeamGargona.addEventListener('pointerdown', (event) => {
+  woodNormalDecor.addEventListener('pointerdown', (event) => {
     if (event.button !== 0) return;
-    activeGargonaDrag = {
+    activeWoodNormalDecorDrag = {
       pointerId: event.pointerId,
       startX: event.clientX,
       startY: event.clientY,
-      originX: gargonaArtState.x || 0,
-      originY: gargonaArtState.y || 0,
+      originX: woodNormalDecorState.x || 0,
+      originY: woodNormalDecorState.y || 0,
     };
-    topBeamGargona.classList.add('is-dragging');
-    topBeamGargona.setPointerCapture(event.pointerId);
+    woodNormalDecor.classList.add('is-dragging');
+    woodNormalDecor.setPointerCapture(event.pointerId);
     event.preventDefault();
     event.stopPropagation();
   });
 
-  topBeamGargona.addEventListener('pointermove', (event) => {
-    if (!activeGargonaDrag || activeGargonaDrag.pointerId !== event.pointerId) return;
-    gargonaArtState = {
-      x: activeGargonaDrag.originX + (event.clientX - activeGargonaDrag.startX),
-      y: activeGargonaDrag.originY + (event.clientY - activeGargonaDrag.startY),
+  woodNormalDecor.addEventListener('pointermove', (event) => {
+    if (!activeWoodNormalDecorDrag || activeWoodNormalDecorDrag.pointerId !== event.pointerId) return;
+    woodNormalDecorState = {
+      x: activeWoodNormalDecorDrag.originX + (event.clientX - activeWoodNormalDecorDrag.startX),
+      y: activeWoodNormalDecorDrag.originY + (event.clientY - activeWoodNormalDecorDrag.startY),
     };
-    applyGargonaArtLayout();
+    applyWoodNormalDecorLayout();
   });
 
-  const finishGargonaDrag = (event) => {
-    if (!activeGargonaDrag || activeGargonaDrag.pointerId !== event.pointerId) return;
-    topBeamGargona.classList.remove('is-dragging');
-    saveGargonaArtLayout();
-    activeGargonaDrag = null;
+  const finishWoodNormalDecorDrag = (event) => {
+    if (!activeWoodNormalDecorDrag || activeWoodNormalDecorDrag.pointerId !== event.pointerId) return;
+    woodNormalDecor.classList.remove('is-dragging');
+    saveWoodNormalDecorLayout();
+    activeWoodNormalDecorDrag = null;
   };
 
-  topBeamGargona.addEventListener('pointerup', finishGargonaDrag);
-  topBeamGargona.addEventListener('pointercancel', finishGargonaDrag);
-  topBeamGargona.addEventListener('dblclick', (event) => {
+  woodNormalDecor.addEventListener('pointerup', finishWoodNormalDecorDrag);
+  woodNormalDecor.addEventListener('pointercancel', finishWoodNormalDecorDrag);
+  woodNormalDecor.addEventListener('dblclick', (event) => {
     event.preventDefault();
-    gargonaArtState = { x: 0, y: 0 };
-    applyGargonaArtLayout();
-    saveGargonaArtLayout();
+    woodNormalDecorState = { x: 0, y: 0 };
+    applyWoodNormalDecorLayout();
+    saveWoodNormalDecorLayout();
   });
 }
 
@@ -2101,13 +2101,13 @@ function load() {
       }
     }
 
-    const storedGargonaArtLayout = localStorage.getItem('rollbria-gargona-art-layout');
-    if (storedGargonaArtLayout) {
-      const parsedGargonaArtLayout = JSON.parse(storedGargonaArtLayout);
-      if (Number.isFinite(parsedGargonaArtLayout?.x) && Number.isFinite(parsedGargonaArtLayout?.y)) {
-        gargonaArtState = {
-          x: parsedGargonaArtLayout.x,
-          y: parsedGargonaArtLayout.y,
+    const storedWoodNormalDecorLayout = localStorage.getItem('rollbria-wood-normal-layout');
+    if (storedWoodNormalDecorLayout) {
+      const parsedWoodNormalDecorLayout = JSON.parse(storedWoodNormalDecorLayout);
+      if (Number.isFinite(parsedWoodNormalDecorLayout?.x) && Number.isFinite(parsedWoodNormalDecorLayout?.y)) {
+        woodNormalDecorState = {
+          x: parsedWoodNormalDecorLayout.x,
+          y: parsedWoodNormalDecorLayout.y,
         };
       }
     }
@@ -2121,7 +2121,7 @@ winnerPopup.addEventListener('click', (e) => {
 
 load();
 setupBrandDrag();
-setupGargonaArtControl();
+setupWoodNormalDecorControl();
 setupParticipantsBoardEditor();
 setupParticipantsTitleArtControl();
 Object.keys(modeTimerEls).forEach((mode) => syncTimerToggle(mode));
