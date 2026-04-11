@@ -106,6 +106,8 @@ const brandBannerOverlay = document.getElementById('brand-banner-overlay');
 const brandFireGif = document.getElementById('brand-fire-gif');
 const brandLogoImage = document.getElementById('brand-logo-image');
 const woodNormalDecor = document.getElementById('wood-normal-decor');
+const woodNormalDecreaseBtn = document.getElementById('wood-normal-decrease');
+const woodNormalIncreaseBtn = document.getElementById('wood-normal-increase');
 const participantsTitleArt = document.getElementById('participants-title-art');
 const participantsBoard = document.querySelector('.participants-board');
 const participantsBoardMovableEls = Array.from(document.querySelectorAll('.participants-board [data-board-move]'));
@@ -493,6 +495,16 @@ function saveWoodNormalDecorLayout() {
   } catch (_) {}
 }
 
+function updateWoodNormalScale(delta) {
+  const currentScale = Number.isFinite(woodNormalDecorState.scale) ? woodNormalDecorState.scale : 1;
+  woodNormalDecorState = {
+    ...woodNormalDecorState,
+    scale: Number(clamp(currentScale + delta, 0.08, 20).toFixed(3)),
+  };
+  applyWoodNormalDecorLayout();
+  saveWoodNormalDecorLayout();
+}
+
 function setupWoodNormalDecorControl() {
   if (!woodNormalDecor) return;
   applyWoodNormalDecorLayout();
@@ -545,14 +557,7 @@ function setupWoodNormalDecorControl() {
   woodNormalDecor.addEventListener('wheel', (event) => {
     event.preventDefault();
     event.stopPropagation();
-    const currentScale = Number.isFinite(woodNormalDecorState.scale) ? woodNormalDecorState.scale : 1;
-    const nextScale = clamp(currentScale + (event.deltaY < 0 ? 0.08 : -0.08), 0.08, 20);
-    woodNormalDecorState = {
-      ...woodNormalDecorState,
-      scale: Number(nextScale.toFixed(3)),
-    };
-    applyWoodNormalDecorLayout();
-    saveWoodNormalDecorLayout();
+    updateWoodNormalScale(event.deltaY < 0 ? 0.08 : -0.08);
   }, { passive: false });
   woodNormalDecor.addEventListener('dblclick', (event) => {
     event.preventDefault();
@@ -560,6 +565,20 @@ function setupWoodNormalDecorControl() {
     applyWoodNormalDecorLayout();
     saveWoodNormalDecorLayout();
   });
+
+  if (woodNormalDecreaseBtn) {
+    woodNormalDecreaseBtn.addEventListener('click', (event) => {
+      event.preventDefault();
+      updateWoodNormalScale(-0.12);
+    });
+  }
+
+  if (woodNormalIncreaseBtn) {
+    woodNormalIncreaseBtn.addEventListener('click', (event) => {
+      event.preventDefault();
+      updateWoodNormalScale(0.12);
+    });
+  }
 }
 
 function saveParticipantsBoardState() {
