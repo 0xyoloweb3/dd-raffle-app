@@ -100,6 +100,7 @@ const mainIntro = document.getElementById('main-intro');
 const brandBannerOverlay = document.getElementById('brand-banner-overlay');
 const brandFireGif = document.getElementById('brand-fire-gif');
 const brandLogoImage = document.getElementById('brand-logo-image');
+const participantsTitleArt = document.getElementById('participants-title-art');
 const participantsBoard = document.querySelector('.participants-board');
 const participantsBoardMovableEls = Array.from(document.querySelectorAll('.participants-board [data-board-move]'));
 const participantsBoardTextEls = Array.from(document.querySelectorAll('.participants-board [data-board-text]'));
@@ -226,6 +227,78 @@ function setParticipantStatus(text, tone = '') {
   participantStatus.textContent = text;
   participantStatus.className = 'panel-status';
   if (tone) participantStatus.classList.add(`is-${tone}`);
+}
+
+function applyParticipantsTitleArtLayout() {
+  if (!participantsTitleArt) return;
+  const state = participantsBoardLayoutState['participants-title-art'] || { x: 0, y: 0, scale: 1 };
+  participantsTitleArt.style.setProperty('--participants-title-x', `${state.x}px`);
+  participantsTitleArt.style.setProperty('--participants-title-y', `${state.y}px`);
+  participantsTitleArt.style.setProperty('--participants-title-scale', `${state.scale ?? 1}`);
+}
+
+function setupParticipantsTitleArtControl() {
+  if (!participantsTitleArt) return;
+  const key = 'participants-title-art';
+  participantsBoardLayoutState[key] = participantsBoardLayoutState[key] || { x: 0, y: 0, scale: 1 };
+  applyParticipantsTitleArtLayout();
+
+  let activeTitleDrag = null;
+
+  participantsTitleArt.addEventListener('pointerdown', (event) => {
+    if (event.button !== 0) return;
+    activeTitleDrag = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: participantsBoardLayoutState[key].x || 0,
+      originY: participantsBoardLayoutState[key].y || 0,
+    };
+    participantsTitleArt.classList.add('is-dragging');
+    participantsTitleArt.setPointerCapture(event.pointerId);
+    event.preventDefault();
+    event.stopPropagation();
+  });
+
+  participantsTitleArt.addEventListener('pointermove', (event) => {
+    if (!activeTitleDrag || activeTitleDrag.pointerId !== event.pointerId) return;
+    participantsBoardLayoutState[key] = {
+      ...participantsBoardLayoutState[key],
+      x: activeTitleDrag.originX + (event.clientX - activeTitleDrag.startX),
+      y: activeTitleDrag.originY + (event.clientY - activeTitleDrag.startY),
+    };
+    applyParticipantsTitleArtLayout();
+  });
+
+  const finishTitleDrag = (event) => {
+    if (!activeTitleDrag || activeTitleDrag.pointerId !== event.pointerId) return;
+    participantsTitleArt.classList.remove('is-dragging');
+    saveParticipantsBoardState();
+    activeTitleDrag = null;
+  };
+
+  participantsTitleArt.addEventListener('pointerup', finishTitleDrag);
+  participantsTitleArt.addEventListener('pointercancel', finishTitleDrag);
+
+  participantsTitleArt.addEventListener('wheel', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const nextScale = Math.min(2.5, Math.max(0.45, (participantsBoardLayoutState[key].scale || 1) + (event.deltaY < 0 ? 0.05 : -0.05)));
+    participantsBoardLayoutState[key] = {
+      ...participantsBoardLayoutState[key],
+      scale: Number(nextScale.toFixed(2)),
+    };
+    applyParticipantsTitleArtLayout();
+    saveParticipantsBoardState();
+  }, { passive: false });
+
+  participantsTitleArt.addEventListener('dblclick', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    participantsBoardLayoutState[key] = { x: 0, y: 0, scale: 1 };
+    applyParticipantsTitleArtLayout();
+    saveParticipantsBoardState();
+  });
 }
 
 function applyBrandDragPosition() {
@@ -1846,6 +1919,7 @@ winnerPopup.addEventListener('click', (e) => {
 load();
 setupBrandDrag();
 setupParticipantsBoardEditor();
+setupParticipantsTitleArtControl();
 Object.keys(modeTimerEls).forEach((mode) => syncTimerToggle(mode));
 renderParticipants();
 renderHistory();

@@ -342,16 +342,18 @@ body::before {
 }
 
 .panel-header--participants .participants-title-art {
-  font-size: 34px;
-  letter-spacing: 0.04em;
-  line-height: 1;
-  text-transform: uppercase;
-  color: #f4d67e;
-  text-shadow:
-    0 1px 0 #fff2b7,
-    0 2px 0 #d59533,
-    0 3px 0 #9e5724,
-    0 4px 10px rgba(32, 15, 7, 0.5);
+  display: block;
+  width: min(88%, 292px);
+  height: auto;
+  user-select: none;
+  cursor: grab;
+  transform: translate(var(--participants-title-x, 0px), var(--participants-title-y, 0px)) scale(var(--participants-title-scale, 1));
+  transform-origin: center top;
+  filter: drop-shadow(0 6px 10px rgba(32, 15, 7, 0.38));
+}
+
+.panel-header--participants .participants-title-art.is-dragging {
+  cursor: grabbing;
 }
 
 .panel-header-btns {
