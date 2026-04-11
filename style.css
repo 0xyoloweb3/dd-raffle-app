@@ -600,6 +600,12 @@ textarea {
   visibility: visible;
 }
 
+.participants-board__input-field--list {
+  resize: none;
+  overflow: auto;
+  line-height: 1.15;
+}
+
 .participants-board__input-field::placeholder {
   color: rgba(255, 214, 214, 0.82);
 }

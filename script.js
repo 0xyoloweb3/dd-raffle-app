@@ -920,8 +920,9 @@ function addParticipant(name, options = {}) {
 }
 
 function parseParticipantBatch(text) {
-  return text
-    .split(/[\n,;|]+/)
+  return String(text || '')
+    .replace(/\r/g, '')
+    .split('\n')
     .map((item) => item.trim())
     .filter(Boolean);
 }
@@ -1041,7 +1042,10 @@ btnAdd.addEventListener('click', () => {
 });
 
 inputName.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') btnAdd.click();
+  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+    e.preventDefault();
+    btnAdd.click();
+  }
 });
 
 btnImport.addEventListener('click', () => {
