@@ -77,11 +77,11 @@ body::before {
   left: 50%;
   width: min(540px, 74vw);
   height: auto;
-  z-index: 31;
+  z-index: 41;
   pointer-events: auto;
   user-select: none;
   cursor: grab;
-  transform: translate(calc(-50% + var(--wood-normal-x, 0px)), var(--wood-normal-y, 0px));
+  transform: translate(calc(-50% + var(--wood-normal-x, 0px)), var(--wood-normal-y, 0px)) scale(var(--wood-normal-scale, 1));
   transform-origin: center top;
   filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.28));
 }
