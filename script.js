@@ -100,9 +100,6 @@ const historyCount = document.getElementById('history-count');
 const activeModeLabel = document.getElementById('active-mode-label');
 const modeDescription = document.getElementById('mode-description');
 const mainIntro = document.getElementById('main-intro');
-const modeTabSlots = Array.from(document.querySelectorAll('[data-mode-move]'));
-const modeTabsDecreaseBtn = document.getElementById('mode-tabs-decrease');
-const modeTabsIncreaseBtn = document.getElementById('mode-tabs-increase');
 const brandBlock = document.getElementById('brand-block');
 const brandBannerImage = document.getElementById('brand-banner-image');
 const brandBannerOverlay = document.getElementById('brand-banner-overlay');
@@ -183,110 +180,14 @@ const BATTLE_PARTICIPANTS_STORAGE_KEY = 'rollbria-battle-participants';
 const BRAND_DRAG_STORAGE_KEY = 'rollbria-brand-drag';
 const PARTICIPANTS_BOARD_LAYOUT_KEY = 'rollbria-participants-board-layout';
 const PARTICIPANTS_BOARD_LAYOUT_VERSION = 5;
-const MODE_TABS_LAYOUT_KEY = 'rollbria-mode-tabs-layout';
-const MODE_TABS_SCALE_KEY = 'rollbria-mode-tabs-scale';
 let lastBattleSyncSignature = null;
 let winnerThemeAudio = null;
 let uiAudioContext = null;
 let activeParticipantsBoardDrag = null;
 let participantsBoardLayoutState = {};
 let participantsBoardTextState = {};
-let modeTabsLayoutState = {};
-let modeTabsScale = 1;
 let sitePlaqueDecorState = { x: 0, y: 0, scale: 1 };
 let activeSitePlaqueDecorDrag = null;
-
-function applyModeTabsLayout() {
-  modeTabSlots.forEach((slot) => {
-    const key = slot.dataset.modeMove;
-    const state = modeTabsLayoutState[key] || { x: 0, y: 0 };
-    slot.style.setProperty('--mode-tab-offset-x', `${state.x}px`);
-    slot.style.setProperty('--mode-tab-offset-y', `${state.y}px`);
-    slot.style.setProperty('--mode-tab-scale', `${modeTabsScale || 1}`);
-  });
-}
-
-function persistModeTabsLayout() {
-  localStorage.setItem(MODE_TABS_LAYOUT_KEY, JSON.stringify(modeTabsLayoutState));
-}
-
-function persistModeTabsScale() {
-  localStorage.setItem(MODE_TABS_SCALE_KEY, String(modeTabsScale));
-}
-
-function updateModeTabsScale(delta) {
-  modeTabsScale = Number(clamp((Number.isFinite(modeTabsScale) ? modeTabsScale : 1) + delta, 0.5, 1.8).toFixed(3));
-  applyModeTabsLayout();
-  persistModeTabsScale();
-}
-
-function setupModeTabControls() {
-  if (!modeTabSlots.length) return;
-
-  applyModeTabsLayout();
-
-  modeTabSlots.forEach((slot) => {
-    const key = slot.dataset.modeMove;
-    modeTabsLayoutState[key] = modeTabsLayoutState[key] || { x: 0, y: 0 };
-
-    let activeDrag = null;
-
-    slot.addEventListener('pointerdown', (event) => {
-      if (event.button !== 0) return;
-      activeDrag = {
-        pointerId: event.pointerId,
-        startX: event.clientX,
-        startY: event.clientY,
-        originX: modeTabsLayoutState[key].x || 0,
-        originY: modeTabsLayoutState[key].y || 0,
-      };
-      slot.setPointerCapture(event.pointerId);
-      slot.classList.add('is-dragging');
-    });
-
-    slot.addEventListener('pointermove', (event) => {
-      if (!activeDrag || event.pointerId !== activeDrag.pointerId) return;
-      modeTabsLayoutState[key] = {
-        x: activeDrag.originX + (event.clientX - activeDrag.startX),
-        y: activeDrag.originY + (event.clientY - activeDrag.startY),
-      };
-      applyModeTabsLayout();
-    });
-
-    const stopDrag = (event) => {
-      if (!activeDrag || event.pointerId !== activeDrag.pointerId) return;
-      slot.classList.remove('is-dragging');
-      try {
-        slot.releasePointerCapture(event.pointerId);
-      } catch {}
-      activeDrag = null;
-      persistModeTabsLayout();
-    };
-
-    slot.addEventListener('pointerup', stopDrag);
-    slot.addEventListener('pointercancel', stopDrag);
-
-    slot.addEventListener('dblclick', () => {
-      modeTabsLayoutState[key] = { x: 0, y: 0 };
-      applyModeTabsLayout();
-      persistModeTabsLayout();
-    });
-  });
-
-  if (modeTabsDecreaseBtn) {
-    modeTabsDecreaseBtn.addEventListener('click', (event) => {
-      event.preventDefault();
-      updateModeTabsScale(-0.05);
-    });
-  }
-
-  if (modeTabsIncreaseBtn) {
-    modeTabsIncreaseBtn.addEventListener('click', (event) => {
-      event.preventDefault();
-      updateModeTabsScale(0.05);
-    });
-  }
-}
 
 function getCryptoRandomInt(maxExclusive) {
   if (!Number.isInteger(maxExclusive) || maxExclusive <= 0) {
@@ -2292,8 +2193,6 @@ function load() {
     const storedTimerVisible = localStorage.getItem('raffle_mode_timer_visible');
     const storedBrandDrag = localStorage.getItem(BRAND_DRAG_STORAGE_KEY);
     const storedParticipantsBoardState = localStorage.getItem(PARTICIPANTS_BOARD_LAYOUT_KEY);
-    const storedModeTabsLayout = localStorage.getItem(MODE_TABS_LAYOUT_KEY);
-    const storedModeTabsScale = localStorage.getItem(MODE_TABS_SCALE_KEY);
 
     if (storedParticipants) participants = JSON.parse(storedParticipants);
     if (storedHistory) history = JSON.parse(storedHistory);
@@ -2356,18 +2255,6 @@ function load() {
         delete participantsBoardLayoutState['participants-title-art'];
       }
     }
-    if (storedModeTabsLayout) {
-      const parsedModeTabsLayout = JSON.parse(storedModeTabsLayout);
-      if (parsedModeTabsLayout && typeof parsedModeTabsLayout === 'object') {
-        modeTabsLayoutState = parsedModeTabsLayout;
-      }
-    }
-    if (storedModeTabsScale) {
-      const parsedModeTabsScale = Number(storedModeTabsScale);
-      if (Number.isFinite(parsedModeTabsScale)) {
-        modeTabsScale = parsedModeTabsScale;
-      }
-    }
     const storedSitePlaqueDecorLayout = localStorage.getItem('rollbria-site-plaque-layout');
     if (storedSitePlaqueDecorLayout) {
       const parsedSitePlaqueDecorLayout = JSON.parse(storedSitePlaqueDecorLayout);
@@ -2400,7 +2287,6 @@ winnerPopup.addEventListener('click', (e) => {
 });
 
 load();
-setupModeTabControls();
 setupBrandDrag();
 setupSitePlaqueDecorControl();
 setupWoodNormalDecorControl();
