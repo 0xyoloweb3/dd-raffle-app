@@ -1024,9 +1024,13 @@ textarea {
 }
 
 .panel--main {
-  padding: 12px;
+  padding: 0;
   gap: 10px;
+  border: none;
+  border-radius: 0;
   background: transparent;
+  box-shadow: none;
+  overflow: visible;
 }
 
 .main-intro {
@@ -1102,10 +1106,10 @@ textarea {
   gap: 10px;
   min-height: 0;
   flex: 1;
-  padding: 10px;
-  border: 1px solid rgba(173, 123, 66, 0.18);
-  border-radius: 22px;
-  background: linear-gradient(180deg, rgba(124, 80, 42, 0.16), rgba(49, 31, 18, 0.28));
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
 }
 
 .mode-panel.active {
