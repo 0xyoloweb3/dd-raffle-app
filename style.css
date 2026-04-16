@@ -1033,6 +1033,30 @@ textarea {
   overflow: visible;
 }
 
+.draw-stage-banner {
+  position: relative;
+  width: min(100%, 980px);
+  margin: 0 auto;
+}
+
+.draw-stage-banner__art {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+}
+
+.draw-stage-banner__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 34px 20px;
+}
+
 .main-intro {
   display: flex;
   align-items: center;
@@ -1055,24 +1079,46 @@ textarea {
 }
 
 .main-intro--idle {
-  min-height: 72px;
+  min-height: 0;
   justify-content: center;
   text-align: center;
+  padding: 0;
+  border: none;
+  background: transparent;
 }
 
 .main-intro--idle > div {
   max-width: 760px;
 }
 
-.main-intro--idle .mode-description {
-  max-width: 520px;
-  font-size: 15px;
+.draw-stage-banner .main-intro-kicker {
+  font-size: clamp(22px, 2vw, 30px);
+  letter-spacing: 0.24em;
+  color: #ead4a3;
+  text-shadow:
+    0 2px 0 rgba(54, 32, 18, 0.92),
+    0 6px 18px rgba(0, 0, 0, 0.45);
+}
+
+.draw-stage-banner .mode-description {
+  max-width: 560px;
+  margin-top: 6px;
+  font-size: 13px;
+  color: rgba(231, 216, 189, 0.88);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.38);
 }
 
 .mode-tabs {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 8px;
+}
+
+.draw-stage-banner .mode-tabs {
+  width: min(100%, 900px);
+  margin-top: 18px;
+  padding: 0 18px;
+  gap: 14px;
 }
 
 .mode-tab {
@@ -1087,6 +1133,17 @@ textarea {
   text-transform: uppercase;
   cursor: pointer;
   transition: border-color 0.16s ease, background 0.16s ease, color 0.16s ease, transform 0.16s ease;
+}
+
+.draw-stage-banner .mode-tab {
+  min-height: 46px;
+  border-color: rgba(149, 118, 84, 0.72);
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(108, 102, 95, 0.76), rgba(79, 67, 57, 0.86));
+  color: #e7d8bd;
+  box-shadow:
+    inset 0 0 0 1px rgba(223, 207, 177, 0.08),
+    0 5px 12px rgba(0, 0, 0, 0.18);
 }
 
 .mode-tab:hover {

@@ -101,21 +101,26 @@
     </section>
 
     <section class="panel panel--main" id="draw-stage">
-      <div class="main-intro main-intro--idle" id="main-intro">
-        <div>
-          <span class="main-intro-kicker">Draw stage</span>
-        </div>
-        <p id="mode-description" class="mode-description">
-          Choose a raffle mode to see how this draw works and start the game.
-        </p>
-      </div>
+      <div class="draw-stage-banner">
+        <img class="draw-stage-banner__art" src="draw-stage-board.png" alt="" aria-hidden="true" />
+        <div class="draw-stage-banner__overlay">
+          <div class="main-intro main-intro--idle" id="main-intro">
+            <div>
+              <span class="main-intro-kicker">Draw stage</span>
+            </div>
+            <p id="mode-description" class="mode-description">
+              Choose a raffle mode to see how this draw works and start the game.
+            </p>
+          </div>
 
-      <div class="mode-tabs">
-        <button class="mode-tab" data-mode="quick">Quickbria</button>
-        <button class="mode-tab" data-mode="roulette">Stripbria</button>
-        <button class="mode-tab" data-mode="wheel">Wheelbria</button>
-        <button class="mode-tab" data-mode="multi">Multibria</button>
-        <button class="mode-tab" data-mode="battle">Battlebria</button>
+          <div class="mode-tabs">
+            <button class="mode-tab" data-mode="quick">Quickbria</button>
+            <button class="mode-tab" data-mode="roulette">Stripbria</button>
+            <button class="mode-tab" data-mode="wheel">Wheelbria</button>
+            <button class="mode-tab" data-mode="multi">Multibria</button>
+            <button class="mode-tab" data-mode="battle">Battlebria</button>
+          </div>
+        </div>
       </div>
 
       <div class="mode-panel" id="mode-quick">
