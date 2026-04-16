@@ -120,6 +120,36 @@ body::before {
   transform: translateY(1px);
 }
 
+.mode-tabs-controls {
+  position: fixed;
+  top: 98px;
+  right: 14px;
+  z-index: 140;
+  display: flex;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.mode-tabs-control-btn {
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(214, 177, 111, 0.58);
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(81, 48, 24, 0.96), rgba(46, 26, 13, 0.96));
+  color: #f3deb4;
+  font: 700 22px/1 "Cinzel", Georgia, serif;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
+  cursor: pointer;
+}
+
+.mode-tabs-control-btn:hover {
+  background: linear-gradient(180deg, rgba(108, 62, 31, 0.98), rgba(63, 35, 17, 0.98));
+}
+
+.mode-tabs-control-btn:active {
+  transform: translateY(1px);
+}
+
 .wood-normal-decor {
   position: fixed;
   top: -2px;
@@ -1174,7 +1204,7 @@ textarea {
 }
 
 .draw-stage-banner .mode-tab-slot {
-  transform: translate(var(--mode-tab-offset-x, 0px), var(--mode-tab-offset-y, 0px));
+  transform: translate(var(--mode-tab-offset-x, 0px), var(--mode-tab-offset-y, 0px)) scale(var(--mode-tab-scale, 1));
   transform-origin: center center;
   touch-action: none;
   cursor: grab;
