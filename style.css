@@ -1201,6 +1201,7 @@ textarea {
 
 .mode-tab-slot {
   min-width: 0;
+  position: relative;
 }
 
 .draw-stage-banner .mode-tab-slot {
@@ -1213,6 +1214,10 @@ textarea {
 .draw-stage-banner .mode-tab-slot.is-dragging {
   cursor: grabbing;
   z-index: 4;
+}
+
+.draw-stage-banner .mode-tab-slot--quick {
+  z-index: 130;
 }
 
 .mode-tab {
@@ -1232,21 +1237,17 @@ textarea {
 .draw-stage-banner .mode-tab {
   width: 100%;
   min-height: 46px;
-  border-color: rgba(149, 118, 84, 0.72);
+  border-color: transparent;
   border-radius: 12px;
   background: transparent;
   color: #e7d8bd;
-  box-shadow:
-    inset 0 0 0 1px rgba(223, 207, 177, 0.08),
-    0 5px 12px rgba(0, 0, 0, 0.18);
+  box-shadow: none;
 }
 
 .draw-stage-banner .mode-tab:hover {
   background: transparent;
-  border-color: rgba(206, 182, 139, 0.9);
-  box-shadow:
-    inset 0 0 0 1px rgba(243, 225, 193, 0.12),
-    0 5px 12px rgba(0, 0, 0, 0.18);
+  border-color: transparent;
+  box-shadow: none;
 }
 
 .mode-tab:hover {
@@ -1256,11 +1257,9 @@ textarea {
 
 .mode-tab.active {
   color: #f3e1b8;
-  border-color: rgba(236, 211, 154, 0.74);
+  border-color: transparent;
   background: transparent;
-  box-shadow:
-    inset 0 0 0 1px rgba(241, 221, 177, 0.14),
-    0 0 18px rgba(223, 184, 110, 0.18);
+  box-shadow: none;
 }
 
 .mode-panel {
