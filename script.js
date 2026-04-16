@@ -636,7 +636,7 @@ function setupSitePlaqueDecorControl() {
   sitePlaqueDecor.addEventListener('wheel', (event) => {
     event.preventDefault();
     event.stopPropagation();
-    updateSitePlaqueScale(event.deltaY < 0 ? 0.16 : -0.16);
+    updateSitePlaqueScale(event.deltaY < 0 ? 0.08 : -0.08);
   }, { passive: false });
   sitePlaqueDecor.addEventListener('dblclick', (event) => {
     event.preventDefault();
@@ -648,14 +648,14 @@ function setupSitePlaqueDecorControl() {
   if (sitePlaqueDecreaseBtn) {
     sitePlaqueDecreaseBtn.addEventListener('click', (event) => {
       event.preventDefault();
-      updateSitePlaqueScale(-0.16);
+      updateSitePlaqueScale(-0.08);
     });
   }
 
   if (sitePlaqueIncreaseBtn) {
     sitePlaqueIncreaseBtn.addEventListener('click', (event) => {
       event.preventDefault();
-      updateSitePlaqueScale(0.16);
+      updateSitePlaqueScale(0.08);
     });
   }
 }
