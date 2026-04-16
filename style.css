@@ -90,6 +90,36 @@ body::before {
   cursor: grabbing;
 }
 
+.site-plaque-controls {
+  position: fixed;
+  top: 54px;
+  right: 14px;
+  z-index: 140;
+  display: flex;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.site-plaque-control-btn {
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(214, 177, 111, 0.58);
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(81, 48, 24, 0.96), rgba(46, 26, 13, 0.96));
+  color: #f3deb4;
+  font: 700 22px/1 "Cinzel", Georgia, serif;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
+  cursor: pointer;
+}
+
+.site-plaque-control-btn:hover {
+  background: linear-gradient(180deg, rgba(108, 62, 31, 0.98), rgba(63, 35, 17, 0.98));
+}
+
+.site-plaque-control-btn:active {
+  transform: translateY(1px);
+}
+
 .wood-normal-decor {
   position: fixed;
   top: -2px;
@@ -1174,10 +1204,18 @@ textarea {
   min-height: 46px;
   border-color: rgba(149, 118, 84, 0.72);
   border-radius: 12px;
-  background: linear-gradient(180deg, rgba(108, 102, 95, 0.76), rgba(79, 67, 57, 0.86));
+  background: transparent;
   color: #e7d8bd;
   box-shadow:
     inset 0 0 0 1px rgba(223, 207, 177, 0.08),
+    0 5px 12px rgba(0, 0, 0, 0.18);
+}
+
+.draw-stage-banner .mode-tab:hover {
+  background: transparent;
+  border-color: rgba(206, 182, 139, 0.9);
+  box-shadow:
+    inset 0 0 0 1px rgba(243, 225, 193, 0.12),
     0 5px 12px rgba(0, 0, 0, 0.18);
 }
 
@@ -1187,9 +1225,12 @@ textarea {
 }
 
 .mode-tab.active {
-  color: #2b1609;
+  color: #f3e1b8;
   border-color: rgba(236, 211, 154, 0.74);
-  background: linear-gradient(180deg, #efddb1, #ddb96f, #b78343);
+  background: transparent;
+  box-shadow:
+    inset 0 0 0 1px rgba(241, 221, 177, 0.14),
+    0 0 18px rgba(223, 184, 110, 0.18);
 }
 
 .mode-panel {

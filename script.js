@@ -107,6 +107,8 @@ const brandBannerOverlay = document.getElementById('brand-banner-overlay');
 const brandFireGif = document.getElementById('brand-fire-gif');
 const brandLogoImage = document.getElementById('brand-logo-image');
 const sitePlaqueDecor = document.getElementById('site-plaque-decor');
+const sitePlaqueDecreaseBtn = document.getElementById('site-plaque-decrease');
+const sitePlaqueIncreaseBtn = document.getElementById('site-plaque-increase');
 const woodNormalDecor = document.getElementById('wood-normal-decor');
 const woodNormalDecreaseBtn = document.getElementById('wood-normal-decrease');
 const woodNormalIncreaseBtn = document.getElementById('wood-normal-increase');
@@ -568,6 +570,16 @@ function saveSitePlaqueDecorLayout() {
   } catch (_) {}
 }
 
+function updateSitePlaqueScale(delta) {
+  const currentScale = Number.isFinite(sitePlaqueDecorState.scale) ? sitePlaqueDecorState.scale : 1;
+  sitePlaqueDecorState = {
+    ...sitePlaqueDecorState,
+    scale: Number(clamp(currentScale + delta, 0.08, 20).toFixed(3)),
+  };
+  applySitePlaqueDecorLayout();
+  saveSitePlaqueDecorLayout();
+}
+
 function setupSitePlaqueDecorControl() {
   if (!sitePlaqueDecor) return;
   applySitePlaqueDecorLayout();
@@ -620,12 +632,7 @@ function setupSitePlaqueDecorControl() {
   sitePlaqueDecor.addEventListener('wheel', (event) => {
     event.preventDefault();
     event.stopPropagation();
-    sitePlaqueDecorState = {
-      ...sitePlaqueDecorState,
-      scale: Number(clamp((Number.isFinite(sitePlaqueDecorState.scale) ? sitePlaqueDecorState.scale : 1) + (event.deltaY < 0 ? 0.08 : -0.08), 0.08, 20).toFixed(3)),
-    };
-    applySitePlaqueDecorLayout();
-    saveSitePlaqueDecorLayout();
+    updateSitePlaqueScale(event.deltaY < 0 ? 0.08 : -0.08);
   }, { passive: false });
   sitePlaqueDecor.addEventListener('dblclick', (event) => {
     event.preventDefault();
@@ -633,6 +640,20 @@ function setupSitePlaqueDecorControl() {
     applySitePlaqueDecorLayout();
     saveSitePlaqueDecorLayout();
   });
+
+  if (sitePlaqueDecreaseBtn) {
+    sitePlaqueDecreaseBtn.addEventListener('click', (event) => {
+      event.preventDefault();
+      updateSitePlaqueScale(-0.08);
+    });
+  }
+
+  if (sitePlaqueIncreaseBtn) {
+    sitePlaqueIncreaseBtn.addEventListener('click', (event) => {
+      event.preventDefault();
+      updateSitePlaqueScale(0.08);
+    });
+  }
 }
 
 function applyWoodNormalDecorLayout() {
