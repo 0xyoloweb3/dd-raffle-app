@@ -287,6 +287,10 @@ function pickRandomItem(items) {
   return items[getCryptoRandomInt(items.length)];
 }
 
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
+
 function secureShuffle(items) {
   const copy = [...items];
   for (let i = copy.length - 1; i > 0; i--) {
@@ -632,7 +636,7 @@ function setupSitePlaqueDecorControl() {
   sitePlaqueDecor.addEventListener('wheel', (event) => {
     event.preventDefault();
     event.stopPropagation();
-    updateSitePlaqueScale(event.deltaY < 0 ? 0.08 : -0.08);
+    updateSitePlaqueScale(event.deltaY < 0 ? 0.16 : -0.16);
   }, { passive: false });
   sitePlaqueDecor.addEventListener('dblclick', (event) => {
     event.preventDefault();
@@ -644,14 +648,14 @@ function setupSitePlaqueDecorControl() {
   if (sitePlaqueDecreaseBtn) {
     sitePlaqueDecreaseBtn.addEventListener('click', (event) => {
       event.preventDefault();
-      updateSitePlaqueScale(-0.08);
+      updateSitePlaqueScale(-0.16);
     });
   }
 
   if (sitePlaqueIncreaseBtn) {
     sitePlaqueIncreaseBtn.addEventListener('click', (event) => {
       event.preventDefault();
-      updateSitePlaqueScale(0.08);
+      updateSitePlaqueScale(0.16);
     });
   }
 }
