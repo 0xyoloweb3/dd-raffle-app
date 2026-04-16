@@ -1116,6 +1116,7 @@ textarea {
   position: relative;
   width: min(100%, 980px);
   margin: 0 auto;
+  z-index: 130;
 }
 
 .draw-stage-banner__art {
@@ -1124,6 +1125,8 @@ textarea {
   height: auto;
   user-select: none;
   pointer-events: none;
+  position: relative;
+  z-index: 1;
 }
 
 .draw-stage-banner__overlay {
@@ -1134,6 +1137,7 @@ textarea {
   align-items: center;
   justify-content: center;
   padding: 18px 34px 20px;
+  z-index: 2;
 }
 
 .main-intro {
