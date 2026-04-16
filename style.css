@@ -1026,6 +1026,7 @@ textarea {
 .panel--main {
   padding: 12px;
   gap: 10px;
+  background: transparent;
 }
 
 .main-intro {
