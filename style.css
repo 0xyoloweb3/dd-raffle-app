@@ -1102,7 +1102,6 @@ textarea {
 
 .draw-stage-banner .mode-description {
   max-width: 560px;
-  margin-top: 6px;
   font-size: 13px;
   color: rgba(231, 216, 189, 0.88);
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.38);
@@ -1116,9 +1115,25 @@ textarea {
 
 .draw-stage-banner .mode-tabs {
   width: min(100%, 900px);
-  margin-top: 18px;
+  margin-top: 12px;
   padding: 0 18px;
   gap: 14px;
+}
+
+.mode-tab-slot {
+  min-width: 0;
+}
+
+.draw-stage-banner .mode-tab-slot {
+  transform: translate(var(--mode-tab-offset-x, 0px), var(--mode-tab-offset-y, 0px));
+  transform-origin: center center;
+  touch-action: none;
+  cursor: grab;
+}
+
+.draw-stage-banner .mode-tab-slot.is-dragging {
+  cursor: grabbing;
+  z-index: 4;
 }
 
 .mode-tab {
@@ -1136,6 +1151,7 @@ textarea {
 }
 
 .draw-stage-banner .mode-tab {
+  width: 100%;
   min-height: 46px;
   border-color: rgba(149, 118, 84, 0.72);
   border-radius: 12px;
