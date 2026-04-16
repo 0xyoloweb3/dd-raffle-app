@@ -1112,13 +1112,12 @@ textarea {
 .main-intro {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: 16px;
-  min-height: 34px;
-  padding: 0;
-  border: none;
-  background: transparent;
-  text-align: center;
+  padding: 6px 10px 8px;
+  border-radius: 18px;
+  border: 1px solid rgba(173, 123, 66, 0.24);
+  background: linear-gradient(180deg, rgba(95, 62, 33, 0.22), rgba(44, 27, 15, 0.16));
 }
 
 .mode-description {
