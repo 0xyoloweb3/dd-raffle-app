@@ -71,6 +71,25 @@ body::before {
   object-position: center;
 }
 
+.site-plaque-decor {
+  position: fixed;
+  top: 92px;
+  left: 50%;
+  width: min(340px, 34vw);
+  height: auto;
+  z-index: 118;
+  pointer-events: auto;
+  user-select: none;
+  cursor: grab;
+  transform: translate(calc(-50% + var(--site-plaque-x, 0px)), var(--site-plaque-y, 0px)) scale(var(--site-plaque-scale, 1));
+  transform-origin: center top;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.28));
+}
+
+.site-plaque-decor.is-dragging {
+  cursor: grabbing;
+}
+
 .wood-normal-decor {
   position: fixed;
   top: -2px;

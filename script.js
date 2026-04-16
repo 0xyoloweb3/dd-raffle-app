@@ -106,6 +106,7 @@ const brandBannerImage = document.getElementById('brand-banner-image');
 const brandBannerOverlay = document.getElementById('brand-banner-overlay');
 const brandFireGif = document.getElementById('brand-fire-gif');
 const brandLogoImage = document.getElementById('brand-logo-image');
+const sitePlaqueDecor = document.getElementById('site-plaque-decor');
 const woodNormalDecor = document.getElementById('wood-normal-decor');
 const woodNormalDecreaseBtn = document.getElementById('wood-normal-decrease');
 const woodNormalIncreaseBtn = document.getElementById('wood-normal-increase');
@@ -186,6 +187,8 @@ let activeParticipantsBoardDrag = null;
 let participantsBoardLayoutState = {};
 let participantsBoardTextState = {};
 let modeTabsLayoutState = {};
+let sitePlaqueDecorState = { x: 0, y: 0, scale: 1 };
+let activeSitePlaqueDecorDrag = null;
 
 function applyModeTabsLayout() {
   modeTabSlots.forEach((slot) => {
@@ -550,6 +553,86 @@ function setupBrandDrag() {
   setupBrandBannerControl();
   setupBrandElementControl(brandFireGif, 'fire');
   setupBrandElementControl(brandLogoImage, 'title');
+}
+
+function applySitePlaqueDecorLayout() {
+  if (!sitePlaqueDecor) return;
+  sitePlaqueDecor.style.setProperty('--site-plaque-x', `${sitePlaqueDecorState.x || 0}px`);
+  sitePlaqueDecor.style.setProperty('--site-plaque-y', `${sitePlaqueDecorState.y || 0}px`);
+  sitePlaqueDecor.style.setProperty('--site-plaque-scale', `${sitePlaqueDecorState.scale || 1}`);
+}
+
+function saveSitePlaqueDecorLayout() {
+  try {
+    localStorage.setItem('rollbria-site-plaque-layout', JSON.stringify(sitePlaqueDecorState));
+  } catch (_) {}
+}
+
+function setupSitePlaqueDecorControl() {
+  if (!sitePlaqueDecor) return;
+  applySitePlaqueDecorLayout();
+
+  sitePlaqueDecor.addEventListener('pointerdown', (event) => {
+    if (event.button !== 0) return;
+    activeSitePlaqueDecorDrag = {
+      pointerId: event.pointerId,
+      mode: event.shiftKey ? 'scale' : 'move',
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: sitePlaqueDecorState.x || 0,
+      originY: sitePlaqueDecorState.y || 0,
+      originScale: Number.isFinite(sitePlaqueDecorState.scale) ? sitePlaqueDecorState.scale : 1,
+    };
+    sitePlaqueDecor.classList.add('is-dragging');
+    sitePlaqueDecor.setPointerCapture(event.pointerId);
+    event.preventDefault();
+    event.stopPropagation();
+  });
+
+  sitePlaqueDecor.addEventListener('pointermove', (event) => {
+    if (!activeSitePlaqueDecorDrag || activeSitePlaqueDecorDrag.pointerId !== event.pointerId) return;
+    if (activeSitePlaqueDecorDrag.mode === 'scale') {
+      const delta = ((event.clientX - activeSitePlaqueDecorDrag.startX) - (event.clientY - activeSitePlaqueDecorDrag.startY)) * 0.01;
+      sitePlaqueDecorState = {
+        ...sitePlaqueDecorState,
+        scale: Number(clamp(activeSitePlaqueDecorDrag.originScale + delta, 0.08, 20).toFixed(3)),
+      };
+      applySitePlaqueDecorLayout();
+      return;
+    }
+    sitePlaqueDecorState = {
+      ...sitePlaqueDecorState,
+      x: activeSitePlaqueDecorDrag.originX + (event.clientX - activeSitePlaqueDecorDrag.startX),
+      y: activeSitePlaqueDecorDrag.originY + (event.clientY - activeSitePlaqueDecorDrag.startY),
+    };
+    applySitePlaqueDecorLayout();
+  });
+
+  const finishSitePlaqueDecorDrag = (event) => {
+    if (!activeSitePlaqueDecorDrag || activeSitePlaqueDecorDrag.pointerId !== event.pointerId) return;
+    sitePlaqueDecor.classList.remove('is-dragging');
+    saveSitePlaqueDecorLayout();
+    activeSitePlaqueDecorDrag = null;
+  };
+
+  sitePlaqueDecor.addEventListener('pointerup', finishSitePlaqueDecorDrag);
+  sitePlaqueDecor.addEventListener('pointercancel', finishSitePlaqueDecorDrag);
+  sitePlaqueDecor.addEventListener('wheel', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    sitePlaqueDecorState = {
+      ...sitePlaqueDecorState,
+      scale: Number(clamp((Number.isFinite(sitePlaqueDecorState.scale) ? sitePlaqueDecorState.scale : 1) + (event.deltaY < 0 ? 0.08 : -0.08), 0.08, 20).toFixed(3)),
+    };
+    applySitePlaqueDecorLayout();
+    saveSitePlaqueDecorLayout();
+  }, { passive: false });
+  sitePlaqueDecor.addEventListener('dblclick', (event) => {
+    event.preventDefault();
+    sitePlaqueDecorState = { x: 0, y: 0, scale: 1 };
+    applySitePlaqueDecorLayout();
+    saveSitePlaqueDecorLayout();
+  });
 }
 
 function applyWoodNormalDecorLayout() {
@@ -2224,6 +2307,17 @@ function load() {
         modeTabsLayoutState = parsedModeTabsLayout;
       }
     }
+    const storedSitePlaqueDecorLayout = localStorage.getItem('rollbria-site-plaque-layout');
+    if (storedSitePlaqueDecorLayout) {
+      const parsedSitePlaqueDecorLayout = JSON.parse(storedSitePlaqueDecorLayout);
+      if (Number.isFinite(parsedSitePlaqueDecorLayout?.x) && Number.isFinite(parsedSitePlaqueDecorLayout?.y)) {
+        sitePlaqueDecorState = {
+          x: parsedSitePlaqueDecorLayout.x,
+          y: parsedSitePlaqueDecorLayout.y,
+          scale: Number.isFinite(parsedSitePlaqueDecorLayout?.scale) ? parsedSitePlaqueDecorLayout.scale : 1,
+        };
+      }
+    }
 
     const storedWoodNormalDecorLayout = localStorage.getItem('rollbria-wood-normal-layout');
     if (storedWoodNormalDecorLayout) {
@@ -2247,6 +2341,7 @@ winnerPopup.addEventListener('click', (e) => {
 load();
 setupModeTabControls();
 setupBrandDrag();
+setupSitePlaqueDecorControl();
 setupWoodNormalDecorControl();
 setupParticipantsBoardEditor();
 setupParticipantsTitleArtControl();
