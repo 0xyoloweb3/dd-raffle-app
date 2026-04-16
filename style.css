@@ -1178,7 +1178,8 @@ textarea {
 }
 
 .draw-stage-banner .mode-tab-slot {
-  transform: none;
+  transform: translate(var(--mode-tab-offset-x, 0px), var(--mode-tab-offset-y, 0px)) scale(var(--mode-tab-scale, 1));
+  transform-origin: center center;
 }
 
 .draw-stage-banner .mode-tab-slot--quick {
