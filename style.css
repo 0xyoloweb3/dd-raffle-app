@@ -1185,6 +1185,13 @@ textarea {
 .draw-stage-banner .mode-tab-slot {
   transform: translate(var(--mode-tab-offset-x, 0px), var(--mode-tab-offset-y, 0px)) scale(var(--mode-tab-scale, 1));
   transform-origin: center center;
+  touch-action: none;
+  cursor: grab;
+}
+
+.draw-stage-banner .mode-tab-slot.is-dragging {
+  cursor: grabbing;
+  z-index: 4;
 }
 
 .draw-stage-banner .mode-tab-slot--quick {
