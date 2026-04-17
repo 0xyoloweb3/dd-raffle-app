@@ -1101,15 +1101,17 @@ textarea {
 .draw-stage-banner__overlay {
   position: absolute;
   inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  display: block;
   padding: 18px 34px 20px;
   z-index: 130;
 }
 
 .main-intro {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  width: min(560px, calc(100% - 96px));
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1171,9 +1173,10 @@ textarea {
 }
 
 .draw-stage-banner .mode-tabs {
-  width: min(100%, 900px);
-  margin-top: 12px;
-  padding: 0 18px;
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  top: 74px;
   gap: 14px;
 }
 
