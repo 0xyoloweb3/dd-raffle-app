@@ -101,6 +101,7 @@ const activeModeLabel = document.getElementById('active-mode-label');
 const modeDescription = document.getElementById('mode-description');
 const mainIntro = document.getElementById('main-intro');
 const modeTabSlots = Array.from(document.querySelectorAll('[data-mode-move]'));
+const modeTabsControls = document.getElementById('mode-tabs-controls');
 const modeTabsDecreaseBtn = document.getElementById('mode-tabs-decrease');
 const modeTabsIncreaseBtn = document.getElementById('mode-tabs-increase');
 const modeTabsScaleDrag = document.getElementById('mode-tabs-scale-drag');
@@ -2375,37 +2376,51 @@ if (modeTabsIncreaseBtn) {
     updateModeTabsScale(0.05);
   });
 }
-if (modeTabsScaleDrag) {
-  modeTabsScaleDrag.addEventListener('pointerdown', (event) => {
+if (modeTabsControls) {
+  const beginModeTabsScaleDrag = (event) => {
     if (event.button !== 0) return;
+    if (event.target instanceof Element && event.target.closest('.mode-tabs-control-btn')) return;
     event.preventDefault();
     activeModeTabsScaleDrag = {
       pointerId: event.pointerId,
       startX: event.clientX,
       startScale: Number.isFinite(modeTabsScale) ? modeTabsScale : 1,
     };
-    modeTabsScaleDrag.classList.add('is-dragging');
-    modeTabsScaleDrag.setPointerCapture(event.pointerId);
-  });
+    modeTabsControls.classList.add('is-dragging');
+    if (modeTabsScaleDrag) {
+      modeTabsScaleDrag.classList.add('is-dragging');
+    }
+    modeTabsControls.setPointerCapture(event.pointerId);
+  };
 
-  modeTabsScaleDrag.addEventListener('pointermove', (event) => {
+  const moveModeTabsScaleDrag = (event) => {
     if (!activeModeTabsScaleDrag || event.pointerId !== activeModeTabsScaleDrag.pointerId) return;
     event.preventDefault();
     const deltaX = event.clientX - activeModeTabsScaleDrag.startX;
-    setModeTabsScale(activeModeTabsScaleDrag.startScale + deltaX * 0.0025);
-  });
+    setModeTabsScale(activeModeTabsScaleDrag.startScale + deltaX * 0.004);
+  };
 
   const stopModeTabsScaleDrag = (event) => {
     if (!activeModeTabsScaleDrag || event.pointerId !== activeModeTabsScaleDrag.pointerId) return;
-    modeTabsScaleDrag.classList.remove('is-dragging');
-    if (modeTabsScaleDrag.hasPointerCapture(event.pointerId)) {
-      modeTabsScaleDrag.releasePointerCapture(event.pointerId);
+    modeTabsControls.classList.remove('is-dragging');
+    if (modeTabsScaleDrag) {
+      modeTabsScaleDrag.classList.remove('is-dragging');
+    }
+    if (modeTabsControls.hasPointerCapture(event.pointerId)) {
+      modeTabsControls.releasePointerCapture(event.pointerId);
     }
     activeModeTabsScaleDrag = null;
   };
 
-  modeTabsScaleDrag.addEventListener('pointerup', stopModeTabsScaleDrag);
-  modeTabsScaleDrag.addEventListener('pointercancel', stopModeTabsScaleDrag);
+  modeTabsControls.addEventListener('pointerdown', beginModeTabsScaleDrag);
+  modeTabsControls.addEventListener('pointermove', moveModeTabsScaleDrag);
+  modeTabsControls.addEventListener('pointerup', stopModeTabsScaleDrag);
+  modeTabsControls.addEventListener('pointercancel', stopModeTabsScaleDrag);
+  modeTabsControls.addEventListener('wheel', (event) => {
+    if (event.target instanceof Element && event.target.closest('.mode-tabs-control-btn')) return;
+    event.preventDefault();
+    updateModeTabsScale(event.deltaY < 0 ? 0.05 : -0.05);
+  }, { passive: false });
 }
 if (modeTabsOutlineDecreaseBtn) {
   modeTabsOutlineDecreaseBtn.addEventListener('click', (event) => {

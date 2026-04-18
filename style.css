@@ -129,6 +129,11 @@ body::before {
   align-items: center;
   gap: 8px;
   pointer-events: auto;
+  cursor: ew-resize;
+}
+
+.mode-tabs-controls.is-dragging {
+  cursor: ew-resize;
 }
 
 .mode-tabs-controls__label {
