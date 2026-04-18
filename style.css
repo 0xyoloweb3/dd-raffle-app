@@ -1333,7 +1333,7 @@ textarea {
   right: calc(var(--mode-tab-hover-frame-expand-x, 0px) * -1);
   bottom: calc(var(--mode-tab-hover-frame-expand-y, 0px) * -1);
   left: calc(var(--mode-tab-hover-frame-expand-x, 0px) * -1);
-  border-radius: 0;
+  border-radius: calc(12px + var(--mode-tab-hover-frame-radius-expand, 0px));
   pointer-events: none;
   z-index: -1;
   opacity: 0;
