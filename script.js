@@ -105,6 +105,10 @@ const modeTabsControls = document.getElementById('mode-tabs-controls');
 const modeTabsDecreaseBtn = document.getElementById('mode-tabs-decrease');
 const modeTabsIncreaseBtn = document.getElementById('mode-tabs-increase');
 const modeTabsScaleDrag = document.getElementById('mode-tabs-scale-drag');
+const modeTabsOpacityControls = document.getElementById('mode-tabs-opacity-controls');
+const modeTabsOpacityDecreaseBtn = document.getElementById('mode-tabs-opacity-decrease');
+const modeTabsOpacityIncreaseBtn = document.getElementById('mode-tabs-opacity-increase');
+const modeTabsOpacityDrag = document.getElementById('mode-tabs-opacity-drag');
 const modeTabsOutlineControls = document.getElementById('mode-tabs-outline-controls');
 const modeTabsOutlineDecreaseBtn = document.getElementById('mode-tabs-outline-decrease');
 const modeTabsOutlineIncreaseBtn = document.getElementById('mode-tabs-outline-increase');
@@ -199,6 +203,7 @@ const PARTICIPANTS_BOARD_LAYOUT_KEY = 'rollbria-participants-board-layout';
 const PARTICIPANTS_BOARD_LAYOUT_VERSION = 5;
 const MODE_TABS_LAYOUT_KEY = 'rollbria-mode-tabs-layout';
 const MODE_TABS_SCALE_KEY = 'rollbria-mode-tabs-scale';
+const MODE_TABS_FILL_OPACITY_KEY = 'rollbria-mode-tabs-fill-opacity';
 const MODE_TABS_OUTLINE_KEY = 'rollbria-mode-tabs-outline';
 const MODE_TABS_OUTLINE_EXPAND_KEY = 'rollbria-mode-tabs-outline-expand';
 const MODE_TABS_OUTLINE_EXPAND_X_KEY = 'rollbria-mode-tabs-outline-expand-x';
@@ -211,7 +216,9 @@ let participantsBoardLayoutState = {};
 let participantsBoardTextState = {};
 let modeTabsLayoutState = {};
 let modeTabsScale = 1;
+let modeTabsFillOpacity = 0.22;
 let modeTabsOutlineSize = 1;
+let activeModeTabsOpacityDrag = null;
 let activeModeTabsScaleDrag = null;
 let modeTabsOutlineExpand = 0;
 let activeModeTabsOutlineDrag = null;
@@ -230,6 +237,7 @@ function applyModeTabsLayout() {
     slot.style.setProperty('--mode-tab-offset-y', `${state.y}px`);
     slot.style.setProperty('--mode-tab-scale', `${modeTabsScale || 1}`);
   });
+  document.documentElement.style.setProperty('--mode-tab-hover-fill-opacity', `${modeTabsFillOpacity || 0.22}`);
   document.documentElement.style.setProperty('--mode-tab-hover-outline-size', `${modeTabsOutlineSize || 1}px`);
   document.documentElement.style.setProperty('--mode-tab-hover-frame-expand-x', `${modeTabsOutlineExpandX || 0}px`);
   document.documentElement.style.setProperty('--mode-tab-hover-frame-expand-y', `${modeTabsOutlineExpandY || 0}px`);
@@ -244,6 +252,10 @@ function persistModeTabsScale() {
   localStorage.setItem(MODE_TABS_SCALE_KEY, String(modeTabsScale));
 }
 
+function persistModeTabsFillOpacity() {
+  localStorage.setItem(MODE_TABS_FILL_OPACITY_KEY, String(modeTabsFillOpacity));
+}
+
 function updateModeTabsScale(delta) {
   modeTabsScale = Number(clamp((Number.isFinite(modeTabsScale) ? modeTabsScale : 1) + delta, 0.5, 1.8).toFixed(3));
   applyModeTabsLayout();
@@ -254,6 +266,16 @@ function setModeTabsScale(nextScale) {
   modeTabsScale = Number(clamp(nextScale, 0.5, 1.8).toFixed(3));
   applyModeTabsLayout();
   persistModeTabsScale();
+}
+
+function setModeTabsFillOpacity(nextOpacity) {
+  modeTabsFillOpacity = Number(clamp(nextOpacity, 0.02, 0.95).toFixed(3));
+  applyModeTabsLayout();
+  persistModeTabsFillOpacity();
+}
+
+function updateModeTabsFillOpacity(delta) {
+  setModeTabsFillOpacity((Number.isFinite(modeTabsFillOpacity) ? modeTabsFillOpacity : 0.22) + delta);
 }
 
 function persistModeTabsOutlineSize() {
@@ -2318,6 +2340,7 @@ function load() {
     const storedParticipantsBoardState = localStorage.getItem(PARTICIPANTS_BOARD_LAYOUT_KEY);
     const storedModeTabsLayout = localStorage.getItem(MODE_TABS_LAYOUT_KEY);
     const storedModeTabsScale = localStorage.getItem(MODE_TABS_SCALE_KEY);
+    const storedModeTabsFillOpacity = localStorage.getItem(MODE_TABS_FILL_OPACITY_KEY);
     const storedModeTabsOutline = localStorage.getItem(MODE_TABS_OUTLINE_KEY);
     const storedModeTabsOutlineExpand = localStorage.getItem(MODE_TABS_OUTLINE_EXPAND_KEY);
     const storedModeTabsOutlineExpandX = localStorage.getItem(MODE_TABS_OUTLINE_EXPAND_X_KEY);
@@ -2396,6 +2419,12 @@ function load() {
         modeTabsScale = parsedModeTabsScale;
       }
     }
+    if (storedModeTabsFillOpacity) {
+      const parsedModeTabsFillOpacity = Number(storedModeTabsFillOpacity);
+      if (Number.isFinite(parsedModeTabsFillOpacity)) {
+        modeTabsFillOpacity = parsedModeTabsFillOpacity;
+      }
+    }
     if (storedModeTabsOutline) {
       const parsedModeTabsOutline = Number(storedModeTabsOutline);
       if (Number.isFinite(parsedModeTabsOutline)) {
@@ -2455,6 +2484,64 @@ winnerPopup.addEventListener('click', (e) => {
 
 load();
 applyModeTabsLayout();
+if (modeTabsOpacityDecreaseBtn) {
+  modeTabsOpacityDecreaseBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    updateModeTabsFillOpacity(-0.03);
+  });
+}
+if (modeTabsOpacityIncreaseBtn) {
+  modeTabsOpacityIncreaseBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    updateModeTabsFillOpacity(0.03);
+  });
+}
+if (modeTabsOpacityControls) {
+  const beginModeTabsOpacityDrag = (event) => {
+    if (event.button !== 0) return;
+    if (event.target instanceof Element && event.target.closest('.mode-tabs-control-btn')) return;
+    event.preventDefault();
+    activeModeTabsOpacityDrag = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startOpacity: Number.isFinite(modeTabsFillOpacity) ? modeTabsFillOpacity : 0.22,
+    };
+    modeTabsOpacityControls.classList.add('is-dragging');
+    if (modeTabsOpacityDrag) {
+      modeTabsOpacityDrag.classList.add('is-dragging');
+    }
+    modeTabsOpacityControls.setPointerCapture(event.pointerId);
+  };
+
+  const moveModeTabsOpacityDrag = (event) => {
+    if (!activeModeTabsOpacityDrag || event.pointerId !== activeModeTabsOpacityDrag.pointerId) return;
+    event.preventDefault();
+    const deltaX = event.clientX - activeModeTabsOpacityDrag.startX;
+    setModeTabsFillOpacity(activeModeTabsOpacityDrag.startOpacity + deltaX * 0.0025);
+  };
+
+  const stopModeTabsOpacityDrag = (event) => {
+    if (!activeModeTabsOpacityDrag || event.pointerId !== activeModeTabsOpacityDrag.pointerId) return;
+    modeTabsOpacityControls.classList.remove('is-dragging');
+    if (modeTabsOpacityDrag) {
+      modeTabsOpacityDrag.classList.remove('is-dragging');
+    }
+    if (modeTabsOpacityControls.hasPointerCapture(event.pointerId)) {
+      modeTabsOpacityControls.releasePointerCapture(event.pointerId);
+    }
+    activeModeTabsOpacityDrag = null;
+  };
+
+  modeTabsOpacityControls.addEventListener('pointerdown', beginModeTabsOpacityDrag);
+  modeTabsOpacityControls.addEventListener('pointermove', moveModeTabsOpacityDrag);
+  modeTabsOpacityControls.addEventListener('pointerup', stopModeTabsOpacityDrag);
+  modeTabsOpacityControls.addEventListener('pointercancel', stopModeTabsOpacityDrag);
+  modeTabsOpacityControls.addEventListener('wheel', (event) => {
+    if (event.target instanceof Element && event.target.closest('.mode-tabs-control-btn')) return;
+    event.preventDefault();
+    updateModeTabsFillOpacity(event.deltaY < 0 ? 0.03 : -0.03);
+  }, { passive: false });
+}
 if (modeTabsDecreaseBtn) {
   modeTabsDecreaseBtn.addEventListener('click', (event) => {
     event.preventDefault();
