@@ -433,6 +433,16 @@ body::before {
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 10px;
+  position: relative;
+  transform: translate(var(--header-meta-x, 0px), var(--header-meta-y, 0px));
+  transform-origin: top right;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+
+.header-meta.is-dragging {
+  cursor: grabbing;
 }
 
 

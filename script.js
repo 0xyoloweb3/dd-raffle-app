@@ -136,6 +136,7 @@ const participantsTitleArt = document.getElementById('participants-title-art');
 const participantsBoard = document.querySelector('.participants-board');
 const participantsBoardMovableEls = Array.from(document.querySelectorAll('.participants-board [data-board-move]'));
 const participantsBoardTextEls = Array.from(document.querySelectorAll('.participants-board [data-board-text]'));
+const headerMeta = document.getElementById('header-meta');
 
 const btnQuickDraw = document.getElementById('btn-quick-draw');
 const quickWinner = document.getElementById('quick-winner');
@@ -199,6 +200,7 @@ const WHEEL_BASE_ROTATIONS_PER_SECOND = 0.96;
 let activeSpinPlan = null;
 const BATTLE_PARTICIPANTS_STORAGE_KEY = 'rollbria-battle-participants';
 const BRAND_DRAG_STORAGE_KEY = 'rollbria-brand-drag';
+const HEADER_META_LAYOUT_KEY = 'rollbria-header-meta-layout';
 const PARTICIPANTS_BOARD_LAYOUT_KEY = 'rollbria-participants-board-layout';
 const PARTICIPANTS_BOARD_LAYOUT_VERSION = 5;
 const MODE_TABS_LAYOUT_KEY = 'rollbria-mode-tabs-layout';
@@ -211,6 +213,8 @@ const MODE_TABS_OUTLINE_EXPAND_Y_KEY = 'rollbria-mode-tabs-outline-expand-y';
 let lastBattleSyncSignature = null;
 let winnerThemeAudio = null;
 let uiAudioContext = null;
+let headerMetaState = { x: 0, y: 0 };
+let activeHeaderMetaDrag = null;
 let activeParticipantsBoardDrag = null;
 let participantsBoardLayoutState = {};
 let participantsBoardTextState = {};
@@ -364,6 +368,62 @@ function pickRandomItem(items) {
 
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
+}
+
+function applyHeaderMetaLayout() {
+  if (!headerMeta) return;
+  headerMeta.style.setProperty('--header-meta-x', `${headerMetaState.x || 0}px`);
+  headerMeta.style.setProperty('--header-meta-y', `${headerMetaState.y || 0}px`);
+}
+
+function saveHeaderMetaLayout() {
+  try {
+    localStorage.setItem(HEADER_META_LAYOUT_KEY, JSON.stringify(headerMetaState));
+  } catch (_) {}
+}
+
+function setupHeaderMetaDrag() {
+  if (!headerMeta) return;
+  applyHeaderMetaLayout();
+
+  headerMeta.addEventListener('pointerdown', (event) => {
+    if (event.button !== 0) return;
+    activeHeaderMetaDrag = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: headerMetaState.x || 0,
+      originY: headerMetaState.y || 0,
+    };
+    headerMeta.classList.add('is-dragging');
+    headerMeta.setPointerCapture(event.pointerId);
+    event.preventDefault();
+  });
+
+  headerMeta.addEventListener('pointermove', (event) => {
+    if (!activeHeaderMetaDrag || activeHeaderMetaDrag.pointerId !== event.pointerId) return;
+    headerMetaState = {
+      x: activeHeaderMetaDrag.originX + (event.clientX - activeHeaderMetaDrag.startX),
+      y: activeHeaderMetaDrag.originY + (event.clientY - activeHeaderMetaDrag.startY),
+    };
+    applyHeaderMetaLayout();
+  });
+
+  const finishHeaderMetaDrag = (event) => {
+    if (!activeHeaderMetaDrag || activeHeaderMetaDrag.pointerId !== event.pointerId) return;
+    headerMeta.classList.remove('is-dragging');
+    saveHeaderMetaLayout();
+    activeHeaderMetaDrag = null;
+  };
+
+  headerMeta.addEventListener('pointerup', finishHeaderMetaDrag);
+  headerMeta.addEventListener('pointercancel', finishHeaderMetaDrag);
+  headerMeta.addEventListener('dblclick', (event) => {
+    event.preventDefault();
+    headerMetaState = { x: 0, y: 0 };
+    applyHeaderMetaLayout();
+    saveHeaderMetaLayout();
+  });
 }
 
 function secureShuffle(items) {
@@ -2338,6 +2398,7 @@ function load() {
     const storedTimerVisible = localStorage.getItem('raffle_mode_timer_visible');
     const storedBrandDrag = localStorage.getItem(BRAND_DRAG_STORAGE_KEY);
     const storedParticipantsBoardState = localStorage.getItem(PARTICIPANTS_BOARD_LAYOUT_KEY);
+    const storedHeaderMetaLayout = localStorage.getItem(HEADER_META_LAYOUT_KEY);
     const storedModeTabsLayout = localStorage.getItem(MODE_TABS_LAYOUT_KEY);
     const storedModeTabsScale = localStorage.getItem(MODE_TABS_SCALE_KEY);
     const storedModeTabsFillOpacity = localStorage.getItem(MODE_TABS_FILL_OPACITY_KEY);
@@ -2405,6 +2466,15 @@ function load() {
         }
         delete participantsBoardLayoutState['input-name'];
         delete participantsBoardLayoutState['participants-title-art'];
+      }
+    }
+    if (storedHeaderMetaLayout) {
+      const parsedHeaderMetaLayout = JSON.parse(storedHeaderMetaLayout);
+      if (Number.isFinite(parsedHeaderMetaLayout?.x) && Number.isFinite(parsedHeaderMetaLayout?.y)) {
+        headerMetaState = {
+          x: parsedHeaderMetaLayout.x,
+          y: parsedHeaderMetaLayout.y,
+        };
       }
     }
     if (storedModeTabsLayout) {
@@ -2761,6 +2831,7 @@ if (modeTabsFrameHeightControls) {
   }, { passive: false });
 }
 setupBrandDrag();
+setupHeaderMetaDrag();
 setupSitePlaqueDecorControl();
 setupWoodNormalDecorControl();
 setupParticipantsBoardEditor();
