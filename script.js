@@ -140,6 +140,12 @@ const headerMeta = document.getElementById('header-meta');
 const headerMetaItems = Array.from(document.querySelectorAll('[data-header-meta-item]'));
 const headerMetaTextDecreaseBtn = document.getElementById('header-meta-text-decrease');
 const headerMetaTextIncreaseBtn = document.getElementById('header-meta-text-increase');
+const poolLabelDecreaseBtn = document.getElementById('pool-label-decrease');
+const poolLabelIncreaseBtn = document.getElementById('pool-label-increase');
+const historyLabelDecreaseBtn = document.getElementById('history-label-decrease');
+const historyLabelIncreaseBtn = document.getElementById('history-label-increase');
+const modeLabelDecreaseBtn = document.getElementById('mode-label-decrease');
+const modeLabelIncreaseBtn = document.getElementById('mode-label-increase');
 
 const btnQuickDraw = document.getElementById('btn-quick-draw');
 const quickWinner = document.getElementById('quick-winner');
@@ -385,9 +391,10 @@ function applyHeaderMetaLayout() {
   headerMeta.style.setProperty('--header-meta-text-scale', `${headerMetaTextScale || 1}`);
   headerMetaItems.forEach((item) => {
     const key = item.dataset.headerMetaItem;
-    const state = headerMetaItemsState[key] || { x: 0, y: 0 };
+    const state = headerMetaItemsState[key] || { x: 0, y: 0, scale: 1 };
     item.style.setProperty('--header-meta-item-x', `${state.x}px`);
     item.style.setProperty('--header-meta-item-y', `${state.y}px`);
+    item.style.setProperty('--header-meta-item-scale', `${state.scale ?? 1}`);
   });
 }
 
@@ -413,6 +420,16 @@ function updateHeaderMetaTextScale(delta) {
   headerMetaTextScale = Number(clamp((Number.isFinite(headerMetaTextScale) ? headerMetaTextScale : 1) + delta, 0.6, 2.4).toFixed(3));
   applyHeaderMetaLayout();
   saveHeaderMetaTextScale();
+}
+
+function updateHeaderMetaItemScale(key, delta) {
+  const current = headerMetaItemsState[key] || { x: 0, y: 0, scale: 1 };
+  headerMetaItemsState[key] = {
+    ...current,
+    scale: Number(clamp((Number.isFinite(current.scale) ? current.scale : 1) + delta, 0.5, 3).toFixed(3)),
+  };
+  applyHeaderMetaLayout();
+  saveHeaderMetaItemsLayout();
 }
 
 function setupHeaderMetaDrag() {
@@ -460,7 +477,7 @@ function setupHeaderMetaDrag() {
 
   headerMetaItems.forEach((item) => {
     const key = item.dataset.headerMetaItem;
-    headerMetaItemsState[key] = headerMetaItemsState[key] || { x: 0, y: 0 };
+    headerMetaItemsState[key] = headerMetaItemsState[key] || { x: 0, y: 0, scale: 1 };
 
     item.addEventListener('pointerdown', (event) => {
       if (event.button !== 0) return;
@@ -481,6 +498,7 @@ function setupHeaderMetaDrag() {
     item.addEventListener('pointermove', (event) => {
       if (!activeHeaderMetaItemDrag || activeHeaderMetaItemDrag.pointerId !== event.pointerId || activeHeaderMetaItemDrag.key !== key) return;
       headerMetaItemsState[key] = {
+        ...headerMetaItemsState[key],
         x: activeHeaderMetaItemDrag.originX + (event.clientX - activeHeaderMetaItemDrag.startX),
         y: activeHeaderMetaItemDrag.originY + (event.clientY - activeHeaderMetaItemDrag.startY),
       };
@@ -501,7 +519,7 @@ function setupHeaderMetaDrag() {
     item.addEventListener('dblclick', (event) => {
       event.preventDefault();
       event.stopPropagation();
-      headerMetaItemsState[key] = { x: 0, y: 0 };
+      headerMetaItemsState[key] = { x: 0, y: 0, scale: 1 };
       applyHeaderMetaLayout();
       saveHeaderMetaItemsLayout();
     });
@@ -2661,6 +2679,42 @@ if (headerMetaTextIncreaseBtn) {
   headerMetaTextIncreaseBtn.addEventListener('click', (event) => {
     event.preventDefault();
     updateHeaderMetaTextScale(0.08);
+  });
+}
+if (poolLabelDecreaseBtn) {
+  poolLabelDecreaseBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    updateHeaderMetaItemScale('pool-label', -0.08);
+  });
+}
+if (poolLabelIncreaseBtn) {
+  poolLabelIncreaseBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    updateHeaderMetaItemScale('pool-label', 0.08);
+  });
+}
+if (historyLabelDecreaseBtn) {
+  historyLabelDecreaseBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    updateHeaderMetaItemScale('history-label', -0.08);
+  });
+}
+if (historyLabelIncreaseBtn) {
+  historyLabelIncreaseBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    updateHeaderMetaItemScale('history-label', 0.08);
+  });
+}
+if (modeLabelDecreaseBtn) {
+  modeLabelDecreaseBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    updateHeaderMetaItemScale('mode-label', -0.08);
+  });
+}
+if (modeLabelIncreaseBtn) {
+  modeLabelIncreaseBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    updateHeaderMetaItemScale('mode-label', 0.08);
   });
 }
 if (modeTabsOpacityDecreaseBtn) {

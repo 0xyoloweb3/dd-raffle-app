@@ -457,6 +457,25 @@ body::before {
   pointer-events: auto;
 }
 
+.header-meta-label-controls {
+  position: fixed;
+  top: 142px;
+  right: 14px;
+  z-index: 140;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.header-meta-label-controls--history {
+  top: 186px;
+}
+
+.header-meta-label-controls--mode {
+  top: 230px;
+}
+
 
 .stat-pill {
   min-width: 158px;
@@ -486,7 +505,8 @@ body::before {
   padding-left: 4px;
   text-indent: 2px;
   position: relative;
-  transform: translate(var(--header-meta-item-x, 0px), var(--header-meta-item-y, 0px));
+  transform: translate(var(--header-meta-item-x, 0px), var(--header-meta-item-y, 0px)) scale(var(--header-meta-item-scale, 1));
+  transform-origin: left center;
   cursor: grab;
   touch-action: none;
 }
