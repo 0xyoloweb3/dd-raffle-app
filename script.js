@@ -3011,6 +3011,9 @@ setParticipantStatus(
   participants.length ? 'success' : ''
 );
 drawWheel();
+requestAnimationFrame(() => {
+  document.body.classList.add('page-ready');
+});
 
 
 

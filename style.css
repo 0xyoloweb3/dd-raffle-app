@@ -28,6 +28,8 @@ body {
   color: var(--text);
   font: 14px/1.45 "Cinzel Decorative", Georgia, serif;
   overflow: hidden;
+  opacity: 0;
+  transition: opacity 420ms ease-out;
   background:
     linear-gradient(rgba(22, 14, 8, 0.58), rgba(22, 14, 8, 0.78)),
     url("site-bg-castle.png"),
@@ -37,6 +39,10 @@ body {
   background-size: cover, cover, auto, auto, auto;
   background-position: center center, center center, 0 0, 0 0, 0 0;
   background-attachment: fixed, fixed, scroll, scroll, scroll;
+}
+
+body.page-ready {
+  opacity: 1;
 }
 
 body::before {
