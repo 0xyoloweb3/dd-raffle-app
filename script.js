@@ -105,8 +105,10 @@ const modeTabsControls = document.getElementById('mode-tabs-controls');
 const modeTabsDecreaseBtn = document.getElementById('mode-tabs-decrease');
 const modeTabsIncreaseBtn = document.getElementById('mode-tabs-increase');
 const modeTabsScaleDrag = document.getElementById('mode-tabs-scale-drag');
+const modeTabsOutlineControls = document.getElementById('mode-tabs-outline-controls');
 const modeTabsOutlineDecreaseBtn = document.getElementById('mode-tabs-outline-decrease');
 const modeTabsOutlineIncreaseBtn = document.getElementById('mode-tabs-outline-increase');
+const modeTabsOutlineDrag = document.getElementById('mode-tabs-outline-drag');
 const brandBlock = document.getElementById('brand-block');
 const brandBannerImage = document.getElementById('brand-banner-image');
 const brandBannerOverlay = document.getElementById('brand-banner-overlay');
@@ -190,6 +192,7 @@ const PARTICIPANTS_BOARD_LAYOUT_VERSION = 5;
 const MODE_TABS_LAYOUT_KEY = 'rollbria-mode-tabs-layout';
 const MODE_TABS_SCALE_KEY = 'rollbria-mode-tabs-scale';
 const MODE_TABS_OUTLINE_KEY = 'rollbria-mode-tabs-outline';
+const MODE_TABS_OUTLINE_EXPAND_KEY = 'rollbria-mode-tabs-outline-expand';
 let lastBattleSyncSignature = null;
 let winnerThemeAudio = null;
 let uiAudioContext = null;
@@ -200,6 +203,8 @@ let modeTabsLayoutState = {};
 let modeTabsScale = 1;
 let modeTabsOutlineSize = 1;
 let activeModeTabsScaleDrag = null;
+let modeTabsOutlineExpand = 0;
+let activeModeTabsOutlineDrag = null;
 let sitePlaqueDecorState = { x: 0, y: 0, scale: 1 };
 let activeSitePlaqueDecorDrag = null;
 
@@ -212,6 +217,7 @@ function applyModeTabsLayout() {
     slot.style.setProperty('--mode-tab-scale', `${modeTabsScale || 1}`);
   });
   document.documentElement.style.setProperty('--mode-tab-hover-outline-size', `${modeTabsOutlineSize || 1}px`);
+  document.documentElement.style.setProperty('--mode-tab-hover-frame-expand', `${modeTabsOutlineExpand || 0}px`);
 }
 
 function persistModeTabsLayout() {
@@ -242,6 +248,20 @@ function updateModeTabsOutlineSize(delta) {
   modeTabsOutlineSize = Number(clamp((Number.isFinite(modeTabsOutlineSize) ? modeTabsOutlineSize : 1) + delta, 0, 6).toFixed(2));
   applyModeTabsLayout();
   persistModeTabsOutlineSize();
+}
+
+function persistModeTabsOutlineExpand() {
+  localStorage.setItem(MODE_TABS_OUTLINE_EXPAND_KEY, String(modeTabsOutlineExpand));
+}
+
+function setModeTabsOutlineExpand(nextExpand) {
+  modeTabsOutlineExpand = Number(clamp(nextExpand, 0, 18).toFixed(2));
+  applyModeTabsLayout();
+  persistModeTabsOutlineExpand();
+}
+
+function updateModeTabsOutlineExpand(delta) {
+  setModeTabsOutlineExpand((Number.isFinite(modeTabsOutlineExpand) ? modeTabsOutlineExpand : 0) + delta);
 }
 
 function getCryptoRandomInt(maxExclusive) {
@@ -2251,6 +2271,7 @@ function load() {
     const storedModeTabsLayout = localStorage.getItem(MODE_TABS_LAYOUT_KEY);
     const storedModeTabsScale = localStorage.getItem(MODE_TABS_SCALE_KEY);
     const storedModeTabsOutline = localStorage.getItem(MODE_TABS_OUTLINE_KEY);
+    const storedModeTabsOutlineExpand = localStorage.getItem(MODE_TABS_OUTLINE_EXPAND_KEY);
 
     if (storedParticipants) participants = JSON.parse(storedParticipants);
     if (storedHistory) history = JSON.parse(storedHistory);
@@ -2329,6 +2350,12 @@ function load() {
       const parsedModeTabsOutline = Number(storedModeTabsOutline);
       if (Number.isFinite(parsedModeTabsOutline)) {
         modeTabsOutlineSize = parsedModeTabsOutline;
+      }
+    }
+    if (storedModeTabsOutlineExpand) {
+      const parsedModeTabsOutlineExpand = Number(storedModeTabsOutlineExpand);
+      if (Number.isFinite(parsedModeTabsOutlineExpand)) {
+        modeTabsOutlineExpand = parsedModeTabsOutlineExpand;
       }
     }
     const storedSitePlaqueDecorLayout = localStorage.getItem('rollbria-site-plaque-layout');
@@ -2433,6 +2460,52 @@ if (modeTabsOutlineIncreaseBtn) {
     event.preventDefault();
     updateModeTabsOutlineSize(0.25);
   });
+}
+if (modeTabsOutlineControls) {
+  const beginModeTabsOutlineDrag = (event) => {
+    if (event.button !== 0) return;
+    if (event.target instanceof Element && event.target.closest('.mode-tabs-control-btn')) return;
+    event.preventDefault();
+    activeModeTabsOutlineDrag = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startExpand: Number.isFinite(modeTabsOutlineExpand) ? modeTabsOutlineExpand : 0,
+    };
+    modeTabsOutlineControls.classList.add('is-dragging');
+    if (modeTabsOutlineDrag) {
+      modeTabsOutlineDrag.classList.add('is-dragging');
+    }
+    modeTabsOutlineControls.setPointerCapture(event.pointerId);
+  };
+
+  const moveModeTabsOutlineDrag = (event) => {
+    if (!activeModeTabsOutlineDrag || event.pointerId !== activeModeTabsOutlineDrag.pointerId) return;
+    event.preventDefault();
+    const deltaX = event.clientX - activeModeTabsOutlineDrag.startX;
+    setModeTabsOutlineExpand(activeModeTabsOutlineDrag.startExpand + deltaX * 0.08);
+  };
+
+  const stopModeTabsOutlineDrag = (event) => {
+    if (!activeModeTabsOutlineDrag || event.pointerId !== activeModeTabsOutlineDrag.pointerId) return;
+    modeTabsOutlineControls.classList.remove('is-dragging');
+    if (modeTabsOutlineDrag) {
+      modeTabsOutlineDrag.classList.remove('is-dragging');
+    }
+    if (modeTabsOutlineControls.hasPointerCapture(event.pointerId)) {
+      modeTabsOutlineControls.releasePointerCapture(event.pointerId);
+    }
+    activeModeTabsOutlineDrag = null;
+  };
+
+  modeTabsOutlineControls.addEventListener('pointerdown', beginModeTabsOutlineDrag);
+  modeTabsOutlineControls.addEventListener('pointermove', moveModeTabsOutlineDrag);
+  modeTabsOutlineControls.addEventListener('pointerup', stopModeTabsOutlineDrag);
+  modeTabsOutlineControls.addEventListener('pointercancel', stopModeTabsOutlineDrag);
+  modeTabsOutlineControls.addEventListener('wheel', (event) => {
+    if (event.target instanceof Element && event.target.closest('.mode-tabs-control-btn')) return;
+    event.preventDefault();
+    updateModeTabsOutlineExpand(event.deltaY < 0 ? 1 : -1);
+  }, { passive: false });
 }
 setupBrandDrag();
 setupSitePlaqueDecorControl();
