@@ -1319,6 +1319,7 @@ textarea {
   border: none;
   border-radius: 12px;
   position: relative;
+  isolation: isolate;
   background: transparent;
   color: #f4e2bc;
   box-shadow: none;
@@ -1334,14 +1335,16 @@ textarea {
   left: calc(var(--mode-tab-hover-frame-expand-x, 0px) * -1);
   border-radius: calc(12px + var(--mode-tab-hover-frame-radius-expand, 0px));
   pointer-events: none;
+  z-index: -1;
   opacity: 0;
+  background: rgba(255, 228, 178, 0.14);
   box-shadow: inset 0 0 0 var(--mode-tab-hover-outline-size, 1px) rgba(255, 221, 161, 0.12);
   transition: opacity 140ms ease;
 }
 
 .draw-stage-banner .mode-tab:hover {
   transform: none;
-  background: rgba(255, 228, 178, 0.14);
+  background: transparent;
   border-color: transparent;
   box-shadow: none;
 }
