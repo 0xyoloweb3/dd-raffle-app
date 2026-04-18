@@ -1341,7 +1341,7 @@ textarea {
 
 .draw-stage-banner .mode-tab:hover {
   transform: none;
-  background: rgba(255, 228, 178, 0.05);
+  background: rgba(255, 228, 178, 0.14);
   border-color: transparent;
   box-shadow: none;
 }
