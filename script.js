@@ -101,6 +101,8 @@ const activeModeLabel = document.getElementById('active-mode-label');
 const modeDescription = document.getElementById('mode-description');
 const mainIntro = document.getElementById('main-intro');
 const modeTabSlots = Array.from(document.querySelectorAll('[data-mode-move]'));
+const modeTabsDecreaseBtn = document.getElementById('mode-tabs-decrease');
+const modeTabsIncreaseBtn = document.getElementById('mode-tabs-increase');
 const brandBlock = document.getElementById('brand-block');
 const brandBannerImage = document.getElementById('brand-banner-image');
 const brandBannerOverlay = document.getElementById('brand-banner-overlay');
@@ -206,6 +208,16 @@ function applyModeTabsLayout() {
 
 function persistModeTabsLayout() {
   localStorage.setItem(MODE_TABS_LAYOUT_KEY, JSON.stringify(modeTabsLayoutState));
+}
+
+function persistModeTabsScale() {
+  localStorage.setItem(MODE_TABS_SCALE_KEY, String(modeTabsScale));
+}
+
+function updateModeTabsScale(delta) {
+  modeTabsScale = Number(clamp((Number.isFinite(modeTabsScale) ? modeTabsScale : 1) + delta, 0.5, 1.8).toFixed(3));
+  applyModeTabsLayout();
+  persistModeTabsScale();
 }
 
 function getCryptoRandomInt(maxExclusive) {
@@ -2321,6 +2333,18 @@ winnerPopup.addEventListener('click', (e) => {
 
 load();
 applyModeTabsLayout();
+if (modeTabsDecreaseBtn) {
+  modeTabsDecreaseBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    updateModeTabsScale(-0.05);
+  });
+}
+if (modeTabsIncreaseBtn) {
+  modeTabsIncreaseBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    updateModeTabsScale(0.05);
+  });
+}
 setupBrandDrag();
 setupSitePlaqueDecorControl();
 setupWoodNormalDecorControl();
