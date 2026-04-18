@@ -109,6 +109,14 @@ const modeTabsOutlineControls = document.getElementById('mode-tabs-outline-contr
 const modeTabsOutlineDecreaseBtn = document.getElementById('mode-tabs-outline-decrease');
 const modeTabsOutlineIncreaseBtn = document.getElementById('mode-tabs-outline-increase');
 const modeTabsOutlineDrag = document.getElementById('mode-tabs-outline-drag');
+const modeTabsFrameWidthControls = document.getElementById('mode-tabs-frame-width-controls');
+const modeTabsFrameWidthDecreaseBtn = document.getElementById('mode-tabs-frame-width-decrease');
+const modeTabsFrameWidthIncreaseBtn = document.getElementById('mode-tabs-frame-width-increase');
+const modeTabsFrameWidthDrag = document.getElementById('mode-tabs-frame-width-drag');
+const modeTabsFrameHeightControls = document.getElementById('mode-tabs-frame-height-controls');
+const modeTabsFrameHeightDecreaseBtn = document.getElementById('mode-tabs-frame-height-decrease');
+const modeTabsFrameHeightIncreaseBtn = document.getElementById('mode-tabs-frame-height-increase');
+const modeTabsFrameHeightDrag = document.getElementById('mode-tabs-frame-height-drag');
 const brandBlock = document.getElementById('brand-block');
 const brandBannerImage = document.getElementById('brand-banner-image');
 const brandBannerOverlay = document.getElementById('brand-banner-overlay');
@@ -193,6 +201,8 @@ const MODE_TABS_LAYOUT_KEY = 'rollbria-mode-tabs-layout';
 const MODE_TABS_SCALE_KEY = 'rollbria-mode-tabs-scale';
 const MODE_TABS_OUTLINE_KEY = 'rollbria-mode-tabs-outline';
 const MODE_TABS_OUTLINE_EXPAND_KEY = 'rollbria-mode-tabs-outline-expand';
+const MODE_TABS_OUTLINE_EXPAND_X_KEY = 'rollbria-mode-tabs-outline-expand-x';
+const MODE_TABS_OUTLINE_EXPAND_Y_KEY = 'rollbria-mode-tabs-outline-expand-y';
 let lastBattleSyncSignature = null;
 let winnerThemeAudio = null;
 let uiAudioContext = null;
@@ -205,6 +215,10 @@ let modeTabsOutlineSize = 1;
 let activeModeTabsScaleDrag = null;
 let modeTabsOutlineExpand = 0;
 let activeModeTabsOutlineDrag = null;
+let modeTabsOutlineExpandX = 0;
+let modeTabsOutlineExpandY = 0;
+let activeModeTabsFrameWidthDrag = null;
+let activeModeTabsFrameHeightDrag = null;
 let sitePlaqueDecorState = { x: 0, y: 0, scale: 1 };
 let activeSitePlaqueDecorDrag = null;
 
@@ -217,7 +231,9 @@ function applyModeTabsLayout() {
     slot.style.setProperty('--mode-tab-scale', `${modeTabsScale || 1}`);
   });
   document.documentElement.style.setProperty('--mode-tab-hover-outline-size', `${modeTabsOutlineSize || 1}px`);
-  document.documentElement.style.setProperty('--mode-tab-hover-frame-expand', `${modeTabsOutlineExpand || 0}px`);
+  document.documentElement.style.setProperty('--mode-tab-hover-frame-expand-x', `${modeTabsOutlineExpandX || 0}px`);
+  document.documentElement.style.setProperty('--mode-tab-hover-frame-expand-y', `${modeTabsOutlineExpandY || 0}px`);
+  document.documentElement.style.setProperty('--mode-tab-hover-frame-radius-expand', `${Math.max(modeTabsOutlineExpandX || 0, modeTabsOutlineExpandY || 0)}px`);
 }
 
 function persistModeTabsLayout() {
@@ -255,13 +271,45 @@ function persistModeTabsOutlineExpand() {
 }
 
 function setModeTabsOutlineExpand(nextExpand) {
-  modeTabsOutlineExpand = Number(clamp(nextExpand, 0, 18).toFixed(2));
+  modeTabsOutlineExpand = Number(clamp(nextExpand, 0, 48).toFixed(2));
+  modeTabsOutlineExpandX = modeTabsOutlineExpand;
+  modeTabsOutlineExpandY = modeTabsOutlineExpand;
   applyModeTabsLayout();
   persistModeTabsOutlineExpand();
+  persistModeTabsOutlineExpandAxes();
 }
 
 function updateModeTabsOutlineExpand(delta) {
   setModeTabsOutlineExpand((Number.isFinite(modeTabsOutlineExpand) ? modeTabsOutlineExpand : 0) + delta);
+}
+
+function persistModeTabsOutlineExpandAxes() {
+  localStorage.setItem(MODE_TABS_OUTLINE_EXPAND_X_KEY, String(modeTabsOutlineExpandX));
+  localStorage.setItem(MODE_TABS_OUTLINE_EXPAND_Y_KEY, String(modeTabsOutlineExpandY));
+}
+
+function setModeTabsOutlineExpandX(nextExpand) {
+  modeTabsOutlineExpandX = Number(clamp(nextExpand, 0, 72).toFixed(2));
+  modeTabsOutlineExpand = Number(((modeTabsOutlineExpandX + modeTabsOutlineExpandY) / 2).toFixed(2));
+  applyModeTabsLayout();
+  persistModeTabsOutlineExpand();
+  persistModeTabsOutlineExpandAxes();
+}
+
+function setModeTabsOutlineExpandY(nextExpand) {
+  modeTabsOutlineExpandY = Number(clamp(nextExpand, 0, 72).toFixed(2));
+  modeTabsOutlineExpand = Number(((modeTabsOutlineExpandX + modeTabsOutlineExpandY) / 2).toFixed(2));
+  applyModeTabsLayout();
+  persistModeTabsOutlineExpand();
+  persistModeTabsOutlineExpandAxes();
+}
+
+function updateModeTabsOutlineExpandX(delta) {
+  setModeTabsOutlineExpandX((Number.isFinite(modeTabsOutlineExpandX) ? modeTabsOutlineExpandX : 0) + delta);
+}
+
+function updateModeTabsOutlineExpandY(delta) {
+  setModeTabsOutlineExpandY((Number.isFinite(modeTabsOutlineExpandY) ? modeTabsOutlineExpandY : 0) + delta);
 }
 
 function getCryptoRandomInt(maxExclusive) {
@@ -2272,6 +2320,8 @@ function load() {
     const storedModeTabsScale = localStorage.getItem(MODE_TABS_SCALE_KEY);
     const storedModeTabsOutline = localStorage.getItem(MODE_TABS_OUTLINE_KEY);
     const storedModeTabsOutlineExpand = localStorage.getItem(MODE_TABS_OUTLINE_EXPAND_KEY);
+    const storedModeTabsOutlineExpandX = localStorage.getItem(MODE_TABS_OUTLINE_EXPAND_X_KEY);
+    const storedModeTabsOutlineExpandY = localStorage.getItem(MODE_TABS_OUTLINE_EXPAND_Y_KEY);
 
     if (storedParticipants) participants = JSON.parse(storedParticipants);
     if (storedHistory) history = JSON.parse(storedHistory);
@@ -2356,6 +2406,20 @@ function load() {
       const parsedModeTabsOutlineExpand = Number(storedModeTabsOutlineExpand);
       if (Number.isFinite(parsedModeTabsOutlineExpand)) {
         modeTabsOutlineExpand = parsedModeTabsOutlineExpand;
+        modeTabsOutlineExpandX = parsedModeTabsOutlineExpand;
+        modeTabsOutlineExpandY = parsedModeTabsOutlineExpand;
+      }
+    }
+    if (storedModeTabsOutlineExpandX) {
+      const parsedModeTabsOutlineExpandX = Number(storedModeTabsOutlineExpandX);
+      if (Number.isFinite(parsedModeTabsOutlineExpandX)) {
+        modeTabsOutlineExpandX = parsedModeTabsOutlineExpandX;
+      }
+    }
+    if (storedModeTabsOutlineExpandY) {
+      const parsedModeTabsOutlineExpandY = Number(storedModeTabsOutlineExpandY);
+      if (Number.isFinite(parsedModeTabsOutlineExpandY)) {
+        modeTabsOutlineExpandY = parsedModeTabsOutlineExpandY;
       }
     }
     const storedSitePlaqueDecorLayout = localStorage.getItem('rollbria-site-plaque-layout');
@@ -2504,7 +2568,109 @@ if (modeTabsOutlineControls) {
   modeTabsOutlineControls.addEventListener('wheel', (event) => {
     if (event.target instanceof Element && event.target.closest('.mode-tabs-control-btn')) return;
     event.preventDefault();
-    updateModeTabsOutlineExpand(event.deltaY < 0 ? 1 : -1);
+    updateModeTabsOutlineExpand(event.deltaY < 0 ? 2 : -2);
+  }, { passive: false });
+}
+if (modeTabsFrameWidthDecreaseBtn) {
+  modeTabsFrameWidthDecreaseBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    updateModeTabsOutlineExpandX(-2);
+  });
+}
+if (modeTabsFrameWidthIncreaseBtn) {
+  modeTabsFrameWidthIncreaseBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    updateModeTabsOutlineExpandX(2);
+  });
+}
+if (modeTabsFrameWidthControls) {
+  const beginModeTabsFrameWidthDrag = (event) => {
+    if (event.button !== 0) return;
+    if (event.target instanceof Element && event.target.closest('.mode-tabs-control-btn')) return;
+    event.preventDefault();
+    activeModeTabsFrameWidthDrag = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startExpand: Number.isFinite(modeTabsOutlineExpandX) ? modeTabsOutlineExpandX : 0,
+    };
+    modeTabsFrameWidthControls.classList.add('is-dragging');
+    if (modeTabsFrameWidthDrag) modeTabsFrameWidthDrag.classList.add('is-dragging');
+    modeTabsFrameWidthControls.setPointerCapture(event.pointerId);
+  };
+  const moveModeTabsFrameWidthDrag = (event) => {
+    if (!activeModeTabsFrameWidthDrag || event.pointerId !== activeModeTabsFrameWidthDrag.pointerId) return;
+    event.preventDefault();
+    const deltaX = event.clientX - activeModeTabsFrameWidthDrag.startX;
+    setModeTabsOutlineExpandX(activeModeTabsFrameWidthDrag.startExpand + deltaX * 0.12);
+  };
+  const stopModeTabsFrameWidthDrag = (event) => {
+    if (!activeModeTabsFrameWidthDrag || event.pointerId !== activeModeTabsFrameWidthDrag.pointerId) return;
+    modeTabsFrameWidthControls.classList.remove('is-dragging');
+    if (modeTabsFrameWidthDrag) modeTabsFrameWidthDrag.classList.remove('is-dragging');
+    if (modeTabsFrameWidthControls.hasPointerCapture(event.pointerId)) {
+      modeTabsFrameWidthControls.releasePointerCapture(event.pointerId);
+    }
+    activeModeTabsFrameWidthDrag = null;
+  };
+  modeTabsFrameWidthControls.addEventListener('pointerdown', beginModeTabsFrameWidthDrag);
+  modeTabsFrameWidthControls.addEventListener('pointermove', moveModeTabsFrameWidthDrag);
+  modeTabsFrameWidthControls.addEventListener('pointerup', stopModeTabsFrameWidthDrag);
+  modeTabsFrameWidthControls.addEventListener('pointercancel', stopModeTabsFrameWidthDrag);
+  modeTabsFrameWidthControls.addEventListener('wheel', (event) => {
+    if (event.target instanceof Element && event.target.closest('.mode-tabs-control-btn')) return;
+    event.preventDefault();
+    updateModeTabsOutlineExpandX(event.deltaY < 0 ? 2 : -2);
+  }, { passive: false });
+}
+if (modeTabsFrameHeightDecreaseBtn) {
+  modeTabsFrameHeightDecreaseBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    updateModeTabsOutlineExpandY(-2);
+  });
+}
+if (modeTabsFrameHeightIncreaseBtn) {
+  modeTabsFrameHeightIncreaseBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    updateModeTabsOutlineExpandY(2);
+  });
+}
+if (modeTabsFrameHeightControls) {
+  const beginModeTabsFrameHeightDrag = (event) => {
+    if (event.button !== 0) return;
+    if (event.target instanceof Element && event.target.closest('.mode-tabs-control-btn')) return;
+    event.preventDefault();
+    activeModeTabsFrameHeightDrag = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startExpand: Number.isFinite(modeTabsOutlineExpandY) ? modeTabsOutlineExpandY : 0,
+    };
+    modeTabsFrameHeightControls.classList.add('is-dragging');
+    if (modeTabsFrameHeightDrag) modeTabsFrameHeightDrag.classList.add('is-dragging');
+    modeTabsFrameHeightControls.setPointerCapture(event.pointerId);
+  };
+  const moveModeTabsFrameHeightDrag = (event) => {
+    if (!activeModeTabsFrameHeightDrag || event.pointerId !== activeModeTabsFrameHeightDrag.pointerId) return;
+    event.preventDefault();
+    const deltaX = event.clientX - activeModeTabsFrameHeightDrag.startX;
+    setModeTabsOutlineExpandY(activeModeTabsFrameHeightDrag.startExpand + deltaX * 0.12);
+  };
+  const stopModeTabsFrameHeightDrag = (event) => {
+    if (!activeModeTabsFrameHeightDrag || event.pointerId !== activeModeTabsFrameHeightDrag.pointerId) return;
+    modeTabsFrameHeightControls.classList.remove('is-dragging');
+    if (modeTabsFrameHeightDrag) modeTabsFrameHeightDrag.classList.remove('is-dragging');
+    if (modeTabsFrameHeightControls.hasPointerCapture(event.pointerId)) {
+      modeTabsFrameHeightControls.releasePointerCapture(event.pointerId);
+    }
+    activeModeTabsFrameHeightDrag = null;
+  };
+  modeTabsFrameHeightControls.addEventListener('pointerdown', beginModeTabsFrameHeightDrag);
+  modeTabsFrameHeightControls.addEventListener('pointermove', moveModeTabsFrameHeightDrag);
+  modeTabsFrameHeightControls.addEventListener('pointerup', stopModeTabsFrameHeightDrag);
+  modeTabsFrameHeightControls.addEventListener('pointercancel', stopModeTabsFrameHeightDrag);
+  modeTabsFrameHeightControls.addEventListener('wheel', (event) => {
+    if (event.target instanceof Element && event.target.closest('.mode-tabs-control-btn')) return;
+    event.preventDefault();
+    updateModeTabsOutlineExpandY(event.deltaY < 0 ? 2 : -2);
   }, { passive: false });
 }
 setupBrandDrag();

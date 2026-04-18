@@ -201,6 +201,31 @@ body::before {
   cursor: ew-resize;
 }
 
+.mode-tabs-frame-width-controls,
+.mode-tabs-frame-height-controls {
+  position: fixed;
+  right: 14px;
+  z-index: 140;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: auto;
+  cursor: ew-resize;
+}
+
+.mode-tabs-frame-width-controls {
+  top: 186px;
+}
+
+.mode-tabs-frame-height-controls {
+  top: 230px;
+}
+
+.mode-tabs-frame-width-controls.is-dragging,
+.mode-tabs-frame-height-controls.is-dragging {
+  cursor: ew-resize;
+}
+
 .wood-normal-decor {
   position: fixed;
   top: -2px;
@@ -1303,8 +1328,11 @@ textarea {
 .draw-stage-banner .mode-tab::after {
   content: "";
   position: absolute;
-  inset: calc(var(--mode-tab-hover-frame-expand, 0px) * -1);
-  border-radius: calc(12px + var(--mode-tab-hover-frame-expand, 0px));
+  top: calc(var(--mode-tab-hover-frame-expand-y, 0px) * -1);
+  right: calc(var(--mode-tab-hover-frame-expand-x, 0px) * -1);
+  bottom: calc(var(--mode-tab-hover-frame-expand-y, 0px) * -1);
+  left: calc(var(--mode-tab-hover-frame-expand-x, 0px) * -1);
+  border-radius: calc(12px + var(--mode-tab-hover-frame-radius-expand, 0px));
   pointer-events: none;
   opacity: 0;
   box-shadow: inset 0 0 0 var(--mode-tab-hover-outline-size, 1px) rgba(255, 221, 161, 0.12);
