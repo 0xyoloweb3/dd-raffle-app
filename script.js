@@ -103,6 +103,8 @@ const mainIntro = document.getElementById('main-intro');
 const modeTabSlots = Array.from(document.querySelectorAll('[data-mode-move]'));
 const modeTabsDecreaseBtn = document.getElementById('mode-tabs-decrease');
 const modeTabsIncreaseBtn = document.getElementById('mode-tabs-increase');
+const modeTabsOutlineDecreaseBtn = document.getElementById('mode-tabs-outline-decrease');
+const modeTabsOutlineIncreaseBtn = document.getElementById('mode-tabs-outline-increase');
 const brandBlock = document.getElementById('brand-block');
 const brandBannerImage = document.getElementById('brand-banner-image');
 const brandBannerOverlay = document.getElementById('brand-banner-overlay');
@@ -185,6 +187,7 @@ const PARTICIPANTS_BOARD_LAYOUT_KEY = 'rollbria-participants-board-layout';
 const PARTICIPANTS_BOARD_LAYOUT_VERSION = 5;
 const MODE_TABS_LAYOUT_KEY = 'rollbria-mode-tabs-layout';
 const MODE_TABS_SCALE_KEY = 'rollbria-mode-tabs-scale';
+const MODE_TABS_OUTLINE_KEY = 'rollbria-mode-tabs-outline';
 let lastBattleSyncSignature = null;
 let winnerThemeAudio = null;
 let uiAudioContext = null;
@@ -193,6 +196,7 @@ let participantsBoardLayoutState = {};
 let participantsBoardTextState = {};
 let modeTabsLayoutState = {};
 let modeTabsScale = 1;
+let modeTabsOutlineSize = 1;
 let sitePlaqueDecorState = { x: 0, y: 0, scale: 1 };
 let activeSitePlaqueDecorDrag = null;
 
@@ -204,6 +208,7 @@ function applyModeTabsLayout() {
     slot.style.setProperty('--mode-tab-offset-y', `${state.y}px`);
     slot.style.setProperty('--mode-tab-scale', `${modeTabsScale || 1}`);
   });
+  document.documentElement.style.setProperty('--mode-tab-hover-outline-size', `${modeTabsOutlineSize || 1}px`);
 }
 
 function persistModeTabsLayout() {
@@ -218,6 +223,16 @@ function updateModeTabsScale(delta) {
   modeTabsScale = Number(clamp((Number.isFinite(modeTabsScale) ? modeTabsScale : 1) + delta, 0.5, 1.8).toFixed(3));
   applyModeTabsLayout();
   persistModeTabsScale();
+}
+
+function persistModeTabsOutlineSize() {
+  localStorage.setItem(MODE_TABS_OUTLINE_KEY, String(modeTabsOutlineSize));
+}
+
+function updateModeTabsOutlineSize(delta) {
+  modeTabsOutlineSize = Number(clamp((Number.isFinite(modeTabsOutlineSize) ? modeTabsOutlineSize : 1) + delta, 0, 6).toFixed(2));
+  applyModeTabsLayout();
+  persistModeTabsOutlineSize();
 }
 
 function getCryptoRandomInt(maxExclusive) {
@@ -2226,6 +2241,7 @@ function load() {
     const storedParticipantsBoardState = localStorage.getItem(PARTICIPANTS_BOARD_LAYOUT_KEY);
     const storedModeTabsLayout = localStorage.getItem(MODE_TABS_LAYOUT_KEY);
     const storedModeTabsScale = localStorage.getItem(MODE_TABS_SCALE_KEY);
+    const storedModeTabsOutline = localStorage.getItem(MODE_TABS_OUTLINE_KEY);
 
     if (storedParticipants) participants = JSON.parse(storedParticipants);
     if (storedHistory) history = JSON.parse(storedHistory);
@@ -2300,6 +2316,12 @@ function load() {
         modeTabsScale = parsedModeTabsScale;
       }
     }
+    if (storedModeTabsOutline) {
+      const parsedModeTabsOutline = Number(storedModeTabsOutline);
+      if (Number.isFinite(parsedModeTabsOutline)) {
+        modeTabsOutlineSize = parsedModeTabsOutline;
+      }
+    }
     const storedSitePlaqueDecorLayout = localStorage.getItem('rollbria-site-plaque-layout');
     if (storedSitePlaqueDecorLayout) {
       const parsedSitePlaqueDecorLayout = JSON.parse(storedSitePlaqueDecorLayout);
@@ -2343,6 +2365,18 @@ if (modeTabsIncreaseBtn) {
   modeTabsIncreaseBtn.addEventListener('click', (event) => {
     event.preventDefault();
     updateModeTabsScale(0.05);
+  });
+}
+if (modeTabsOutlineDecreaseBtn) {
+  modeTabsOutlineDecreaseBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    updateModeTabsOutlineSize(-0.25);
+  });
+}
+if (modeTabsOutlineIncreaseBtn) {
+  modeTabsOutlineIncreaseBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    updateModeTabsOutlineSize(0.25);
   });
 }
 setupBrandDrag();
