@@ -1008,7 +1008,7 @@ function updateHeaderStats() {
   modeDescription.textContent = currentMode
     ? MODE_META[currentMode].description
     : 'Choose a raffle mode to see how this draw works and start the game.';
-  mainIntro.classList.toggle('main-intro--idle', !currentMode);
+  mainIntro.classList.add('main-intro--idle');
 }
 
 function launchWinnerConfetti() {
