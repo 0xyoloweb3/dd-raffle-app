@@ -103,6 +103,7 @@ const mainIntro = document.getElementById('main-intro');
 const modeTabSlots = Array.from(document.querySelectorAll('[data-mode-move]'));
 const modeTabsDecreaseBtn = document.getElementById('mode-tabs-decrease');
 const modeTabsIncreaseBtn = document.getElementById('mode-tabs-increase');
+const modeTabsScaleDrag = document.getElementById('mode-tabs-scale-drag');
 const modeTabsOutlineDecreaseBtn = document.getElementById('mode-tabs-outline-decrease');
 const modeTabsOutlineIncreaseBtn = document.getElementById('mode-tabs-outline-increase');
 const brandBlock = document.getElementById('brand-block');
@@ -197,6 +198,7 @@ let participantsBoardTextState = {};
 let modeTabsLayoutState = {};
 let modeTabsScale = 1;
 let modeTabsOutlineSize = 1;
+let activeModeTabsScaleDrag = null;
 let sitePlaqueDecorState = { x: 0, y: 0, scale: 1 };
 let activeSitePlaqueDecorDrag = null;
 
@@ -221,6 +223,12 @@ function persistModeTabsScale() {
 
 function updateModeTabsScale(delta) {
   modeTabsScale = Number(clamp((Number.isFinite(modeTabsScale) ? modeTabsScale : 1) + delta, 0.5, 1.8).toFixed(3));
+  applyModeTabsLayout();
+  persistModeTabsScale();
+}
+
+function setModeTabsScale(nextScale) {
+  modeTabsScale = Number(clamp(nextScale, 0.5, 1.8).toFixed(3));
   applyModeTabsLayout();
   persistModeTabsScale();
 }
@@ -2366,6 +2374,38 @@ if (modeTabsIncreaseBtn) {
     event.preventDefault();
     updateModeTabsScale(0.05);
   });
+}
+if (modeTabsScaleDrag) {
+  modeTabsScaleDrag.addEventListener('pointerdown', (event) => {
+    if (event.button !== 0) return;
+    event.preventDefault();
+    activeModeTabsScaleDrag = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startScale: Number.isFinite(modeTabsScale) ? modeTabsScale : 1,
+    };
+    modeTabsScaleDrag.classList.add('is-dragging');
+    modeTabsScaleDrag.setPointerCapture(event.pointerId);
+  });
+
+  modeTabsScaleDrag.addEventListener('pointermove', (event) => {
+    if (!activeModeTabsScaleDrag || event.pointerId !== activeModeTabsScaleDrag.pointerId) return;
+    event.preventDefault();
+    const deltaX = event.clientX - activeModeTabsScaleDrag.startX;
+    setModeTabsScale(activeModeTabsScaleDrag.startScale + deltaX * 0.0025);
+  });
+
+  const stopModeTabsScaleDrag = (event) => {
+    if (!activeModeTabsScaleDrag || event.pointerId !== activeModeTabsScaleDrag.pointerId) return;
+    modeTabsScaleDrag.classList.remove('is-dragging');
+    if (modeTabsScaleDrag.hasPointerCapture(event.pointerId)) {
+      modeTabsScaleDrag.releasePointerCapture(event.pointerId);
+    }
+    activeModeTabsScaleDrag = null;
+  };
+
+  modeTabsScaleDrag.addEventListener('pointerup', stopModeTabsScaleDrag);
+  modeTabsScaleDrag.addEventListener('pointercancel', stopModeTabsScaleDrag);
 }
 if (modeTabsOutlineDecreaseBtn) {
   modeTabsOutlineDecreaseBtn.addEventListener('click', (event) => {

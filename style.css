@@ -141,6 +141,25 @@ body::before {
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
 }
 
+.mode-tabs-controls__label--drag {
+  position: relative;
+  user-select: none;
+  cursor: ew-resize;
+}
+
+.mode-tabs-controls__label--drag::after {
+  content: "< >";
+  display: block;
+  margin-top: 4px;
+  color: rgba(243, 222, 180, 0.72);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+}
+
+.mode-tabs-controls__label--drag.is-dragging {
+  color: #ffe9bd;
+}
+
 .mode-tabs-control-btn {
   width: 38px;
   height: 38px;
