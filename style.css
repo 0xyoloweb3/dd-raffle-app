@@ -1178,49 +1178,6 @@ textarea {
   gap: 14px;
 }
 
-.mode-tabs-guides {
-  position: absolute;
-  inset: -8px 12px -8px 12px;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.mode-tabs-guide {
-  position: absolute;
-  opacity: 0.72;
-}
-
-.mode-tabs-guide--center,
-.mode-tabs-guide--col1,
-.mode-tabs-guide--col2,
-.mode-tabs-guide--col3,
-.mode-tabs-guide--col4,
-.mode-tabs-guide--col5 {
-  top: 0;
-  bottom: 0;
-  width: 0;
-  border-left: 1px dashed rgba(245, 223, 176, 0.42);
-}
-
-.mode-tabs-guide--center {
-  left: 50%;
-  border-left-color: rgba(255, 225, 155, 0.78);
-}
-
-.mode-tabs-guide--col1 { left: 10%; }
-.mode-tabs-guide--col2 { left: 30%; }
-.mode-tabs-guide--col3 { left: 50%; }
-.mode-tabs-guide--col4 { left: 70%; }
-.mode-tabs-guide--col5 { left: 90%; }
-
-.mode-tabs-guide--horizon {
-  left: 0;
-  right: 0;
-  top: 50%;
-  height: 0;
-  border-top: 1px dashed rgba(245, 223, 176, 0.3);
-}
-
 .mode-tab-slot {
   min-width: 0;
   position: relative;
@@ -1230,13 +1187,6 @@ textarea {
 .draw-stage-banner .mode-tab-slot {
   transform: translate(var(--mode-tab-offset-x, 0px), var(--mode-tab-offset-y, 0px)) scale(var(--mode-tab-scale, 1));
   transform-origin: center center;
-  touch-action: none;
-  cursor: grab;
-}
-
-.draw-stage-banner .mode-tab-slot.is-dragging {
-  cursor: grabbing;
-  z-index: 4;
 }
 
 .draw-stage-banner .mode-tab-slot--quick {

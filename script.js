@@ -208,54 +208,6 @@ function persistModeTabsLayout() {
   localStorage.setItem(MODE_TABS_LAYOUT_KEY, JSON.stringify(modeTabsLayoutState));
 }
 
-function setupModeTabControls() {
-  if (!modeTabSlots.length) return;
-
-  applyModeTabsLayout();
-
-  modeTabSlots.forEach((slot) => {
-    const key = slot.dataset.modeMove;
-    modeTabsLayoutState[key] = modeTabsLayoutState[key] || { x: 0, y: 0 };
-
-    let activeDrag = null;
-
-    slot.addEventListener('pointerdown', (event) => {
-      if (event.button !== 0) return;
-      activeDrag = {
-        pointerId: event.pointerId,
-        startX: event.clientX,
-        startY: event.clientY,
-        originX: modeTabsLayoutState[key].x || 0,
-        originY: modeTabsLayoutState[key].y || 0,
-      };
-      slot.setPointerCapture(event.pointerId);
-      slot.classList.add('is-dragging');
-    });
-
-    slot.addEventListener('pointermove', (event) => {
-      if (!activeDrag || event.pointerId !== activeDrag.pointerId) return;
-      modeTabsLayoutState[key] = {
-        x: activeDrag.originX + (event.clientX - activeDrag.startX),
-        y: activeDrag.originY + (event.clientY - activeDrag.startY),
-      };
-      applyModeTabsLayout();
-    });
-
-    const stopDrag = (event) => {
-      if (!activeDrag || event.pointerId !== activeDrag.pointerId) return;
-      slot.classList.remove('is-dragging');
-      try {
-        slot.releasePointerCapture(event.pointerId);
-      } catch {}
-      activeDrag = null;
-      persistModeTabsLayout();
-    };
-
-    slot.addEventListener('pointerup', stopDrag);
-    slot.addEventListener('pointercancel', stopDrag);
-  });
-}
-
 function getCryptoRandomInt(maxExclusive) {
   if (!Number.isInteger(maxExclusive) || maxExclusive <= 0) {
     throw new Error('maxExclusive must be a positive integer');
@@ -2369,7 +2321,6 @@ winnerPopup.addEventListener('click', (e) => {
 
 load();
 applyModeTabsLayout();
-setupModeTabControls();
 setupBrandDrag();
 setupSitePlaqueDecorControl();
 setupWoodNormalDecorControl();
