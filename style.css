@@ -442,15 +442,14 @@ body::before {
   flex-direction: column;
   gap: 4px;
   padding: 12px 18px;
-  border-radius: 14px;
-  border: 1px solid rgba(160, 113, 63, 0.5);
-  background: linear-gradient(180deg, rgba(72, 47, 25, 0.72), rgba(40, 25, 14, 0.7));
+  border-radius: 0;
+  border: none;
+  background: transparent;
   overflow: visible;
 }
 
 .stat-pill--accent {
-  border-color: rgba(208, 164, 92, 0.5);
-  background: linear-gradient(180deg, rgba(115, 80, 42, 0.78), rgba(59, 37, 20, 0.78));
+  background: transparent;
 }
 
 .stat-pill-label {
