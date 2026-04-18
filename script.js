@@ -137,6 +137,8 @@ const participantsBoard = document.querySelector('.participants-board');
 const participantsBoardMovableEls = Array.from(document.querySelectorAll('.participants-board [data-board-move]'));
 const participantsBoardTextEls = Array.from(document.querySelectorAll('.participants-board [data-board-text]'));
 const headerMeta = document.getElementById('header-meta');
+const headerMetaTextDecreaseBtn = document.getElementById('header-meta-text-decrease');
+const headerMetaTextIncreaseBtn = document.getElementById('header-meta-text-increase');
 
 const btnQuickDraw = document.getElementById('btn-quick-draw');
 const quickWinner = document.getElementById('quick-winner');
@@ -201,6 +203,7 @@ let activeSpinPlan = null;
 const BATTLE_PARTICIPANTS_STORAGE_KEY = 'rollbria-battle-participants';
 const BRAND_DRAG_STORAGE_KEY = 'rollbria-brand-drag';
 const HEADER_META_LAYOUT_KEY = 'rollbria-header-meta-layout';
+const HEADER_META_TEXT_SCALE_KEY = 'rollbria-header-meta-text-scale';
 const PARTICIPANTS_BOARD_LAYOUT_KEY = 'rollbria-participants-board-layout';
 const PARTICIPANTS_BOARD_LAYOUT_VERSION = 5;
 const MODE_TABS_LAYOUT_KEY = 'rollbria-mode-tabs-layout';
@@ -214,6 +217,7 @@ let lastBattleSyncSignature = null;
 let winnerThemeAudio = null;
 let uiAudioContext = null;
 let headerMetaState = { x: 0, y: 0 };
+let headerMetaTextScale = 1;
 let activeHeaderMetaDrag = null;
 let activeParticipantsBoardDrag = null;
 let participantsBoardLayoutState = {};
@@ -374,12 +378,25 @@ function applyHeaderMetaLayout() {
   if (!headerMeta) return;
   headerMeta.style.setProperty('--header-meta-x', `${headerMetaState.x || 0}px`);
   headerMeta.style.setProperty('--header-meta-y', `${headerMetaState.y || 0}px`);
+  headerMeta.style.setProperty('--header-meta-text-scale', `${headerMetaTextScale || 1}`);
 }
 
 function saveHeaderMetaLayout() {
   try {
     localStorage.setItem(HEADER_META_LAYOUT_KEY, JSON.stringify(headerMetaState));
   } catch (_) {}
+}
+
+function saveHeaderMetaTextScale() {
+  try {
+    localStorage.setItem(HEADER_META_TEXT_SCALE_KEY, String(headerMetaTextScale));
+  } catch (_) {}
+}
+
+function updateHeaderMetaTextScale(delta) {
+  headerMetaTextScale = Number(clamp((Number.isFinite(headerMetaTextScale) ? headerMetaTextScale : 1) + delta, 0.6, 2.4).toFixed(3));
+  applyHeaderMetaLayout();
+  saveHeaderMetaTextScale();
 }
 
 function setupHeaderMetaDrag() {
@@ -2399,6 +2416,7 @@ function load() {
     const storedBrandDrag = localStorage.getItem(BRAND_DRAG_STORAGE_KEY);
     const storedParticipantsBoardState = localStorage.getItem(PARTICIPANTS_BOARD_LAYOUT_KEY);
     const storedHeaderMetaLayout = localStorage.getItem(HEADER_META_LAYOUT_KEY);
+    const storedHeaderMetaTextScale = localStorage.getItem(HEADER_META_TEXT_SCALE_KEY);
     const storedModeTabsLayout = localStorage.getItem(MODE_TABS_LAYOUT_KEY);
     const storedModeTabsScale = localStorage.getItem(MODE_TABS_SCALE_KEY);
     const storedModeTabsFillOpacity = localStorage.getItem(MODE_TABS_FILL_OPACITY_KEY);
@@ -2475,6 +2493,12 @@ function load() {
           x: parsedHeaderMetaLayout.x,
           y: parsedHeaderMetaLayout.y,
         };
+      }
+    }
+    if (storedHeaderMetaTextScale) {
+      const parsedHeaderMetaTextScale = Number(storedHeaderMetaTextScale);
+      if (Number.isFinite(parsedHeaderMetaTextScale)) {
+        headerMetaTextScale = parsedHeaderMetaTextScale;
       }
     }
     if (storedModeTabsLayout) {
@@ -2554,6 +2578,19 @@ winnerPopup.addEventListener('click', (e) => {
 
 load();
 applyModeTabsLayout();
+applyHeaderMetaLayout();
+if (headerMetaTextDecreaseBtn) {
+  headerMetaTextDecreaseBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    updateHeaderMetaTextScale(-0.08);
+  });
+}
+if (headerMetaTextIncreaseBtn) {
+  headerMetaTextIncreaseBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    updateHeaderMetaTextScale(0.08);
+  });
+}
 if (modeTabsOpacityDecreaseBtn) {
   modeTabsOpacityDecreaseBtn.addEventListener('click', (event) => {
     event.preventDefault();
