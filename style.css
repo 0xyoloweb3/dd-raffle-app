@@ -1250,15 +1250,17 @@ textarea {
 .draw-stage-banner .mode-tab {
   width: 100%;
   min-height: 46px;
-  border-color: transparent;
+  border: none;
   border-radius: 12px;
   background: transparent;
-  color: #e7d8bd;
+  color: #f4e2bc;
   box-shadow: none;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.52);
 }
 
 .draw-stage-banner .mode-tab:hover {
-  background: transparent;
+  transform: none;
+  background: rgba(255, 228, 178, 0.05);
   border-color: transparent;
   box-shadow: inset 0 0 0 var(--mode-tab-hover-outline-size, 1px) rgba(255, 221, 161, 0.12);
 }
