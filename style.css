@@ -126,18 +126,29 @@ body::before {
   right: 14px;
   z-index: 140;
   display: flex;
+  align-items: center;
   gap: 8px;
   pointer-events: auto;
 }
 
+.mode-tabs-controls__label {
+  min-width: 62px;
+  color: #f3deb4;
+  font: 700 11px/1.2 "Cinzel", Georgia, serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: right;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
 .mode-tabs-control-btn {
-  width: 34px;
-  height: 34px;
+  width: 38px;
+  height: 38px;
   border: 1px solid rgba(214, 177, 111, 0.58);
   border-radius: 10px;
   background: linear-gradient(180deg, rgba(81, 48, 24, 0.96), rgba(46, 26, 13, 0.96));
   color: #f3deb4;
-  font: 700 22px/1 "Cinzel", Georgia, serif;
+  font: 700 24px/1 "Cinzel", Georgia, serif;
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
   cursor: pointer;
 }
@@ -156,6 +167,7 @@ body::before {
   right: 14px;
   z-index: 140;
   display: flex;
+  align-items: center;
   gap: 8px;
   pointer-events: auto;
 }
