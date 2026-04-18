@@ -137,6 +137,7 @@ const participantsBoard = document.querySelector('.participants-board');
 const participantsBoardMovableEls = Array.from(document.querySelectorAll('.participants-board [data-board-move]'));
 const participantsBoardTextEls = Array.from(document.querySelectorAll('.participants-board [data-board-text]'));
 const headerMeta = document.getElementById('header-meta');
+const headerMetaItems = Array.from(document.querySelectorAll('[data-header-meta-item]'));
 const headerMetaTextDecreaseBtn = document.getElementById('header-meta-text-decrease');
 const headerMetaTextIncreaseBtn = document.getElementById('header-meta-text-increase');
 
@@ -203,6 +204,7 @@ let activeSpinPlan = null;
 const BATTLE_PARTICIPANTS_STORAGE_KEY = 'rollbria-battle-participants';
 const BRAND_DRAG_STORAGE_KEY = 'rollbria-brand-drag';
 const HEADER_META_LAYOUT_KEY = 'rollbria-header-meta-layout';
+const HEADER_META_ITEMS_LAYOUT_KEY = 'rollbria-header-meta-items-layout';
 const HEADER_META_TEXT_SCALE_KEY = 'rollbria-header-meta-text-scale';
 const PARTICIPANTS_BOARD_LAYOUT_KEY = 'rollbria-participants-board-layout';
 const PARTICIPANTS_BOARD_LAYOUT_VERSION = 5;
@@ -217,8 +219,10 @@ let lastBattleSyncSignature = null;
 let winnerThemeAudio = null;
 let uiAudioContext = null;
 let headerMetaState = { x: 0, y: 0 };
+let headerMetaItemsState = {};
 let headerMetaTextScale = 1;
 let activeHeaderMetaDrag = null;
+let activeHeaderMetaItemDrag = null;
 let activeParticipantsBoardDrag = null;
 let participantsBoardLayoutState = {};
 let participantsBoardTextState = {};
@@ -379,6 +383,12 @@ function applyHeaderMetaLayout() {
   headerMeta.style.setProperty('--header-meta-x', `${headerMetaState.x || 0}px`);
   headerMeta.style.setProperty('--header-meta-y', `${headerMetaState.y || 0}px`);
   headerMeta.style.setProperty('--header-meta-text-scale', `${headerMetaTextScale || 1}`);
+  headerMetaItems.forEach((item) => {
+    const key = item.dataset.headerMetaItem;
+    const state = headerMetaItemsState[key] || { x: 0, y: 0 };
+    item.style.setProperty('--header-meta-item-x', `${state.x}px`);
+    item.style.setProperty('--header-meta-item-y', `${state.y}px`);
+  });
 }
 
 function saveHeaderMetaLayout() {
@@ -390,6 +400,12 @@ function saveHeaderMetaLayout() {
 function saveHeaderMetaTextScale() {
   try {
     localStorage.setItem(HEADER_META_TEXT_SCALE_KEY, String(headerMetaTextScale));
+  } catch (_) {}
+}
+
+function saveHeaderMetaItemsLayout() {
+  try {
+    localStorage.setItem(HEADER_META_ITEMS_LAYOUT_KEY, JSON.stringify(headerMetaItemsState));
   } catch (_) {}
 }
 
@@ -440,6 +456,55 @@ function setupHeaderMetaDrag() {
     headerMetaState = { x: 0, y: 0 };
     applyHeaderMetaLayout();
     saveHeaderMetaLayout();
+  });
+
+  headerMetaItems.forEach((item) => {
+    const key = item.dataset.headerMetaItem;
+    headerMetaItemsState[key] = headerMetaItemsState[key] || { x: 0, y: 0 };
+
+    item.addEventListener('pointerdown', (event) => {
+      if (event.button !== 0) return;
+      event.stopPropagation();
+      activeHeaderMetaItemDrag = {
+        pointerId: event.pointerId,
+        key,
+        startX: event.clientX,
+        startY: event.clientY,
+        originX: headerMetaItemsState[key].x || 0,
+        originY: headerMetaItemsState[key].y || 0,
+      };
+      item.classList.add('is-dragging');
+      item.setPointerCapture(event.pointerId);
+      event.preventDefault();
+    });
+
+    item.addEventListener('pointermove', (event) => {
+      if (!activeHeaderMetaItemDrag || activeHeaderMetaItemDrag.pointerId !== event.pointerId || activeHeaderMetaItemDrag.key !== key) return;
+      headerMetaItemsState[key] = {
+        x: activeHeaderMetaItemDrag.originX + (event.clientX - activeHeaderMetaItemDrag.startX),
+        y: activeHeaderMetaItemDrag.originY + (event.clientY - activeHeaderMetaItemDrag.startY),
+      };
+      applyHeaderMetaLayout();
+      event.stopPropagation();
+    });
+
+    const finishHeaderMetaItemDrag = (event) => {
+      if (!activeHeaderMetaItemDrag || activeHeaderMetaItemDrag.pointerId !== event.pointerId || activeHeaderMetaItemDrag.key !== key) return;
+      item.classList.remove('is-dragging');
+      saveHeaderMetaItemsLayout();
+      activeHeaderMetaItemDrag = null;
+      event.stopPropagation();
+    };
+
+    item.addEventListener('pointerup', finishHeaderMetaItemDrag);
+    item.addEventListener('pointercancel', finishHeaderMetaItemDrag);
+    item.addEventListener('dblclick', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      headerMetaItemsState[key] = { x: 0, y: 0 };
+      applyHeaderMetaLayout();
+      saveHeaderMetaItemsLayout();
+    });
   });
 }
 
@@ -2416,6 +2481,7 @@ function load() {
     const storedBrandDrag = localStorage.getItem(BRAND_DRAG_STORAGE_KEY);
     const storedParticipantsBoardState = localStorage.getItem(PARTICIPANTS_BOARD_LAYOUT_KEY);
     const storedHeaderMetaLayout = localStorage.getItem(HEADER_META_LAYOUT_KEY);
+    const storedHeaderMetaItemsLayout = localStorage.getItem(HEADER_META_ITEMS_LAYOUT_KEY);
     const storedHeaderMetaTextScale = localStorage.getItem(HEADER_META_TEXT_SCALE_KEY);
     const storedModeTabsLayout = localStorage.getItem(MODE_TABS_LAYOUT_KEY);
     const storedModeTabsScale = localStorage.getItem(MODE_TABS_SCALE_KEY);
@@ -2493,6 +2559,12 @@ function load() {
           x: parsedHeaderMetaLayout.x,
           y: parsedHeaderMetaLayout.y,
         };
+      }
+    }
+    if (storedHeaderMetaItemsLayout) {
+      const parsedHeaderMetaItemsLayout = JSON.parse(storedHeaderMetaItemsLayout);
+      if (parsedHeaderMetaItemsLayout && typeof parsedHeaderMetaItemsLayout === 'object') {
+        headerMetaItemsState = parsedHeaderMetaItemsLayout;
       }
     }
     if (storedHeaderMetaTextScale) {

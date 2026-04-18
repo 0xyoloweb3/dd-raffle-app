@@ -485,6 +485,10 @@ body::before {
   color: var(--muted-soft);
   padding-left: 4px;
   text-indent: 2px;
+  position: relative;
+  transform: translate(var(--header-meta-item-x, 0px), var(--header-meta-item-y, 0px));
+  cursor: grab;
+  touch-action: none;
 }
 
 .participant-count,
@@ -492,6 +496,16 @@ body::before {
   font-size: calc(15px * var(--header-meta-text-scale, 1));
   font-weight: 700;
   color: var(--text);
+  position: relative;
+  transform: translate(var(--header-meta-item-x, 0px), var(--header-meta-item-y, 0px));
+  cursor: grab;
+  touch-action: none;
+}
+
+.stat-pill-label.is-dragging,
+.participant-count.is-dragging,
+.stat-pill-value.is-dragging {
+  cursor: grabbing;
 }
 
 .layout {
