@@ -271,7 +271,7 @@ function persistModeTabsOutlineExpand() {
 }
 
 function setModeTabsOutlineExpand(nextExpand) {
-  modeTabsOutlineExpand = Number(clamp(nextExpand, 0, 48).toFixed(2));
+  modeTabsOutlineExpand = Number(clamp(nextExpand, -72, 72).toFixed(2));
   modeTabsOutlineExpandX = modeTabsOutlineExpand;
   modeTabsOutlineExpandY = modeTabsOutlineExpand;
   applyModeTabsLayout();
@@ -289,7 +289,7 @@ function persistModeTabsOutlineExpandAxes() {
 }
 
 function setModeTabsOutlineExpandX(nextExpand) {
-  modeTabsOutlineExpandX = Number(clamp(nextExpand, 0, 72).toFixed(2));
+  modeTabsOutlineExpandX = Number(clamp(nextExpand, -72, 72).toFixed(2));
   modeTabsOutlineExpand = Number(((modeTabsOutlineExpandX + modeTabsOutlineExpandY) / 2).toFixed(2));
   applyModeTabsLayout();
   persistModeTabsOutlineExpand();
@@ -297,7 +297,7 @@ function setModeTabsOutlineExpandX(nextExpand) {
 }
 
 function setModeTabsOutlineExpandY(nextExpand) {
-  modeTabsOutlineExpandY = Number(clamp(nextExpand, 0, 72).toFixed(2));
+  modeTabsOutlineExpandY = Number(clamp(nextExpand, -72, 72).toFixed(2));
   modeTabsOutlineExpand = Number(((modeTabsOutlineExpandX + modeTabsOutlineExpandY) / 2).toFixed(2));
   applyModeTabsLayout();
   persistModeTabsOutlineExpand();
