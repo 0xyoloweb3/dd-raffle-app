@@ -434,6 +434,7 @@ body::before {
   justify-content: flex-end;
   gap: 10px;
   position: relative;
+  z-index: 9999;
   transform: translate(var(--header-meta-x, 0px), var(--header-meta-y, 0px));
   transform-origin: top right;
   cursor: grab;
